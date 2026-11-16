@@ -27,12 +27,15 @@ import (
 	"time"
 
 	"github.com/beevik/etree"
-	siat "github.com/ron86i/go-siat/v2"
-	invoices "github.com/ron86i/go-siat/v2/pkg/models/invoices/v3"
-	"github.com/ron86i/go-siat/v2/pkg/utils"
 	dsig "github.com/russellhaering/goxmldsig"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	siat "github.com/supay8/go-siat"
+	"github.com/supay8/go-siat/internal/core/domain/siat/facturacion/v3"
+	"github.com/supay8/go-siat/internal/core/ports"
+	invoices "github.com/supay8/go-siat/pkg/models/invoices/v3"
+	models "github.com/supay8/go-siat/pkg/models/v3"
+	"github.com/supay8/go-siat/pkg/utils"
 )
 
 func signingCredential(t *testing.T) (siat.CredentialSign, *x509.Certificate) {
@@ -145,6 +148,9 @@ func TestV3IndividualRoutingSigningAndLifecycle(t *testing.T) {
 			status = 905
 			assert.NotEmpty(t, in.CUF)
 			assert.Equal(t, 1, in.Motivo)
+		} else if strings.HasPrefix(call.XMLName.Local, "verificacion") {
+			status = 908
+			assert.NotEmpty(t, in.CUF)
 		} else {
 			status = 907
 			assert.NotEmpty(t, in.CUF)
@@ -161,28 +167,60 @@ func TestV3IndividualRoutingSigningAndLifecycle(t *testing.T) {
 	require.NoError(t, err)
 	for _, pos := range []int{0, 1} {
 		for _, sector := range []int{1, 2, 11, 13, 16, 17, 24, 28, 34} {
-			s := siat.SesionV3{POS: pos, CUIS: "CUIS", CUFD: "CUFD", CodigoControl: "CONTROL", CodigoInterno: "A"}
-			d := v3Fixture(t, sector, pos)
-			result, err := client.RecepcionFactura(context.Background(), s, d)
+			session := models.Sesion{POS: pos, CUIS: "CUIS", CUFD: "CUFD", CodigoControl: "CONTROL", CodigoInterno: "A"}
+			document := v3Fixture(t, sector, pos)
+			result, err := receiveV3(client, session, document, cfg)
 			require.NoError(t, err)
+			require.NoError(t, siat.Verify(result))
 			require.Equal(t, 908, result.CodigoEstado)
-			ref := siat.ReferenciaV3{Sector: sector, CUF: d.Informacion().CUF}
-			result, err = client.Anulacion(context.Background(), s, ref, 1)
-			require.NoError(t, err)
-			require.Equal(t, 905, result.CodigoEstado)
-			result, err = client.Reversion(context.Background(), s, ref)
-			require.NoError(t, err)
-			require.Equal(t, 907, result.CodigoEstado)
-			bad := s
+			cuf := document.Informacion().CUF
+			if sector == 24 {
+				a, err := client.DocumentoAjuste().AnulacionDocumentoAjuste(context.Background(), models.NewAnulacionDocumentoAjusteBuilder().WithSesion(session).WithCodigoDocumentoSector(sector).WithCuf(cuf).WithCodigoMotivo(1).Build())
+				require.NoError(t, err)
+				ac, err := a.GetContent()
+				require.NoError(t, err)
+				require.NoError(t, siat.Verify(ac.RespuestaServicioFacturacion))
+				require.Equal(t, 905, ac.RespuestaServicioFacturacion.CodigoEstado)
+				r, err := client.DocumentoAjuste().ReversionAnulacionDocumentoAjuste(context.Background(), models.NewReversionAnulacionDocumentoAjusteBuilder().WithSesion(session).WithCodigoDocumentoSector(sector).WithCuf(cuf).Build())
+				require.NoError(t, err)
+				rc, err := r.GetContent()
+				require.NoError(t, err)
+				require.Equal(t, 907, rc.RespuestaServicioFacturacion.CodigoEstado)
+				v, err := client.DocumentoAjuste().VerificacionEstadoDocumentoAjuste(context.Background(), models.NewVerificacionEstadoDocumentoAjusteBuilder().WithSesion(session).WithCodigoDocumentoSector(sector).WithCuf(cuf).Build())
+				require.NoError(t, err)
+				vc, err := v.GetContent()
+				require.NoError(t, err)
+				require.Equal(t, 908, vc.RespuestaServicioFacturacion.CodigoEstado)
+			} else {
+				service := invoiceServiceV3(client, sector)
+				a, err := service.AnulacionFactura(context.Background(), models.NewAnulacionFacturaBuilder().WithSesion(session).WithCodigoDocumentoSector(sector).WithCuf(cuf).WithCodigoMotivo(1).Build())
+				require.NoError(t, err)
+				ac, err := a.GetContent()
+				require.NoError(t, err)
+				require.NoError(t, siat.Verify(ac.RespuestaServicioFacturacion))
+				require.Equal(t, 905, ac.RespuestaServicioFacturacion.CodigoEstado)
+				r, err := service.ReversionAnulacionFactura(context.Background(), models.NewReversionAnulacionFacturaBuilder().WithSesion(session).WithCodigoDocumentoSector(sector).WithCuf(cuf).Build())
+				require.NoError(t, err)
+				rc, err := r.GetContent()
+				require.NoError(t, err)
+				require.Equal(t, 907, rc.RespuestaServicioFacturacion.CodigoEstado)
+				v, err := service.VerificacionEstadoFactura(context.Background(), models.NewVerificacionEstadoFacturaBuilder().WithSesion(session).WithCodigoDocumentoSector(sector).WithCuf(cuf).Build())
+				require.NoError(t, err)
+				vc, err := v.GetContent()
+				require.NoError(t, err)
+				require.Equal(t, 908, vc.RespuestaServicioFacturacion.CodigoEstado)
+			}
+			bad := session
 			bad.POS = 1 - pos
-			_, err = client.RecepcionFactura(context.Background(), bad, d)
+			_, err = receiveV3(client, bad, document, cfg)
 			require.Error(t, err)
+
 		}
 	}
-	require.EqualValues(t, 54, requests.Load(), "documentos cruzados entre POS se rechazan sin red")
+	require.EqualValues(t, 72, requests.Load(), "documentos cruzados entre POS se rechazan sin red")
 }
 
-func TestV3RejectsPendingAndSOAPFault(t *testing.T) {
+func TestV3ExplicitVerificationAndSOAPFault(t *testing.T) {
 	for _, test := range []struct{ name, payload string }{
 		{"pendiente", `<anulacionFacturaResponse><RespuestaServicioFacturacion><codigoEstado>901</codigoEstado><transaccion>true</transaccion></RespuestaServicioFacturacion></anulacionFacturaResponse>`},
 		{"rechazo", `<anulacionFacturaResponse><RespuestaServicioFacturacion><codigoEstado>906</codigoEstado><transaccion>false</transaccion><mensajesList><codigo>946</codigo><descripcion>CUF inexistente</descripcion></mensajesList></RespuestaServicioFacturacion></anulacionFacturaResponse>`},
@@ -197,8 +235,20 @@ func TestV3RejectsPendingAndSOAPFault(t *testing.T) {
 			cfg.BaseURL = server.URL + "/sfd"
 			client, err := siat.NewV3(cfg)
 			require.NoError(t, err)
-			_, err = client.Anulacion(context.Background(), siat.SesionV3{CUIS: "CUIS", CUFD: "CUFD"}, siat.ReferenciaV3{Sector: 1, CUF: "CUF"}, 1)
-			require.Error(t, err)
+			response, err := client.CompraVenta().AnulacionFactura(context.Background(), models.NewAnulacionFacturaBuilder().WithSesion(models.Sesion{CUIS: "CUIS", CUFD: "CUFD"}).WithCodigoDocumentoSector(1).WithCuf("CUF").WithCodigoMotivo(1).Build())
+			require.NoError(t, err)
+			content, err := response.GetContent()
+			if test.name == "fault" {
+				require.Error(t, err)
+				return
+			}
+			require.NoError(t, err)
+			if test.name == "rechazo" {
+				require.Error(t, siat.Verify(content.RespuestaServicioFacturacion))
+			} else {
+				require.NoError(t, siat.Verify(content.RespuestaServicioFacturacion))
+				require.Equal(t, 901, content.RespuestaServicioFacturacion.CodigoEstado)
+			}
 		})
 	}
 }
@@ -215,7 +265,47 @@ func TestLegacyDiscountSectorIsNotExposedAsV3Document(t *testing.T) {
 	cfg.BaseURL = server.URL + "/sfd"
 	client, err := siat.NewV3(cfg)
 	require.NoError(t, err)
-	_, err = client.Anulacion(context.Background(), siat.SesionV3{CUIS: "CUIS", CUFD: "CUFD"}, siat.ReferenciaV3{Sector: 47, CUF: "CUF"}, 1)
+	_, err = client.CompraVenta().AnulacionFactura(context.Background(), models.NewAnulacionFacturaBuilder().WithSesion(models.Sesion{CUIS: "CUIS", CUFD: "CUFD"}).WithCodigoDocumentoSector(47).WithCuf("CUF").WithCodigoMotivo(1).Build())
 	require.Error(t, err)
 	require.Zero(t, requests.Load())
+}
+
+func invoiceServiceV3(c *siat.SiatV3Services, sector int) ports.FacturacionV3Service {
+	if sector == 1 {
+		return c.CompraVenta()
+	}
+	if sector == 13 {
+		return c.ServicioBasico()
+	}
+	return c.Electronica()
+}
+func receiveV3(c *siat.SiatV3Services, s models.Sesion, d invoices.Documento, cfg siat.Config) (v3.RespuestaRecepcion, error) {
+	if d.CodigoDocumentoSector() == 24 {
+		b := models.NewRecepcionDocumentoAjusteBuilder().WithSesion(s).WithFechaEnvio(time.Now())
+		if err := b.WithDocumento(d, cfg); err != nil {
+			return v3.RespuestaRecepcion{}, err
+		}
+		resp, err := c.DocumentoAjuste().RecepcionDocumentoAjuste(context.Background(), b.Build())
+		if err != nil {
+			return v3.RespuestaRecepcion{}, err
+		}
+		body, err := resp.GetContent()
+		if err != nil {
+			return v3.RespuestaRecepcion{}, err
+		}
+		return body.RespuestaRecepcionFactura, nil
+	}
+	b := models.NewRecepcionFacturaBuilder().WithSesion(s).WithFechaEnvio(time.Now())
+	if err := b.WithFactura(d, cfg); err != nil {
+		return v3.RespuestaRecepcion{}, err
+	}
+	resp, err := invoiceServiceV3(c, d.CodigoDocumentoSector()).RecepcionFactura(context.Background(), b.Build())
+	if err != nil {
+		return v3.RespuestaRecepcion{}, err
+	}
+	body, err := resp.GetContent()
+	if err != nil {
+		return v3.RespuestaRecepcion{}, err
+	}
+	return body.RespuestaServicioFacturacion, nil
 }

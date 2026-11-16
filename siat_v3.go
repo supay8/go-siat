@@ -1,85 +1,69 @@
 package siat
 
 import (
-	"context"
 	"fmt"
 	"net/url"
 	"strings"
 
-	"github.com/ron86i/go-siat/v2/internal/adapter/services"
-	"github.com/ron86i/go-siat/v2/internal/core/ports"
-	invoices "github.com/ron86i/go-siat/v2/pkg/models/invoices/v3"
-	modelsv3 "github.com/ron86i/go-siat/v2/pkg/models/v3"
+	"github.com/supay8/go-siat/internal/adapter/services"
+	"github.com/supay8/go-siat/internal/core/ports"
 )
 
 const BaseURLPruebasV3 = "https://pilotosiatservicios.impuestos.gob.bo/sfd"
 
-type SesionV3 = modelsv3.Sesion
-type ReferenciaV3 = modelsv3.Referencia
-type ResultadoV3 = modelsv3.Resultado
-type MensajeV3 = modelsv3.Mensaje
-type EventoPaqueteV3 = modelsv3.EventoPaquete
+// FacturacionV3Service is the public contract for V3 invoice services and mocks.
+type FacturacionV3Service = ports.FacturacionV3Service
 
-// SiatV3Services es la fachada V3 del SDK. Comparte códigos, catálogos y
-// operaciones con SiatServices; su receptor solo acepta documentos V3.
+// DocumentoAjusteV3Service is the public contract for V3 adjustment documents.
+type DocumentoAjusteV3Service = ports.DocumentoAjusteV3Service
+
+// SiatV3Services exposes the same service-oriented architecture as the V2 client.
 type SiatV3Services struct {
-	base        *SiatServices
-	facturacion ports.SiatV3Service
+	config         Config
+	common         *commonServices
+	compraVenta    ports.FacturacionV3Service
+	servicioBasico ports.FacturacionV3Service
+	electronica    ports.FacturacionV3Service
+	ajuste         ports.DocumentoAjusteV3Service
 }
 
-// NewV3 construye un cliente independiente. New conserva la API V2 existente.
-// En piloto, una URL vacía selecciona /sfd; producción exige URL explícita.
+// NewV3 constructs an independent client for the SIAT V3 services.
+// An empty test URL selects the pilot; production requires an explicit /sfd URL.
 func NewV3(config Config) (*SiatV3Services, error) {
 	config.BaseURL = strings.TrimRight(strings.TrimSpace(config.BaseURL), "/")
 	if config.BaseURL == "" && config.CodigoAmbiente == AmbientePruebas {
 		config.BaseURL = BaseURLPruebasV3
 	}
 	u, err := url.Parse(config.BaseURL)
-	if err != nil || u == nil || u.Host == "" || (u.Scheme != "https" && u.Scheme != "http") ||
-		u.Path != "/sfd" || u.RawQuery != "" || u.Fragment != "" || u.User != nil {
+	if err != nil || u == nil || u.Host == "" || (u.Scheme != "https" && u.Scheme != "http") || u.Path != "/sfd" || u.RawQuery != "" || u.Fragment != "" || u.User != nil {
 		return nil, fmt.Errorf("SIAT V3 requiere una BaseURL absoluta con ruta /sfd, sin query ni fragmento")
 	}
-	if err := validateConfig(config); err != nil {
-		return nil, err
-	}
-	if config.HTTPClient == nil {
-		config.HTTPClient = services.NewHTTPClient(services.DefaultHTTPConfig())
-	} else {
-		cloned := *config.HTTPClient
-		config.HTTPClient = &cloned
-	}
-	base, err := New(config)
+	common, err := newCommonServices(config)
 	if err != nil {
 		return nil, err
 	}
-	facturacion := services.NewSiatV3Service(config, config.HTTPClient,
-		base.CompraVenta(), base.ServicioBasico(), base.Electronica(), base.DocumentoAjuste(), Verify)
-	return &SiatV3Services{base: base, facturacion: facturacion}, nil
+	config.HTTPClient = common.httpClient
+	cv, err := services.NewFacturacionV3Service(config.BaseURL, common.httpClient, config, services.SiatCompraVenta)
+	if err != nil {
+		return nil, err
+	}
+	sb, err := services.NewFacturacionV3Service(config.BaseURL, common.httpClient, config, services.SiatServicioBasico)
+	if err != nil {
+		return nil, err
+	}
+	el, err := services.NewFacturacionV3Service(config.BaseURL, common.httpClient, config, services.SiatElectronica)
+	if err != nil {
+		return nil, err
+	}
+	return &SiatV3Services{config: config, common: common, compraVenta: cv, servicioBasico: sb, electronica: el, ajuste: services.NewDocumentoAjusteV3Service(config.BaseURL, common.httpClient, config)}, nil
 }
-
-func (s *SiatV3Services) Config() Config                    { return s.base.Config() }
-func (s *SiatV3Services) Codigos() ports.SiatCodigosService { return s.base.Codigos() }
+func (s *SiatV3Services) Config() Config                    { return s.config }
+func (s *SiatV3Services) Codigos() ports.SiatCodigosService { return s.common.codigos }
 func (s *SiatV3Services) Sincronizacion() ports.SiatSincronizacionService {
-	return s.base.Sincronizacion()
+	return s.common.sincronizacion
 }
-func (s *SiatV3Services) Operaciones() ports.SiatOperacionesService { return s.base.Operaciones() }
-
-// RecepcionFactura valida, firma y envía un documento electrónico V3.
-func (s *SiatV3Services) RecepcionFactura(ctx context.Context, sesion SesionV3, documento invoices.Documento) (ResultadoV3, error) {
-	return s.facturacion.RecepcionFactura(ctx, sesion, documento)
-}
-func (s *SiatV3Services) Anulacion(ctx context.Context, sesion SesionV3, ref ReferenciaV3, motivo int) (ResultadoV3, error) {
-	return s.facturacion.Anulacion(ctx, sesion, ref, motivo)
-}
-func (s *SiatV3Services) Reversion(ctx context.Context, sesion SesionV3, ref ReferenciaV3) (ResultadoV3, error) {
-	return s.facturacion.Reversion(ctx, sesion, ref)
-}
-func (s *SiatV3Services) InspeccionarPaquete(actual SesionV3, evento EventoPaqueteV3, archivo []byte) (int, error) {
-	return s.facturacion.InspeccionarPaquete(actual, evento, archivo)
-}
-func (s *SiatV3Services) RecepcionPaqueteArchivo(ctx context.Context, actual SesionV3, evento EventoPaqueteV3, archivo []byte) (ResultadoV3, error) {
-	return s.facturacion.RecepcionPaqueteArchivo(ctx, actual, evento, archivo)
-}
-func (s *SiatV3Services) ValidacionPaquete(ctx context.Context, actual SesionV3, sector int, recepcion string) (ResultadoV3, error) {
-	return s.facturacion.ValidacionPaquete(ctx, actual, sector, recepcion)
-}
+func (s *SiatV3Services) Operaciones() ports.SiatOperacionesService { return s.common.operaciones }
+func (s *SiatV3Services) CompraVenta() FacturacionV3Service         { return s.compraVenta }
+func (s *SiatV3Services) ServicioBasico() FacturacionV3Service      { return s.servicioBasico }
+func (s *SiatV3Services) Electronica() FacturacionV3Service         { return s.electronica }
+func (s *SiatV3Services) DocumentoAjuste() DocumentoAjusteV3Service { return s.ajuste }

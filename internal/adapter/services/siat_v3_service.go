@@ -2,54 +2,56 @@ package services
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
-	"github.com/ron86i/go-siat/v2/internal/core/domain/siat/facturacion"
-	facturacionv3 "github.com/ron86i/go-siat/v2/internal/core/domain/siat/facturacion/v3"
-	"github.com/ron86i/go-siat/v2/internal/core/ports"
-	"github.com/ron86i/go-siat/v2/pkg/models"
-	modelsv3 "github.com/ron86i/go-siat/v2/pkg/models/v3"
+	"github.com/supay8/go-siat/internal/core/domain/datatype/soap"
+	documents "github.com/supay8/go-siat/internal/core/domain/documents/v3"
+	"github.com/supay8/go-siat/internal/core/ports"
+	"github.com/supay8/go-siat/pkg/models"
 )
 
-// SiatV3Service implementa el puerto V3 con los adaptadores y transporte del SDK.
-// Las dependencias se construyen en la fachada; este paquete no importa siat.
-type SiatV3Service struct {
-	config         ports.Config
-	httpClient     *http.Client
-	compraVenta    ports.FacturacionService
-	servicioBasico ports.FacturacionService
-	electronica    ports.FacturacionService
-	ajuste         ports.SiatDocumentoAjusteService
-	verify         func(any) error
+type v3Transport struct {
+	url        string
+	httpClient *http.Client
+	config     ports.Config
+	familia    documents.Familia
 }
 
-func NewSiatV3Service(config ports.Config, httpClient *http.Client,
-	compraVenta, servicioBasico, electronica ports.FacturacionService,
-	ajuste ports.SiatDocumentoAjusteService, verify func(any) error,
-) *SiatV3Service {
-	return &SiatV3Service{config: config, httpClient: httpClient,
-		compraVenta: compraVenta, servicioBasico: servicioBasico,
-		electronica: electronica, ajuste: ajuste, verify: verify}
+type FacturacionV3ServiceImpl struct{ transport v3Transport }
+type DocumentoAjusteV3ServiceImpl struct{ transport v3Transport }
+
+func NewFacturacionV3Service(baseURL string, client *http.Client, config ports.Config, service SiatService) (*FacturacionV3ServiceImpl, error) {
+	family := documents.ElectronicaFamilia
+	switch service {
+	case SiatCompraVenta:
+		family = documents.CompraVentaFamilia
+	case SiatServicioBasico:
+		family = documents.ServicioBasicoFamilia
+	case SiatElectronica:
+	default:
+		return nil, fmt.Errorf("servicio de facturación V3 inválido")
+	}
+	return &FacturacionV3ServiceImpl{v3Transport{fullURL(baseURL, service), client, config, family}}, nil
 }
 
-func (c *SiatV3Service) enviarPaqueteSOAP(ctx context.Context, sector int, input facturacionv3.SolicitudPaquete) (modelsv3.Resultado, error) {
-	service := SiatElectronica
-	if sector == 1 {
-		service = SiatCompraVenta
-	} else if sector == 13 {
-		service = SiatServicioBasico
-	}
-	req := models.NewRequestWrapper(&facturacionv3.RecepcionPaquete{Solicitud: input})
-	response, err := performSoapRequest[facturacionv3.RecepcionPaquete, facturacion.RecepcionPaqueteFacturaResponse](
-		ctx, c.httpClient, fullURL(c.config.BaseURL, service), c.config, req)
-	if err != nil {
-		return modelsv3.Resultado{}, err
-	}
-	content, err := response.GetContent()
-	if err != nil {
-		return modelsv3.Resultado{}, err
-	}
-	return c.resultado(content.RespuestaServicioFacturacion)
+func NewDocumentoAjusteV3Service(baseURL string, client *http.Client, config ports.Config) *DocumentoAjusteV3ServiceImpl {
+	return &DocumentoAjusteV3ServiceImpl{v3Transport{fullURL(baseURL, SiatDocumentoAjuste), client, config, documents.AjusteFamilia}}
 }
 
-var _ ports.SiatV3Service = (*SiatV3Service)(nil)
+func performV3Request[TReq, TResp any](ctx context.Context, t v3Transport, opaque any) (*soap.EnvelopeResponse[TResp], error) {
+	req := getInternalRequest[TReq](opaque)
+	if req == nil {
+		return nil, fmt.Errorf("solicitud V3 sin construir")
+	}
+	// Copy before credential injection so a prepared request can be reused concurrently.
+	snapshot := *req
+	validator, ok := any(&snapshot).(interface{ ValidarServicio(documents.Familia) error })
+	if !ok {
+		return nil, fmt.Errorf("contrato de solicitud V3 inválido")
+	}
+	if err := validator.ValidarServicio(t.familia); err != nil {
+		return nil, err
+	}
+	return performSoapRequest[TReq, TResp](ctx, t.httpClient, t.url, t.config, models.NewRequestWrapper(&snapshot))
+}

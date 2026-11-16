@@ -4,7 +4,7 @@ package v3
 import (
 	"encoding/xml"
 
-	"github.com/ron86i/go-siat/v2/internal/core/domain/siat/facturacion"
+	"github.com/supay8/go-siat/internal/core/domain/siat/facturacion"
 )
 
 // SolicitudPaquete no incluye cafc: el WSDL V3 rechaza incluso su valor nulo.

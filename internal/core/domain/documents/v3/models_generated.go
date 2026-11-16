@@ -4,6 +4,7 @@ package v3
 import (
 	"encoding/xml"
 	"fmt"
+
 	"github.com/shopspring/decimal"
 )
 
@@ -45,6 +46,128 @@ type CabeceraCompraVenta struct {
 	CodigoInterno                string                    `xml:"codigoInterno" json:"codigoInterno"`
 	CodigoDocumentoSector        int64                     `xml:"codigoDocumentoSector" json:"codigoDocumentoSector"`
 }
+
+func (v CabeceraCompraVenta) validarXSD() error {
+	if err := validarNumero("nitEmisor", decimal.NewFromInt(v.NitEmisor), 0, 0, "1", "9999999999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("razonSocialEmisor", v.RazonSocialEmisor, 1, 200); err != nil {
+		return err
+	}
+	if err := validarTexto("municipio", v.Municipio, 1, 25); err != nil {
+		return err
+	}
+	if v.Telefono.Value != nil {
+		value := *v.Telefono.Value
+		if err := validarTexto("telefono", value, 1, 25); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("numeroFactura", decimal.NewFromInt(v.NumeroFactura), 0, 0, "1", "9999999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("cuf", v.Cuf, 1, 100); err != nil {
+		return err
+	}
+	if err := validarTexto("cufd", v.Cufd, 1, 100); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoSucursal", decimal.NewFromInt(v.CodigoSucursal), 0, 0, "0", "9999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("direccion", v.Direccion, 1, 500); err != nil {
+		return err
+	}
+	if v.CodigoPuntoVenta.Value != nil {
+		value := *v.CodigoPuntoVenta.Value
+		if err := validarNumero("codigoPuntoVenta", decimal.NewFromInt(value), 0, 0, "0", "9999", false); err != nil {
+			return err
+		}
+	}
+	if v.NombreRazonSocial.Value != nil {
+		value := *v.NombreRazonSocial.Value
+		if err := validarTexto("nombreRazonSocial", value, 1, 500); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("codigoTipoDocumentoIdentidad", decimal.NewFromInt(v.CodigoTipoDocumentoIdentidad), 0, 0, "1", "5", false); err != nil {
+		return err
+	}
+	if err := validarTexto("numeroDocumento", v.NumeroDocumento, 1, 20); err != nil {
+		return err
+	}
+	if err := validarTexto("complemento", v.Complemento, 0, 5); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoCliente", v.CodigoCliente, 1, 100); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoMetodoPago", decimal.NewFromInt(v.CodigoMetodoPago), 0, 0, "1", "500", false); err != nil {
+		return err
+	}
+	if v.NumeroTarjeta.Value != nil {
+		value := *v.NumeroTarjeta.Value
+		if err := validarNumero("numeroTarjeta", decimal.NewFromInt(value), 0, 0, "0", "9999999999999999", false); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("subTotalNeto", v.SubTotalNeto, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("totalPrecioNeto", v.TotalPrecioNeto, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("iva", v.Iva, 17, 2, "0", "", false); err != nil {
+		return err
+	}
+	if err := validarNumero("montoaPagar", v.MontoaPagar, 17, 2, "0", "", false); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoMoneda", decimal.NewFromInt(v.CodigoMoneda), 0, 0, "1", "300", false); err != nil {
+		return err
+	}
+	if err := validarNumero("tipoCambio", v.TipoCambio, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("montoTotalMoneda", v.MontoTotalMoneda, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if v.MontoGiftCard.Value != nil {
+		value := *v.MontoGiftCard.Value
+		if err := validarNumero("montoGiftCard", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if v.DescuentoAdicional.Value != nil {
+		value := *v.DescuentoAdicional.Value
+		if err := validarNumero("descuentoAdicional", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if v.CodigoExcepcion.Value != nil {
+		value := *v.CodigoExcepcion.Value
+		if err := validarNumero("codigoExcepcion", decimal.NewFromInt(value), 0, 0, "0", "1", false); err != nil {
+			return err
+		}
+	}
+	if err := validarTexto("leyenda", v.Leyenda, 1, 200); err != nil {
+		return err
+	}
+	if err := validarTexto("usuario", v.Usuario, 1, 100); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoInterno", v.CodigoInterno, 1, 10); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoDocumentoSector", decimal.NewFromInt(v.CodigoDocumentoSector), 0, 0, "", "", false); err != nil {
+		return err
+	}
+	if !decimal.NewFromInt(v.CodigoDocumentoSector).Equal(decimal.RequireFromString("1")) {
+		return fmt.Errorf("codigoDocumentoSector: valor fijo inválido")
+	}
+	return nil
+}
+
 type DetalleCompraVenta struct {
 	ActividadEconomica string                    `xml:"actividadEconomica" json:"actividadEconomica"`
 	CodigoProductoSin  int64                     `xml:"codigoProductoSin" json:"codigoProductoSin"`
@@ -57,6 +180,52 @@ type DetalleCompraVenta struct {
 	SubTotal           decimal.Decimal           `xml:"subTotal" json:"subTotal"`
 	NumeroSerie        Optional[string]          `xml:"numeroSerie" json:"numeroSerie"`
 	NumeroImei         Optional[string]          `xml:"numeroImei" json:"numeroImei"`
+}
+
+func (v DetalleCompraVenta) validarXSD() error {
+	if err := validarTexto("actividadEconomica", v.ActividadEconomica, 1, 10); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoProductoSin", decimal.NewFromInt(v.CodigoProductoSin), 0, 0, "1", "99999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoProducto", v.CodigoProducto, 1, 50); err != nil {
+		return err
+	}
+	if err := validarTexto("descripcion", v.Descripcion, 1, 500); err != nil {
+		return err
+	}
+	if err := validarNumero("cantidad", v.Cantidad, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("unidadMedida", decimal.NewFromInt(v.UnidadMedida), 0, 0, "1", "500", false); err != nil {
+		return err
+	}
+	if err := validarNumero("precioNetoUnitario", v.PrecioNetoUnitario, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if v.MontoDescuento.Value != nil {
+		value := *v.MontoDescuento.Value
+		if err := validarNumero("montoDescuento", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("subTotal", v.SubTotal, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if v.NumeroSerie.Value != nil {
+		value := *v.NumeroSerie.Value
+		if err := validarTexto("numeroSerie", value, 0, 1500); err != nil {
+			return err
+		}
+	}
+	if v.NumeroImei.Value != nil {
+		value := *v.NumeroImei.Value
+		if err := validarTexto("numeroImei", value, 0, 1500); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (d CompraVenta) esV3()                      {}
@@ -73,8 +242,16 @@ func (d CompraVenta) Validar() error {
 	if d.Cabecera.CodigoDocumentoSector != 1 {
 		return fmt.Errorf("sector de cabecera distinto de 1")
 	}
-	if len(d.Detalle) == 0 {
-		return fmt.Errorf("el documento requiere al menos un detalle")
+	if len(d.Detalle) == 0 || len(d.Detalle) > 500 {
+		return fmt.Errorf("el documento requiere entre 1 y 500 detalles")
+	}
+	if err := d.Cabecera.validarXSD(); err != nil {
+		return fmt.Errorf("cabecera: %w", err)
+	}
+	for n, detail := range d.Detalle {
+		if err := detail.validarXSD(); err != nil {
+			return fmt.Errorf("detalle %d: %w", n+1, err)
+		}
 	}
 	return nil
 }
@@ -123,6 +300,125 @@ type CabeceraAlquiler struct {
 	CodigoInterno                string                    `xml:"codigoInterno" json:"codigoInterno"`
 	CodigoDocumentoSector        int64                     `xml:"codigoDocumentoSector" json:"codigoDocumentoSector"`
 }
+
+func (v CabeceraAlquiler) validarXSD() error {
+	if err := validarNumero("nitEmisor", decimal.NewFromInt(v.NitEmisor), 0, 0, "1", "9999999999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("razonSocialEmisor", v.RazonSocialEmisor, 1, 200); err != nil {
+		return err
+	}
+	if err := validarTexto("municipio", v.Municipio, 1, 25); err != nil {
+		return err
+	}
+	if v.Telefono.Value != nil {
+		value := *v.Telefono.Value
+		if err := validarTexto("telefono", value, 1, 25); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("numeroFactura", decimal.NewFromInt(v.NumeroFactura), 0, 0, "1", "9999999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("cuf", v.Cuf, 1, 100); err != nil {
+		return err
+	}
+	if err := validarTexto("cufd", v.Cufd, 1, 100); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoSucursal", decimal.NewFromInt(v.CodigoSucursal), 0, 0, "0", "9999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("direccion", v.Direccion, 1, 500); err != nil {
+		return err
+	}
+	if v.CodigoPuntoVenta.Value != nil {
+		value := *v.CodigoPuntoVenta.Value
+		if err := validarNumero("codigoPuntoVenta", decimal.NewFromInt(value), 0, 0, "0", "9999", false); err != nil {
+			return err
+		}
+	}
+	if v.NombreRazonSocial.Value != nil {
+		value := *v.NombreRazonSocial.Value
+		if err := validarTexto("nombreRazonSocial", value, 1, 500); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("codigoTipoDocumentoIdentidad", decimal.NewFromInt(v.CodigoTipoDocumentoIdentidad), 0, 0, "1", "5", false); err != nil {
+		return err
+	}
+	if err := validarTexto("numeroDocumento", v.NumeroDocumento, 1, 20); err != nil {
+		return err
+	}
+	if err := validarTexto("complemento", v.Complemento, 0, 5); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoCliente", v.CodigoCliente, 1, 100); err != nil {
+		return err
+	}
+	if err := validarTexto("periodoFacturado", v.PeriodoFacturado, 1, 50); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoMetodoPago", decimal.NewFromInt(v.CodigoMetodoPago), 0, 0, "1", "500", false); err != nil {
+		return err
+	}
+	if v.NumeroTarjeta.Value != nil {
+		value := *v.NumeroTarjeta.Value
+		if err := validarNumero("numeroTarjeta", decimal.NewFromInt(value), 0, 0, "0", "9999999999999999", false); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("subTotalNeto", v.SubTotalNeto, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("totalPrecioNeto", v.TotalPrecioNeto, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("iva", v.Iva, 17, 2, "0", "", false); err != nil {
+		return err
+	}
+	if err := validarNumero("montoaPagar", v.MontoaPagar, 17, 2, "0", "", false); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoMoneda", decimal.NewFromInt(v.CodigoMoneda), 0, 0, "1", "300", false); err != nil {
+		return err
+	}
+	if err := validarNumero("tipoCambio", v.TipoCambio, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("montoTotalMoneda", v.MontoTotalMoneda, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if v.DescuentoAdicional.Value != nil {
+		value := *v.DescuentoAdicional.Value
+		if err := validarNumero("descuentoAdicional", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if v.CodigoExcepcion.Value != nil {
+		value := *v.CodigoExcepcion.Value
+		if err := validarNumero("codigoExcepcion", decimal.NewFromInt(value), 0, 0, "0", "1", false); err != nil {
+			return err
+		}
+	}
+	if err := validarTexto("leyenda", v.Leyenda, 1, 200); err != nil {
+		return err
+	}
+	if err := validarTexto("usuario", v.Usuario, 1, 100); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoInterno", v.CodigoInterno, 1, 10); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoDocumentoSector", decimal.NewFromInt(v.CodigoDocumentoSector), 0, 0, "", "", false); err != nil {
+		return err
+	}
+	if !decimal.NewFromInt(v.CodigoDocumentoSector).Equal(decimal.RequireFromString("2")) {
+		return fmt.Errorf("codigoDocumentoSector: valor fijo inválido")
+	}
+	return nil
+}
+
 type DetalleAlquiler struct {
 	ActividadEconomica string                    `xml:"actividadEconomica" json:"actividadEconomica"`
 	CodigoProductoSin  int64                     `xml:"codigoProductoSin" json:"codigoProductoSin"`
@@ -133,6 +429,40 @@ type DetalleAlquiler struct {
 	PrecioNetoUnitario decimal.Decimal           `xml:"precioNetoUnitario" json:"precioNetoUnitario"`
 	MontoDescuento     Optional[decimal.Decimal] `xml:"montoDescuento" json:"montoDescuento"`
 	SubTotal           decimal.Decimal           `xml:"subTotal" json:"subTotal"`
+}
+
+func (v DetalleAlquiler) validarXSD() error {
+	if err := validarTexto("actividadEconomica", v.ActividadEconomica, 1, 10); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoProductoSin", decimal.NewFromInt(v.CodigoProductoSin), 0, 0, "1", "99999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoProducto", v.CodigoProducto, 1, 50); err != nil {
+		return err
+	}
+	if err := validarTexto("descripcion", v.Descripcion, 1, 500); err != nil {
+		return err
+	}
+	if err := validarNumero("cantidad", v.Cantidad, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("unidadMedida", decimal.NewFromInt(v.UnidadMedida), 0, 0, "1", "500", false); err != nil {
+		return err
+	}
+	if err := validarNumero("precioNetoUnitario", v.PrecioNetoUnitario, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if v.MontoDescuento.Value != nil {
+		value := *v.MontoDescuento.Value
+		if err := validarNumero("montoDescuento", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("subTotal", v.SubTotal, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (d Alquiler) esV3()                      {}
@@ -149,8 +479,16 @@ func (d Alquiler) Validar() error {
 	if d.Cabecera.CodigoDocumentoSector != 2 {
 		return fmt.Errorf("sector de cabecera distinto de 2")
 	}
-	if len(d.Detalle) == 0 {
-		return fmt.Errorf("el documento requiere al menos un detalle")
+	if len(d.Detalle) == 0 || len(d.Detalle) > 500 {
+		return fmt.Errorf("el documento requiere entre 1 y 500 detalles")
+	}
+	if err := d.Cabecera.validarXSD(); err != nil {
+		return fmt.Errorf("cabecera: %w", err)
+	}
+	for n, detail := range d.Detalle {
+		if err := detail.validarXSD(); err != nil {
+			return fmt.Errorf("detalle %d: %w", n+1, err)
+		}
 	}
 	return nil
 }
@@ -201,6 +539,134 @@ type CabeceraEducativo struct {
 	CodigoInterno                string                    `xml:"codigoInterno" json:"codigoInterno"`
 	CodigoDocumentoSector        int64                     `xml:"codigoDocumentoSector" json:"codigoDocumentoSector"`
 }
+
+func (v CabeceraEducativo) validarXSD() error {
+	if err := validarNumero("nitEmisor", decimal.NewFromInt(v.NitEmisor), 0, 0, "1", "9999999999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("razonSocialEmisor", v.RazonSocialEmisor, 1, 200); err != nil {
+		return err
+	}
+	if err := validarTexto("municipio", v.Municipio, 1, 25); err != nil {
+		return err
+	}
+	if v.Telefono.Value != nil {
+		value := *v.Telefono.Value
+		if err := validarTexto("telefono", value, 1, 25); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("numeroFactura", decimal.NewFromInt(v.NumeroFactura), 0, 0, "1", "9999999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("cuf", v.Cuf, 1, 100); err != nil {
+		return err
+	}
+	if err := validarTexto("cufd", v.Cufd, 1, 100); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoSucursal", decimal.NewFromInt(v.CodigoSucursal), 0, 0, "0", "9999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("direccion", v.Direccion, 1, 500); err != nil {
+		return err
+	}
+	if v.CodigoPuntoVenta.Value != nil {
+		value := *v.CodigoPuntoVenta.Value
+		if err := validarNumero("codigoPuntoVenta", decimal.NewFromInt(value), 0, 0, "0", "9999", false); err != nil {
+			return err
+		}
+	}
+	if v.NombreRazonSocial.Value != nil {
+		value := *v.NombreRazonSocial.Value
+		if err := validarTexto("nombreRazonSocial", value, 1, 500); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("codigoTipoDocumentoIdentidad", decimal.NewFromInt(v.CodigoTipoDocumentoIdentidad), 0, 0, "1", "5", false); err != nil {
+		return err
+	}
+	if err := validarTexto("numeroDocumento", v.NumeroDocumento, 1, 20); err != nil {
+		return err
+	}
+	if err := validarTexto("complemento", v.Complemento, 0, 5); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoCliente", v.CodigoCliente, 1, 100); err != nil {
+		return err
+	}
+	if err := validarTexto("nombreEstudiante", v.NombreEstudiante, 1, 200); err != nil {
+		return err
+	}
+	if err := validarTexto("periodoFacturado", v.PeriodoFacturado, 1, 50); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoMetodoPago", decimal.NewFromInt(v.CodigoMetodoPago), 0, 0, "1", "500", false); err != nil {
+		return err
+	}
+	if v.NumeroTarjeta.Value != nil {
+		value := *v.NumeroTarjeta.Value
+		if err := validarNumero("numeroTarjeta", decimal.NewFromInt(value), 0, 0, "0", "9999999999999999", false); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("subTotalNeto", v.SubTotalNeto, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("totalPrecioNeto", v.TotalPrecioNeto, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("iva", v.Iva, 17, 2, "0", "", false); err != nil {
+		return err
+	}
+	if err := validarNumero("montoaPagar", v.MontoaPagar, 17, 2, "0", "", false); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoMoneda", decimal.NewFromInt(v.CodigoMoneda), 0, 0, "1", "300", false); err != nil {
+		return err
+	}
+	if err := validarNumero("tipoCambio", v.TipoCambio, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("montoTotalMoneda", v.MontoTotalMoneda, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if v.MontoGiftCard.Value != nil {
+		value := *v.MontoGiftCard.Value
+		if err := validarNumero("montoGiftCard", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if v.DescuentoAdicional.Value != nil {
+		value := *v.DescuentoAdicional.Value
+		if err := validarNumero("descuentoAdicional", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if v.CodigoExcepcion.Value != nil {
+		value := *v.CodigoExcepcion.Value
+		if err := validarNumero("codigoExcepcion", decimal.NewFromInt(value), 0, 0, "0", "1", false); err != nil {
+			return err
+		}
+	}
+	if err := validarTexto("leyenda", v.Leyenda, 1, 200); err != nil {
+		return err
+	}
+	if err := validarTexto("usuario", v.Usuario, 1, 100); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoInterno", v.CodigoInterno, 1, 10); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoDocumentoSector", decimal.NewFromInt(v.CodigoDocumentoSector), 0, 0, "", "", false); err != nil {
+		return err
+	}
+	if !decimal.NewFromInt(v.CodigoDocumentoSector).Equal(decimal.RequireFromString("11")) {
+		return fmt.Errorf("codigoDocumentoSector: valor fijo inválido")
+	}
+	return nil
+}
+
 type DetalleEducativo struct {
 	ActividadEconomica string                    `xml:"actividadEconomica" json:"actividadEconomica"`
 	CodigoProductoSin  int64                     `xml:"codigoProductoSin" json:"codigoProductoSin"`
@@ -211,6 +677,40 @@ type DetalleEducativo struct {
 	PrecioNetoUnitario decimal.Decimal           `xml:"precioNetoUnitario" json:"precioNetoUnitario"`
 	MontoDescuento     Optional[decimal.Decimal] `xml:"montoDescuento" json:"montoDescuento"`
 	SubTotal           decimal.Decimal           `xml:"subTotal" json:"subTotal"`
+}
+
+func (v DetalleEducativo) validarXSD() error {
+	if err := validarTexto("actividadEconomica", v.ActividadEconomica, 1, 10); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoProductoSin", decimal.NewFromInt(v.CodigoProductoSin), 0, 0, "1", "99999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoProducto", v.CodigoProducto, 1, 50); err != nil {
+		return err
+	}
+	if err := validarTexto("descripcion", v.Descripcion, 1, 500); err != nil {
+		return err
+	}
+	if err := validarNumero("cantidad", v.Cantidad, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("unidadMedida", decimal.NewFromInt(v.UnidadMedida), 0, 0, "1", "500", false); err != nil {
+		return err
+	}
+	if err := validarNumero("precioNetoUnitario", v.PrecioNetoUnitario, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if v.MontoDescuento.Value != nil {
+		value := *v.MontoDescuento.Value
+		if err := validarNumero("montoDescuento", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("subTotal", v.SubTotal, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (d Educativo) esV3()                      {}
@@ -227,8 +727,16 @@ func (d Educativo) Validar() error {
 	if d.Cabecera.CodigoDocumentoSector != 11 {
 		return fmt.Errorf("sector de cabecera distinto de 11")
 	}
-	if len(d.Detalle) == 0 {
-		return fmt.Errorf("el documento requiere al menos un detalle")
+	if len(d.Detalle) == 0 || len(d.Detalle) > 500 {
+		return fmt.Errorf("el documento requiere entre 1 y 500 detalles")
+	}
+	if err := d.Cabecera.validarXSD(); err != nil {
+		return fmt.Errorf("cabecera: %w", err)
+	}
+	for n, detail := range d.Detalle {
+		if err := detail.validarXSD(); err != nil {
+			return fmt.Errorf("detalle %d: %w", n+1, err)
+		}
 	}
 	return nil
 }
@@ -294,6 +802,224 @@ type CabeceraServicioBasico struct {
 	CodigoInterno                string                    `xml:"codigoInterno" json:"codigoInterno"`
 	CodigoDocumentoSector        int64                     `xml:"codigoDocumentoSector" json:"codigoDocumentoSector"`
 }
+
+func (v CabeceraServicioBasico) validarXSD() error {
+	if err := validarNumero("nitEmisor", decimal.NewFromInt(v.NitEmisor), 0, 0, "1", "9999999999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("razonSocialEmisor", v.RazonSocialEmisor, 1, 200); err != nil {
+		return err
+	}
+	if err := validarTexto("municipio", v.Municipio, 1, 25); err != nil {
+		return err
+	}
+	if v.Telefono.Value != nil {
+		value := *v.Telefono.Value
+		if err := validarTexto("telefono", value, 1, 25); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("numeroFactura", decimal.NewFromInt(v.NumeroFactura), 0, 0, "1", "9999999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("cuf", v.Cuf, 1, 100); err != nil {
+		return err
+	}
+	if err := validarTexto("cufd", v.Cufd, 1, 100); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoSucursal", decimal.NewFromInt(v.CodigoSucursal), 0, 0, "0", "9999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("direccion", v.Direccion, 1, 500); err != nil {
+		return err
+	}
+	if v.CodigoPuntoVenta.Value != nil {
+		value := *v.CodigoPuntoVenta.Value
+		if err := validarNumero("codigoPuntoVenta", decimal.NewFromInt(value), 0, 0, "0", "9999", false); err != nil {
+			return err
+		}
+	}
+	if v.Mes.Value != nil {
+		value := *v.Mes.Value
+		if err := validarTexto("mes", value, 1, 10); err != nil {
+			return err
+		}
+	}
+	if v.Gestion.Value != nil {
+		value := *v.Gestion.Value
+		if err := validarNumero("gestion", decimal.NewFromInt(value), 0, 0, "2015", "9999", false); err != nil {
+			return err
+		}
+	}
+	if v.Ciudad.Value != nil {
+		value := *v.Ciudad.Value
+		if err := validarTexto("ciudad", value, 1, 100); err != nil {
+			return err
+		}
+	}
+	if v.Zona.Value != nil {
+		value := *v.Zona.Value
+		if err := validarTexto("zona", value, 1, 100); err != nil {
+			return err
+		}
+	}
+	if err := validarTexto("numeroMedidor", v.NumeroMedidor, 1, 100); err != nil {
+		return err
+	}
+	if v.NombreRazonSocial.Value != nil {
+		value := *v.NombreRazonSocial.Value
+		if err := validarTexto("nombreRazonSocial", value, 1, 500); err != nil {
+			return err
+		}
+	}
+	if v.DomicilioCliente.Value != nil {
+		value := *v.DomicilioCliente.Value
+		if err := validarTexto("domicilioCliente", value, 1, 500); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("codigoTipoDocumentoIdentidad", decimal.NewFromInt(v.CodigoTipoDocumentoIdentidad), 0, 0, "1", "5", false); err != nil {
+		return err
+	}
+	if err := validarTexto("numeroDocumento", v.NumeroDocumento, 1, 20); err != nil {
+		return err
+	}
+	if err := validarTexto("complemento", v.Complemento, 0, 5); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoCliente", v.CodigoCliente, 1, 100); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoMetodoPago", decimal.NewFromInt(v.CodigoMetodoPago), 0, 0, "1", "500", false); err != nil {
+		return err
+	}
+	if v.NumeroTarjeta.Value != nil {
+		value := *v.NumeroTarjeta.Value
+		if err := validarNumero("numeroTarjeta", decimal.NewFromInt(value), 0, 0, "0", "9999999999999999", false); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("subTotalNeto", v.SubTotalNeto, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("totalPrecioNeto", v.TotalPrecioNeto, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("iva", v.Iva, 17, 2, "0", "", false); err != nil {
+		return err
+	}
+	if err := validarNumero("montoaPagar", v.MontoaPagar, 17, 2, "0", "", false); err != nil {
+		return err
+	}
+	if v.ConsumoPeriodo.Value != nil {
+		value := *v.ConsumoPeriodo.Value
+		if err := validarNumero("consumoPeriodo", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if v.BeneficiarioLey1886.Value != nil {
+		value := *v.BeneficiarioLey1886.Value
+		if err := validarNumero("beneficiarioLey1886", decimal.NewFromInt(value), 0, 0, "0", "99999999999999", false); err != nil {
+			return err
+		}
+	}
+	if err := validarTexto("complementoBeneficiario", v.ComplementoBeneficiario, 0, 5); err != nil {
+		return err
+	}
+	if v.MontoDescuentoLey1886.Value != nil {
+		value := *v.MontoDescuentoLey1886.Value
+		if err := validarNumero("montoDescuentoLey1886", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if v.MontoDescuentoSocial.Value != nil {
+		value := *v.MontoDescuentoSocial.Value
+		if err := validarNumero("montoDescuentoSocial", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if v.TasaAseo.Value != nil {
+		value := *v.TasaAseo.Value
+		if err := validarNumero("tasaAseo", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if v.TasaAlumbrado.Value != nil {
+		value := *v.TasaAlumbrado.Value
+		if err := validarNumero("tasaAlumbrado", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if v.AjusteNoSujetoIva.Value != nil {
+		value := *v.AjusteNoSujetoIva.Value
+		if err := validarNumero("ajusteNoSujetoIva", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if v.DetalleAjusteNoSujetoIva.Value != nil {
+		value := *v.DetalleAjusteNoSujetoIva.Value
+		if err := validarTexto("detalleAjusteNoSujetoIva", value, 0, 100); err != nil {
+			return err
+		}
+	}
+	if v.OtrosPagosNoSujetoIva.Value != nil {
+		value := *v.OtrosPagosNoSujetoIva.Value
+		if err := validarNumero("otrosPagosNoSujetoIva", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if v.DetalleOtrosPagosNoSujetoIva.Value != nil {
+		value := *v.DetalleOtrosPagosNoSujetoIva.Value
+		if err := validarTexto("detalleOtrosPagosNoSujetoIva", value, 0, 100); err != nil {
+			return err
+		}
+	}
+	if v.OtrasTasas.Value != nil {
+		value := *v.OtrasTasas.Value
+		if err := validarNumero("otrasTasas", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("codigoMoneda", decimal.NewFromInt(v.CodigoMoneda), 0, 0, "1", "300", false); err != nil {
+		return err
+	}
+	if err := validarNumero("tipoCambio", v.TipoCambio, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("montoTotalMoneda", v.MontoTotalMoneda, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if v.DescuentoAdicional.Value != nil {
+		value := *v.DescuentoAdicional.Value
+		if err := validarNumero("descuentoAdicional", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if v.CodigoExcepcion.Value != nil {
+		value := *v.CodigoExcepcion.Value
+		if err := validarNumero("codigoExcepcion", decimal.NewFromInt(value), 0, 0, "0", "1", false); err != nil {
+			return err
+		}
+	}
+	if err := validarTexto("leyenda", v.Leyenda, 1, 200); err != nil {
+		return err
+	}
+	if err := validarTexto("usuario", v.Usuario, 1, 100); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoInterno", v.CodigoInterno, 1, 10); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoDocumentoSector", decimal.NewFromInt(v.CodigoDocumentoSector), 0, 0, "", "", false); err != nil {
+		return err
+	}
+	if !decimal.NewFromInt(v.CodigoDocumentoSector).Equal(decimal.RequireFromString("13")) {
+		return fmt.Errorf("codigoDocumentoSector: valor fijo inválido")
+	}
+	return nil
+}
+
 type DetalleServicioBasico struct {
 	ActividadEconomica string                    `xml:"actividadEconomica" json:"actividadEconomica"`
 	CodigoProductoSin  int64                     `xml:"codigoProductoSin" json:"codigoProductoSin"`
@@ -304,6 +1030,40 @@ type DetalleServicioBasico struct {
 	PrecioNetoUnitario decimal.Decimal           `xml:"precioNetoUnitario" json:"precioNetoUnitario"`
 	MontoDescuento     Optional[decimal.Decimal] `xml:"montoDescuento" json:"montoDescuento"`
 	SubTotal           decimal.Decimal           `xml:"subTotal" json:"subTotal"`
+}
+
+func (v DetalleServicioBasico) validarXSD() error {
+	if err := validarTexto("actividadEconomica", v.ActividadEconomica, 1, 10); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoProductoSin", decimal.NewFromInt(v.CodigoProductoSin), 0, 0, "1", "99999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoProducto", v.CodigoProducto, 1, 50); err != nil {
+		return err
+	}
+	if err := validarTexto("descripcion", v.Descripcion, 1, 500); err != nil {
+		return err
+	}
+	if err := validarNumero("cantidad", v.Cantidad, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("unidadMedida", decimal.NewFromInt(v.UnidadMedida), 0, 0, "1", "500", false); err != nil {
+		return err
+	}
+	if err := validarNumero("precioNetoUnitario", v.PrecioNetoUnitario, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if v.MontoDescuento.Value != nil {
+		value := *v.MontoDescuento.Value
+		if err := validarNumero("montoDescuento", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("subTotal", v.SubTotal, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (d ServicioBasico) esV3()                      {}
@@ -320,8 +1080,16 @@ func (d ServicioBasico) Validar() error {
 	if d.Cabecera.CodigoDocumentoSector != 13 {
 		return fmt.Errorf("sector de cabecera distinto de 13")
 	}
-	if len(d.Detalle) == 0 {
-		return fmt.Errorf("el documento requiere al menos un detalle")
+	if len(d.Detalle) == 0 || len(d.Detalle) > 500 {
+		return fmt.Errorf("el documento requiere entre 1 y 500 detalles")
+	}
+	if err := d.Cabecera.validarXSD(); err != nil {
+		return fmt.Errorf("cabecera: %w", err)
+	}
+	for n, detail := range d.Detalle {
+		if err := detail.validarXSD(); err != nil {
+			return fmt.Errorf("detalle %d: %w", n+1, err)
+		}
 	}
 	return nil
 }
@@ -373,6 +1141,140 @@ type CabeceraExportacionServicios struct {
 	CodigoInterno                string                    `xml:"codigoInterno" json:"codigoInterno"`
 	CodigoDocumentoSector        int64                     `xml:"codigoDocumentoSector" json:"codigoDocumentoSector"`
 }
+
+func (v CabeceraExportacionServicios) validarXSD() error {
+	if err := validarNumero("nitEmisor", decimal.NewFromInt(v.NitEmisor), 0, 0, "1", "9999999999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("razonSocialEmisor", v.RazonSocialEmisor, 1, 200); err != nil {
+		return err
+	}
+	if err := validarTexto("municipio", v.Municipio, 1, 25); err != nil {
+		return err
+	}
+	if v.Telefono.Value != nil {
+		value := *v.Telefono.Value
+		if err := validarTexto("telefono", value, 1, 25); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("numeroFactura", decimal.NewFromInt(v.NumeroFactura), 0, 0, "1", "9999999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("cuf", v.Cuf, 1, 100); err != nil {
+		return err
+	}
+	if err := validarTexto("cufd", v.Cufd, 1, 100); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoSucursal", decimal.NewFromInt(v.CodigoSucursal), 0, 0, "0", "9999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("direccion", v.Direccion, 1, 500); err != nil {
+		return err
+	}
+	if v.CodigoPuntoVenta.Value != nil {
+		value := *v.CodigoPuntoVenta.Value
+		if err := validarNumero("codigoPuntoVenta", decimal.NewFromInt(value), 0, 0, "0", "9999", false); err != nil {
+			return err
+		}
+	}
+	if v.NombreRazonSocial.Value != nil {
+		value := *v.NombreRazonSocial.Value
+		if err := validarTexto("nombreRazonSocial", value, 1, 500); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("codigoTipoDocumentoIdentidad", decimal.NewFromInt(v.CodigoTipoDocumentoIdentidad), 0, 0, "1", "5", false); err != nil {
+		return err
+	}
+	if err := validarTexto("numeroDocumento", v.NumeroDocumento, 1, 20); err != nil {
+		return err
+	}
+	if err := validarTexto("complemento", v.Complemento, 0, 5); err != nil {
+		return err
+	}
+	if err := validarTexto("direccionComprador", v.DireccionComprador, 1, 500); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoCliente", v.CodigoCliente, 1, 100); err != nil {
+		return err
+	}
+	if err := validarTexto("lugarDestino", v.LugarDestino, 1, 500); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoPais", decimal.NewFromInt(v.CodigoPais), 0, 0, "1", "300", false); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoMetodoPago", decimal.NewFromInt(v.CodigoMetodoPago), 0, 0, "1", "500", false); err != nil {
+		return err
+	}
+	if v.NumeroTarjeta.Value != nil {
+		value := *v.NumeroTarjeta.Value
+		if err := validarNumero("numeroTarjeta", decimal.NewFromInt(value), 0, 0, "0", "9999999999999999", false); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("subTotalNeto", v.SubTotalNeto, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("totalPrecioNeto", v.TotalPrecioNeto, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("iva", v.Iva, 0, 0, "", "", false); err != nil {
+		return err
+	}
+	if !v.Iva.Equal(decimal.RequireFromString("0")) {
+		return fmt.Errorf("iva: valor fijo inválido")
+	}
+	if err := validarNumero("montoaPagar", v.MontoaPagar, 17, 2, "0", "", false); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoMoneda", decimal.NewFromInt(v.CodigoMoneda), 0, 0, "1", "300", false); err != nil {
+		return err
+	}
+	if err := validarNumero("tipoCambio", v.TipoCambio, 17, 5, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("montoTotalMoneda", v.MontoTotalMoneda, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if v.InformacionAdicional.Value != nil {
+		value := *v.InformacionAdicional.Value
+		if err := validarTexto("informacionAdicional", value, 1, 10000); err != nil {
+			return err
+		}
+	}
+	if v.DescuentoAdicional.Value != nil {
+		value := *v.DescuentoAdicional.Value
+		if err := validarNumero("descuentoAdicional", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if v.CodigoExcepcion.Value != nil {
+		value := *v.CodigoExcepcion.Value
+		if err := validarNumero("codigoExcepcion", decimal.NewFromInt(value), 0, 0, "0", "1", false); err != nil {
+			return err
+		}
+	}
+	if err := validarTexto("leyenda", v.Leyenda, 1, 200); err != nil {
+		return err
+	}
+	if err := validarTexto("usuario", v.Usuario, 1, 100); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoInterno", v.CodigoInterno, 1, 10); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoDocumentoSector", decimal.NewFromInt(v.CodigoDocumentoSector), 0, 0, "", "", false); err != nil {
+		return err
+	}
+	if !decimal.NewFromInt(v.CodigoDocumentoSector).Equal(decimal.RequireFromString("28")) {
+		return fmt.Errorf("codigoDocumentoSector: valor fijo inválido")
+	}
+	return nil
+}
+
 type DetalleExportacionServicios struct {
 	ActividadEconomica string                    `xml:"actividadEconomica" json:"actividadEconomica"`
 	CodigoProductoSin  int64                     `xml:"codigoProductoSin" json:"codigoProductoSin"`
@@ -383,6 +1285,43 @@ type DetalleExportacionServicios struct {
 	PrecioNetoUnitario decimal.Decimal           `xml:"precioNetoUnitario" json:"precioNetoUnitario"`
 	MontoDescuento     Optional[decimal.Decimal] `xml:"montoDescuento" json:"montoDescuento"`
 	SubTotal           decimal.Decimal           `xml:"subTotal" json:"subTotal"`
+}
+
+func (v DetalleExportacionServicios) validarXSD() error {
+	if err := validarTexto("actividadEconomica", v.ActividadEconomica, 1, 10); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoProductoSin", decimal.NewFromInt(v.CodigoProductoSin), 0, 0, "1", "99999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoProducto", v.CodigoProducto, 1, 50); err != nil {
+		return err
+	}
+	if err := validarTexto("descripcion", v.Descripcion, 1, 500); err != nil {
+		return err
+	}
+	if err := validarNumero("cantidad", decimal.NewFromInt(v.Cantidad), 0, 0, "", "", false); err != nil {
+		return err
+	}
+	if !decimal.NewFromInt(v.Cantidad).Equal(decimal.RequireFromString("1")) {
+		return fmt.Errorf("cantidad: valor fijo inválido")
+	}
+	if err := validarNumero("unidadMedida", decimal.NewFromInt(v.UnidadMedida), 0, 0, "1", "200", false); err != nil {
+		return err
+	}
+	if err := validarNumero("precioNetoUnitario", v.PrecioNetoUnitario, 20, 5, "0", "", true); err != nil {
+		return err
+	}
+	if v.MontoDescuento.Value != nil {
+		value := *v.MontoDescuento.Value
+		if err := validarNumero("montoDescuento", value, 20, 5, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("subTotal", v.SubTotal, 20, 5, "0", "", true); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (d ExportacionServicios) esV3()                      {}
@@ -399,8 +1338,16 @@ func (d ExportacionServicios) Validar() error {
 	if d.Cabecera.CodigoDocumentoSector != 28 {
 		return fmt.Errorf("sector de cabecera distinto de 28")
 	}
-	if len(d.Detalle) == 0 {
-		return fmt.Errorf("el documento requiere al menos un detalle")
+	if len(d.Detalle) == 0 || len(d.Detalle) > 500 {
+		return fmt.Errorf("el documento requiere entre 1 y 500 detalles")
+	}
+	if err := d.Cabecera.validarXSD(); err != nil {
+		return fmt.Errorf("cabecera: %w", err)
+	}
+	for n, detail := range d.Detalle {
+		if err := detail.validarXSD(); err != nil {
+			return fmt.Errorf("detalle %d: %w", n+1, err)
+		}
 	}
 	return nil
 }
@@ -450,6 +1397,131 @@ type CabeceraSeguros struct {
 	CodigoInterno                string                    `xml:"codigoInterno" json:"codigoInterno"`
 	CodigoDocumentoSector        int64                     `xml:"codigoDocumentoSector" json:"codigoDocumentoSector"`
 }
+
+func (v CabeceraSeguros) validarXSD() error {
+	if err := validarNumero("nitEmisor", decimal.NewFromInt(v.NitEmisor), 0, 0, "1", "9999999999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("razonSocialEmisor", v.RazonSocialEmisor, 1, 200); err != nil {
+		return err
+	}
+	if err := validarTexto("municipio", v.Municipio, 1, 25); err != nil {
+		return err
+	}
+	if v.Telefono.Value != nil {
+		value := *v.Telefono.Value
+		if err := validarTexto("telefono", value, 1, 25); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("numeroFactura", decimal.NewFromInt(v.NumeroFactura), 0, 0, "1", "9999999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("cuf", v.Cuf, 1, 100); err != nil {
+		return err
+	}
+	if err := validarTexto("cufd", v.Cufd, 1, 100); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoSucursal", decimal.NewFromInt(v.CodigoSucursal), 0, 0, "0", "9999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("direccion", v.Direccion, 1, 500); err != nil {
+		return err
+	}
+	if v.CodigoPuntoVenta.Value != nil {
+		value := *v.CodigoPuntoVenta.Value
+		if err := validarNumero("codigoPuntoVenta", decimal.NewFromInt(value), 0, 0, "0", "9999", false); err != nil {
+			return err
+		}
+	}
+	if v.NombreRazonSocial.Value != nil {
+		value := *v.NombreRazonSocial.Value
+		if err := validarTexto("nombreRazonSocial", value, 1, 500); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("codigoTipoDocumentoIdentidad", decimal.NewFromInt(v.CodigoTipoDocumentoIdentidad), 0, 0, "1", "5", false); err != nil {
+		return err
+	}
+	if err := validarTexto("numeroDocumento", v.NumeroDocumento, 1, 20); err != nil {
+		return err
+	}
+	if err := validarTexto("complemento", v.Complemento, 0, 5); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoCliente", v.CodigoCliente, 1, 100); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoMetodoPago", decimal.NewFromInt(v.CodigoMetodoPago), 0, 0, "1", "500", false); err != nil {
+		return err
+	}
+	if v.NumeroTarjeta.Value != nil {
+		value := *v.NumeroTarjeta.Value
+		if err := validarNumero("numeroTarjeta", decimal.NewFromInt(value), 0, 0, "0", "9999999999999999", false); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("subTotalNeto", v.SubTotalNeto, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("totalPrecioNeto", v.TotalPrecioNeto, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("iva", v.Iva, 17, 2, "0", "", false); err != nil {
+		return err
+	}
+	if err := validarNumero("montoaPagar", v.MontoaPagar, 17, 2, "0", "", false); err != nil {
+		return err
+	}
+	if err := validarNumero("ajusteAfectacionIva", v.AjusteAfectacionIva, 17, 2, "0", "", false); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoMoneda", decimal.NewFromInt(v.CodigoMoneda), 0, 0, "1", "300", false); err != nil {
+		return err
+	}
+	if err := validarNumero("tipoCambio", v.TipoCambio, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("montoTotalMoneda", v.MontoTotalMoneda, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if v.MontoGiftCard.Value != nil {
+		value := *v.MontoGiftCard.Value
+		if err := validarNumero("montoGiftCard", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if v.DescuentoAdicional.Value != nil {
+		value := *v.DescuentoAdicional.Value
+		if err := validarNumero("descuentoAdicional", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if v.CodigoExcepcion.Value != nil {
+		value := *v.CodigoExcepcion.Value
+		if err := validarNumero("codigoExcepcion", decimal.NewFromInt(value), 0, 0, "0", "1", false); err != nil {
+			return err
+		}
+	}
+	if err := validarTexto("leyenda", v.Leyenda, 1, 200); err != nil {
+		return err
+	}
+	if err := validarTexto("usuario", v.Usuario, 1, 100); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoInterno", v.CodigoInterno, 1, 10); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoDocumentoSector", decimal.NewFromInt(v.CodigoDocumentoSector), 0, 0, "", "", false); err != nil {
+		return err
+	}
+	if !decimal.NewFromInt(v.CodigoDocumentoSector).Equal(decimal.RequireFromString("34")) {
+		return fmt.Errorf("codigoDocumentoSector: valor fijo inválido")
+	}
+	return nil
+}
+
 type DetalleSeguros struct {
 	ActividadEconomica string                    `xml:"actividadEconomica" json:"actividadEconomica"`
 	CodigoProductoSin  int64                     `xml:"codigoProductoSin" json:"codigoProductoSin"`
@@ -460,6 +1532,40 @@ type DetalleSeguros struct {
 	PrecioNetoUnitario decimal.Decimal           `xml:"precioNetoUnitario" json:"precioNetoUnitario"`
 	MontoDescuento     Optional[decimal.Decimal] `xml:"montoDescuento" json:"montoDescuento"`
 	SubTotal           decimal.Decimal           `xml:"subTotal" json:"subTotal"`
+}
+
+func (v DetalleSeguros) validarXSD() error {
+	if err := validarTexto("actividadEconomica", v.ActividadEconomica, 1, 10); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoProductoSin", decimal.NewFromInt(v.CodigoProductoSin), 0, 0, "1", "99999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoProducto", v.CodigoProducto, 1, 50); err != nil {
+		return err
+	}
+	if err := validarTexto("descripcion", v.Descripcion, 1, 500); err != nil {
+		return err
+	}
+	if err := validarNumero("cantidad", v.Cantidad, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("unidadMedida", decimal.NewFromInt(v.UnidadMedida), 0, 0, "1", "500", false); err != nil {
+		return err
+	}
+	if err := validarNumero("precioNetoUnitario", v.PrecioNetoUnitario, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if v.MontoDescuento.Value != nil {
+		value := *v.MontoDescuento.Value
+		if err := validarNumero("montoDescuento", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("subTotal", v.SubTotal, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (d Seguros) esV3()                      {}
@@ -476,8 +1582,16 @@ func (d Seguros) Validar() error {
 	if d.Cabecera.CodigoDocumentoSector != 34 {
 		return fmt.Errorf("sector de cabecera distinto de 34")
 	}
-	if len(d.Detalle) == 0 {
-		return fmt.Errorf("el documento requiere al menos un detalle")
+	if len(d.Detalle) == 0 || len(d.Detalle) > 500 {
+		return fmt.Errorf("el documento requiere entre 1 y 500 detalles")
+	}
+	if err := d.Cabecera.validarXSD(); err != nil {
+		return fmt.Errorf("cabecera: %w", err)
+	}
+	for n, detail := range d.Detalle {
+		if err := detail.validarXSD(); err != nil {
+			return fmt.Errorf("detalle %d: %w", n+1, err)
+		}
 	}
 	return nil
 }
@@ -485,90 +1599,6 @@ func (d Seguros) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	start.Name = xml.Name{Local: "facturaElectronicaSeguros"}
 	start.Attr = append(start.Attr, xml.Attr{Name: xml.Name{Local: "xmlns:xsi"}, Value: xsi}, xml.Attr{Name: xml.Name{Local: "xsi:noNamespaceSchemaLocation"}, Value: "facturaElectronicaSeguros.xsd"})
 	type payload Seguros
-	return e.EncodeElement(payload(d), start)
-}
-
-type AlcanzadaICE struct {
-	Cabecera CabeceraAlcanzadaICE  `xml:"cabecera" json:"cabecera"`
-	Detalle  []DetalleAlcanzadaICE `xml:"detalle" json:"detalle"`
-}
-type CabeceraAlcanzadaICE struct {
-	NitEmisor                    int64                     `xml:"nitEmisor" json:"nitEmisor"`
-	RazonSocialEmisor            string                    `xml:"razonSocialEmisor" json:"razonSocialEmisor"`
-	Municipio                    string                    `xml:"municipio" json:"municipio"`
-	Telefono                     Optional[string]          `xml:"telefono" json:"telefono"`
-	NumeroFactura                int64                     `xml:"numeroFactura" json:"numeroFactura"`
-	Cuf                          string                    `xml:"cuf" json:"cuf"`
-	Cufd                         string                    `xml:"cufd" json:"cufd"`
-	CodigoSucursal               int64                     `xml:"codigoSucursal" json:"codigoSucursal"`
-	Direccion                    string                    `xml:"direccion" json:"direccion"`
-	CodigoPuntoVenta             Optional[int64]           `xml:"codigoPuntoVenta" json:"codigoPuntoVenta"`
-	FechaEmision                 Time                      `xml:"fechaEmision" json:"fechaEmision"`
-	NombreRazonSocial            Optional[string]          `xml:"nombreRazonSocial" json:"nombreRazonSocial"`
-	CodigoTipoDocumentoIdentidad int64                     `xml:"codigoTipoDocumentoIdentidad" json:"codigoTipoDocumentoIdentidad"`
-	NumeroDocumento              string                    `xml:"numeroDocumento" json:"numeroDocumento"`
-	Complemento                  string                    `xml:"complemento" json:"complemento"`
-	CodigoCliente                string                    `xml:"codigoCliente" json:"codigoCliente"`
-	CodigoMetodoPago             int64                     `xml:"codigoMetodoPago" json:"codigoMetodoPago"`
-	NumeroTarjeta                Optional[int64]           `xml:"numeroTarjeta" json:"numeroTarjeta"`
-	SubTotalNeto                 decimal.Decimal           `xml:"subTotalNeto" json:"subTotalNeto"`
-	TotalPrecioNeto              decimal.Decimal           `xml:"totalPrecioNeto" json:"totalPrecioNeto"`
-	Iva                          decimal.Decimal           `xml:"iva" json:"iva"`
-	MontoaPagar                  decimal.Decimal           `xml:"montoaPagar" json:"montoaPagar"`
-	TotalIceEspecifico           Optional[decimal.Decimal] `xml:"totalIceEspecifico" json:"totalIceEspecifico"`
-	TotalIcePorcentual           Optional[decimal.Decimal] `xml:"totalIcePorcentual" json:"totalIcePorcentual"`
-	CodigoMoneda                 int64                     `xml:"codigoMoneda" json:"codigoMoneda"`
-	TipoCambio                   decimal.Decimal           `xml:"tipoCambio" json:"tipoCambio"`
-	MontoTotalMoneda             decimal.Decimal           `xml:"montoTotalMoneda" json:"montoTotalMoneda"`
-	DescuentoAdicional           Optional[decimal.Decimal] `xml:"descuentoAdicional" json:"descuentoAdicional"`
-	CodigoExcepcion              Optional[int64]           `xml:"codigoExcepcion" json:"codigoExcepcion"`
-	Leyenda                      string                    `xml:"leyenda" json:"leyenda"`
-	Usuario                      string                    `xml:"usuario" json:"usuario"`
-	CodigoInterno                string                    `xml:"codigoInterno" json:"codigoInterno"`
-	CodigoDocumentoSector        int64                     `xml:"codigoDocumentoSector" json:"codigoDocumentoSector"`
-}
-type DetalleAlcanzadaICE struct {
-	ActividadEconomica string                    `xml:"actividadEconomica" json:"actividadEconomica"`
-	CodigoProductoSin  int64                     `xml:"codigoProductoSin" json:"codigoProductoSin"`
-	CodigoProducto     string                    `xml:"codigoProducto" json:"codigoProducto"`
-	Descripcion        string                    `xml:"descripcion" json:"descripcion"`
-	Cantidad           decimal.Decimal           `xml:"cantidad" json:"cantidad"`
-	UnidadMedida       int64                     `xml:"unidadMedida" json:"unidadMedida"`
-	PrecioNetoUnitario decimal.Decimal           `xml:"precioNetoUnitario" json:"precioNetoUnitario"`
-	MontoDescuento     Optional[decimal.Decimal] `xml:"montoDescuento" json:"montoDescuento"`
-	SubTotal           decimal.Decimal           `xml:"subTotal" json:"subTotal"`
-	MarcaIce           int64                     `xml:"marcaIce" json:"marcaIce"`
-	PrecioNetoVentaIce Optional[decimal.Decimal] `xml:"precioNetoVentaIce" json:"precioNetoVentaIce"`
-	AlicuotaEspecifica Optional[decimal.Decimal] `xml:"alicuotaEspecifica" json:"alicuotaEspecifica"`
-	AlicuotaPorcentual Optional[decimal.Decimal] `xml:"alicuotaPorcentual" json:"alicuotaPorcentual"`
-	MontoIceEspecifico Optional[decimal.Decimal] `xml:"montoIceEspecifico" json:"montoIceEspecifico"`
-	MontoIcePorcentual Optional[decimal.Decimal] `xml:"montoIcePorcentual" json:"montoIcePorcentual"`
-	CantidadIce        Optional[decimal.Decimal] `xml:"cantidadIce" json:"cantidadIce"`
-}
-
-func (d AlcanzadaICE) esV3()                      {}
-func (d AlcanzadaICE) CodigoDocumentoSector() int { return 14 }
-func (d AlcanzadaICE) TipoFacturaDocumento() int  { return 1 }
-func (d AlcanzadaICE) Informacion() Info {
-	h := d.Cabecera
-	return Info{Nit: h.NitEmisor, Numero: h.NumeroFactura, CUF: h.Cuf, CUFD: h.Cufd, CodigoInterno: h.CodigoInterno, Sucursal: int(h.CodigoSucursal), POS: int(h.CodigoPuntoVenta.OrZero()), Fecha: h.FechaEmision.Time(), Sector: 14, Tipo: 1}
-}
-func (d AlcanzadaICE) Validar() error {
-	if err := validarInfo(d.Informacion()); err != nil {
-		return err
-	}
-	if d.Cabecera.CodigoDocumentoSector != 14 {
-		return fmt.Errorf("sector de cabecera distinto de 14")
-	}
-	if len(d.Detalle) == 0 {
-		return fmt.Errorf("el documento requiere al menos un detalle")
-	}
-	return nil
-}
-func (d AlcanzadaICE) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	start.Name = xml.Name{Local: "facturaElectronicaAlcanzadaIce"}
-	start.Attr = append(start.Attr, xml.Attr{Name: xml.Name{Local: "xmlns:xsi"}, Value: xsi}, xml.Attr{Name: xml.Name{Local: "xsi:noNamespaceSchemaLocation"}, Value: "facturaElectronicaAlcanzadaIce.xsd"})
-	type payload AlcanzadaICE
 	return e.EncodeElement(payload(d), start)
 }
 
@@ -615,6 +1645,152 @@ type CabeceraHotel struct {
 	CodigoInterno                string                    `xml:"codigoInterno" json:"codigoInterno"`
 	CodigoDocumentoSector        int64                     `xml:"codigoDocumentoSector" json:"codigoDocumentoSector"`
 }
+
+func (v CabeceraHotel) validarXSD() error {
+	if err := validarNumero("nitEmisor", decimal.NewFromInt(v.NitEmisor), 0, 0, "1", "9999999999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("razonSocialEmisor", v.RazonSocialEmisor, 1, 200); err != nil {
+		return err
+	}
+	if err := validarTexto("municipio", v.Municipio, 1, 25); err != nil {
+		return err
+	}
+	if v.Telefono.Value != nil {
+		value := *v.Telefono.Value
+		if err := validarTexto("telefono", value, 1, 25); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("numeroFactura", decimal.NewFromInt(v.NumeroFactura), 0, 0, "1", "9999999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("cuf", v.Cuf, 1, 100); err != nil {
+		return err
+	}
+	if err := validarTexto("cufd", v.Cufd, 1, 100); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoSucursal", decimal.NewFromInt(v.CodigoSucursal), 0, 0, "0", "9999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("direccion", v.Direccion, 1, 500); err != nil {
+		return err
+	}
+	if v.CodigoPuntoVenta.Value != nil {
+		value := *v.CodigoPuntoVenta.Value
+		if err := validarNumero("codigoPuntoVenta", decimal.NewFromInt(value), 0, 0, "0", "9999", false); err != nil {
+			return err
+		}
+	}
+	if v.NombreRazonSocial.Value != nil {
+		value := *v.NombreRazonSocial.Value
+		if err := validarTexto("nombreRazonSocial", value, 1, 500); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("codigoTipoDocumentoIdentidad", decimal.NewFromInt(v.CodigoTipoDocumentoIdentidad), 0, 0, "1", "5", false); err != nil {
+		return err
+	}
+	if err := validarTexto("numeroDocumento", v.NumeroDocumento, 1, 20); err != nil {
+		return err
+	}
+	if err := validarTexto("complemento", v.Complemento, 0, 5); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoCliente", v.CodigoCliente, 1, 100); err != nil {
+		return err
+	}
+	if v.CantidadHuespedes.Value != nil {
+		value := *v.CantidadHuespedes.Value
+		if err := validarNumero("cantidadHuespedes", decimal.NewFromInt(value), 0, 0, "0", "9999", false); err != nil {
+			return err
+		}
+	}
+	if v.CantidadHabitaciones.Value != nil {
+		value := *v.CantidadHabitaciones.Value
+		if err := validarNumero("cantidadHabitaciones", decimal.NewFromInt(value), 0, 0, "0", "9999", false); err != nil {
+			return err
+		}
+	}
+	if v.CantidadMayores.Value != nil {
+		value := *v.CantidadMayores.Value
+		if err := validarNumero("cantidadMayores", decimal.NewFromInt(value), 0, 0, "0", "9999", false); err != nil {
+			return err
+		}
+	}
+	if v.CantidadMenores.Value != nil {
+		value := *v.CantidadMenores.Value
+		if err := validarNumero("cantidadMenores", decimal.NewFromInt(value), 0, 0, "0", "9999", false); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("codigoMetodoPago", decimal.NewFromInt(v.CodigoMetodoPago), 0, 0, "1", "500", false); err != nil {
+		return err
+	}
+	if v.NumeroTarjeta.Value != nil {
+		value := *v.NumeroTarjeta.Value
+		if err := validarNumero("numeroTarjeta", decimal.NewFromInt(value), 0, 0, "0", "9999999999999999", false); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("subTotalNeto", v.SubTotalNeto, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("totalPrecioNeto", v.TotalPrecioNeto, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("iva", v.Iva, 17, 2, "0", "", false); err != nil {
+		return err
+	}
+	if err := validarNumero("montoaPagar", v.MontoaPagar, 17, 2, "0", "", false); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoMoneda", decimal.NewFromInt(v.CodigoMoneda), 0, 0, "1", "300", false); err != nil {
+		return err
+	}
+	if err := validarNumero("tipoCambio", v.TipoCambio, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("montoTotalMoneda", v.MontoTotalMoneda, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if v.MontoGiftCard.Value != nil {
+		value := *v.MontoGiftCard.Value
+		if err := validarNumero("montoGiftCard", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if v.DescuentoAdicional.Value != nil {
+		value := *v.DescuentoAdicional.Value
+		if err := validarNumero("descuentoAdicional", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if v.CodigoExcepcion.Value != nil {
+		value := *v.CodigoExcepcion.Value
+		if err := validarNumero("codigoExcepcion", decimal.NewFromInt(value), 0, 0, "0", "1", false); err != nil {
+			return err
+		}
+	}
+	if err := validarTexto("leyenda", v.Leyenda, 1, 200); err != nil {
+		return err
+	}
+	if err := validarTexto("usuario", v.Usuario, 1, 100); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoInterno", v.CodigoInterno, 1, 10); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoDocumentoSector", decimal.NewFromInt(v.CodigoDocumentoSector), 0, 0, "", "", false); err != nil {
+		return err
+	}
+	if !decimal.NewFromInt(v.CodigoDocumentoSector).Equal(decimal.RequireFromString("16")) {
+		return fmt.Errorf("codigoDocumentoSector: valor fijo inválido")
+	}
+	return nil
+}
+
 type DetalleHotel struct {
 	ActividadEconomica   string                    `xml:"actividadEconomica" json:"actividadEconomica"`
 	CodigoProductoSin    int64                     `xml:"codigoProductoSin" json:"codigoProductoSin"`
@@ -627,6 +1803,52 @@ type DetalleHotel struct {
 	MontoDescuento       Optional[decimal.Decimal] `xml:"montoDescuento" json:"montoDescuento"`
 	SubTotal             decimal.Decimal           `xml:"subTotal" json:"subTotal"`
 	DetalleHuespedes     Optional[string]          `xml:"detalleHuespedes" json:"detalleHuespedes"`
+}
+
+func (v DetalleHotel) validarXSD() error {
+	if err := validarTexto("actividadEconomica", v.ActividadEconomica, 1, 10); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoProductoSin", decimal.NewFromInt(v.CodigoProductoSin), 0, 0, "1", "99999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoProducto", v.CodigoProducto, 1, 50); err != nil {
+		return err
+	}
+	if v.CodigoTipoHabitacion.Value != nil {
+		value := *v.CodigoTipoHabitacion.Value
+		if err := validarNumero("codigoTipoHabitacion", decimal.NewFromInt(value), 0, 0, "0", "16", false); err != nil {
+			return err
+		}
+	}
+	if err := validarTexto("descripcion", v.Descripcion, 1, 500); err != nil {
+		return err
+	}
+	if err := validarNumero("cantidad", v.Cantidad, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("unidadMedida", decimal.NewFromInt(v.UnidadMedida), 0, 0, "1", "500", false); err != nil {
+		return err
+	}
+	if err := validarNumero("precioNetoUnitario", v.PrecioNetoUnitario, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if v.MontoDescuento.Value != nil {
+		value := *v.MontoDescuento.Value
+		if err := validarNumero("montoDescuento", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("subTotal", v.SubTotal, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if v.DetalleHuespedes.Value != nil {
+		value := *v.DetalleHuespedes.Value
+		if err := validarTexto("detalleHuespedes", value, 1, 5000); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (d Hotel) esV3()                      {}
@@ -643,8 +1865,16 @@ func (d Hotel) Validar() error {
 	if d.Cabecera.CodigoDocumentoSector != 16 {
 		return fmt.Errorf("sector de cabecera distinto de 16")
 	}
-	if len(d.Detalle) == 0 {
-		return fmt.Errorf("el documento requiere al menos un detalle")
+	if len(d.Detalle) == 0 || len(d.Detalle) > 500 {
+		return fmt.Errorf("el documento requiere entre 1 y 500 detalles")
+	}
+	if err := d.Cabecera.validarXSD(); err != nil {
+		return fmt.Errorf("cabecera: %w", err)
+	}
+	for n, detail := range d.Detalle {
+		if err := detail.validarXSD(); err != nil {
+			return fmt.Errorf("detalle %d: %w", n+1, err)
+		}
 	}
 	return nil
 }
@@ -694,6 +1924,134 @@ type CabeceraHospital struct {
 	CodigoInterno                string                    `xml:"codigoInterno" json:"codigoInterno"`
 	CodigoDocumentoSector        int64                     `xml:"codigoDocumentoSector" json:"codigoDocumentoSector"`
 }
+
+func (v CabeceraHospital) validarXSD() error {
+	if err := validarNumero("nitEmisor", decimal.NewFromInt(v.NitEmisor), 0, 0, "1", "9999999999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("razonSocialEmisor", v.RazonSocialEmisor, 1, 200); err != nil {
+		return err
+	}
+	if err := validarTexto("municipio", v.Municipio, 1, 25); err != nil {
+		return err
+	}
+	if v.Telefono.Value != nil {
+		value := *v.Telefono.Value
+		if err := validarTexto("telefono", value, 1, 25); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("numeroFactura", decimal.NewFromInt(v.NumeroFactura), 0, 0, "1", "9999999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("cuf", v.Cuf, 1, 100); err != nil {
+		return err
+	}
+	if err := validarTexto("cufd", v.Cufd, 1, 100); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoSucursal", decimal.NewFromInt(v.CodigoSucursal), 0, 0, "0", "9999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("direccion", v.Direccion, 1, 500); err != nil {
+		return err
+	}
+	if v.CodigoPuntoVenta.Value != nil {
+		value := *v.CodigoPuntoVenta.Value
+		if err := validarNumero("codigoPuntoVenta", decimal.NewFromInt(value), 0, 0, "0", "9999", false); err != nil {
+			return err
+		}
+	}
+	if v.NombreRazonSocial.Value != nil {
+		value := *v.NombreRazonSocial.Value
+		if err := validarTexto("nombreRazonSocial", value, 1, 500); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("codigoTipoDocumentoIdentidad", decimal.NewFromInt(v.CodigoTipoDocumentoIdentidad), 0, 0, "1", "5", false); err != nil {
+		return err
+	}
+	if err := validarTexto("numeroDocumento", v.NumeroDocumento, 1, 20); err != nil {
+		return err
+	}
+	if err := validarTexto("complemento", v.Complemento, 0, 5); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoCliente", v.CodigoCliente, 1, 100); err != nil {
+		return err
+	}
+	if v.ModalidadServicio.Value != nil {
+		value := *v.ModalidadServicio.Value
+		if err := validarTexto("modalidadServicio", value, 0, 100); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("codigoMetodoPago", decimal.NewFromInt(v.CodigoMetodoPago), 0, 0, "1", "500", false); err != nil {
+		return err
+	}
+	if v.NumeroTarjeta.Value != nil {
+		value := *v.NumeroTarjeta.Value
+		if err := validarNumero("numeroTarjeta", decimal.NewFromInt(value), 0, 0, "0", "9999999999999999", false); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("subTotalNeto", v.SubTotalNeto, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("totalPrecioNeto", v.TotalPrecioNeto, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("iva", v.Iva, 17, 2, "0", "", false); err != nil {
+		return err
+	}
+	if err := validarNumero("montoaPagar", v.MontoaPagar, 17, 2, "0", "", false); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoMoneda", decimal.NewFromInt(v.CodigoMoneda), 0, 0, "1", "300", false); err != nil {
+		return err
+	}
+	if err := validarNumero("tipoCambio", v.TipoCambio, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("montoTotalMoneda", v.MontoTotalMoneda, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if v.MontoGiftCard.Value != nil {
+		value := *v.MontoGiftCard.Value
+		if err := validarNumero("montoGiftCard", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if v.DescuentoAdicional.Value != nil {
+		value := *v.DescuentoAdicional.Value
+		if err := validarNumero("descuentoAdicional", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if v.CodigoExcepcion.Value != nil {
+		value := *v.CodigoExcepcion.Value
+		if err := validarNumero("codigoExcepcion", decimal.NewFromInt(value), 0, 0, "0", "1", false); err != nil {
+			return err
+		}
+	}
+	if err := validarTexto("leyenda", v.Leyenda, 1, 200); err != nil {
+		return err
+	}
+	if err := validarTexto("usuario", v.Usuario, 1, 100); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoInterno", v.CodigoInterno, 1, 10); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoDocumentoSector", decimal.NewFromInt(v.CodigoDocumentoSector), 0, 0, "", "", false); err != nil {
+		return err
+	}
+	if !decimal.NewFromInt(v.CodigoDocumentoSector).Equal(decimal.RequireFromString("17")) {
+		return fmt.Errorf("codigoDocumentoSector: valor fijo inválido")
+	}
+	return nil
+}
+
 type DetalleHospital struct {
 	ActividadEconomica          string                    `xml:"actividadEconomica" json:"actividadEconomica"`
 	CodigoProductoSin           int64                     `xml:"codigoProductoSin" json:"codigoProductoSin"`
@@ -714,6 +2072,79 @@ type DetalleHospital struct {
 	SubTotal                    decimal.Decimal           `xml:"subTotal" json:"subTotal"`
 }
 
+func (v DetalleHospital) validarXSD() error {
+	if err := validarTexto("actividadEconomica", v.ActividadEconomica, 1, 10); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoProductoSin", decimal.NewFromInt(v.CodigoProductoSin), 0, 0, "1", "99999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoProducto", v.CodigoProducto, 1, 50); err != nil {
+		return err
+	}
+	if err := validarTexto("descripcion", v.Descripcion, 1, 500); err != nil {
+		return err
+	}
+	if v.Especialidad.Value != nil {
+		value := *v.Especialidad.Value
+		if err := validarTexto("especialidad", value, 0, 500); err != nil {
+			return err
+		}
+	}
+	if v.EspecialidadDetalle.Value != nil {
+		value := *v.EspecialidadDetalle.Value
+		if err := validarTexto("especialidadDetalle", value, 0, 500); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("nroQuirofanoSalaOperaciones", decimal.NewFromInt(v.NroQuirofanoSalaOperaciones), 0, 0, "1", "9999", false); err != nil {
+		return err
+	}
+	if v.EspecialidadMedico.Value != nil {
+		value := *v.EspecialidadMedico.Value
+		if err := validarTexto("especialidadMedico", value, 0, 500); err != nil {
+			return err
+		}
+	}
+	if err := validarTexto("nombreApellidoMedico", v.NombreApellidoMedico, 1, 500); err != nil {
+		return err
+	}
+	if err := validarNumero("nitDocumentoMedico", decimal.NewFromInt(v.NitDocumentoMedico), 0, 0, "1", "9999999999999", false); err != nil {
+		return err
+	}
+	if v.NroMatriculaMedico.Value != nil {
+		value := *v.NroMatriculaMedico.Value
+		if err := validarTexto("nroMatriculaMedico", value, 0, 50); err != nil {
+			return err
+		}
+	}
+	if v.NroFacturaMedico.Value != nil {
+		value := *v.NroFacturaMedico.Value
+		if err := validarNumero("nroFacturaMedico", decimal.NewFromInt(value), 0, 0, "0", "99999999", false); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("cantidad", v.Cantidad, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("unidadMedida", decimal.NewFromInt(v.UnidadMedida), 0, 0, "1", "500", false); err != nil {
+		return err
+	}
+	if err := validarNumero("precioNetoUnitario", v.PrecioNetoUnitario, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if v.MontoDescuento.Value != nil {
+		value := *v.MontoDescuento.Value
+		if err := validarNumero("montoDescuento", value, 17, 2, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("subTotal", v.SubTotal, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (d Hospital) esV3()                      {}
 func (d Hospital) CodigoDocumentoSector() int { return 17 }
 func (d Hospital) TipoFacturaDocumento() int  { return 1 }
@@ -728,8 +2159,16 @@ func (d Hospital) Validar() error {
 	if d.Cabecera.CodigoDocumentoSector != 17 {
 		return fmt.Errorf("sector de cabecera distinto de 17")
 	}
-	if len(d.Detalle) == 0 {
-		return fmt.Errorf("el documento requiere al menos un detalle")
+	if len(d.Detalle) == 0 || len(d.Detalle) > 500 {
+		return fmt.Errorf("el documento requiere entre 1 y 500 detalles")
+	}
+	if err := d.Cabecera.validarXSD(); err != nil {
+		return fmt.Errorf("cabecera: %w", err)
+	}
+	for n, detail := range d.Detalle {
+		if err := detail.validarXSD(); err != nil {
+			return fmt.Errorf("detalle %d: %w", n+1, err)
+		}
 	}
 	return nil
 }
@@ -780,6 +2219,122 @@ type CabeceraNotaCreditoDebito struct {
 	CodigoInterno                string           `xml:"codigoInterno" json:"codigoInterno"`
 	CodigoDocumentoSector        int64            `xml:"codigoDocumentoSector" json:"codigoDocumentoSector"`
 }
+
+func (v CabeceraNotaCreditoDebito) validarXSD() error {
+	if err := validarNumero("nitEmisor", decimal.NewFromInt(v.NitEmisor), 0, 0, "1", "9999999999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("razonSocialEmisor", v.RazonSocialEmisor, 1, 200); err != nil {
+		return err
+	}
+	if err := validarTexto("municipio", v.Municipio, 1, 25); err != nil {
+		return err
+	}
+	if v.Telefono.Value != nil {
+		value := *v.Telefono.Value
+		if err := validarTexto("telefono", value, 1, 25); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("numeroNotaCreditoDebito", decimal.NewFromInt(v.NumeroNotaCreditoDebito), 0, 0, "1", "9999999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("cuf", v.Cuf, 1, 100); err != nil {
+		return err
+	}
+	if err := validarTexto("cufd", v.Cufd, 1, 100); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoSucursal", decimal.NewFromInt(v.CodigoSucursal), 0, 0, "0", "9999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("direccion", v.Direccion, 1, 500); err != nil {
+		return err
+	}
+	if v.CodigoPuntoVenta.Value != nil {
+		value := *v.CodigoPuntoVenta.Value
+		if err := validarNumero("codigoPuntoVenta", decimal.NewFromInt(value), 0, 0, "0", "9999", false); err != nil {
+			return err
+		}
+	}
+	if v.NombreRazonSocial.Value != nil {
+		value := *v.NombreRazonSocial.Value
+		if err := validarTexto("nombreRazonSocial", value, 1, 500); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("codigoTipoDocumentoIdentidad", decimal.NewFromInt(v.CodigoTipoDocumentoIdentidad), 0, 0, "1", "5", false); err != nil {
+		return err
+	}
+	if err := validarTexto("numeroDocumento", v.NumeroDocumento, 1, 20); err != nil {
+		return err
+	}
+	if err := validarTexto("complemento", v.Complemento, 0, 5); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoCliente", v.CodigoCliente, 1, 100); err != nil {
+		return err
+	}
+	if err := validarNumero("numeroFactura", decimal.NewFromInt(v.NumeroFactura), 0, 0, "1", "9999999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("numeroAutorizacionCuf", v.NumeroAutorizacionCuf, 1, 100); err != nil {
+		return err
+	}
+	if err := validarNumero("subTotalNetoOriginal", v.SubTotalNetoOriginal, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("totalPrecioNetoOriginal", v.TotalPrecioNetoOriginal, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("ivaOriginal", v.IvaOriginal, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("montoaPagarOriginal", v.MontoaPagarOriginal, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("subTotalNetoDevuelto", v.SubTotalNetoDevuelto, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("totalPrecioNetoDevuelto", v.TotalPrecioNetoDevuelto, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("ivaDevuelto", v.IvaDevuelto, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("montoaPagarDevuelto", v.MontoaPagarDevuelto, 17, 2, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("descuentoAdicionalOriginal", v.DescuentoAdicionalOriginal, 17, 2, "0", "", false); err != nil {
+		return err
+	}
+	if err := validarNumero("montoDescuentoDevuelto", v.MontoDescuentoDevuelto, 17, 2, "0", "", false); err != nil {
+		return err
+	}
+	if v.CodigoExcepcion.Value != nil {
+		value := *v.CodigoExcepcion.Value
+		if err := validarNumero("codigoExcepcion", decimal.NewFromInt(value), 0, 0, "0", "1", false); err != nil {
+			return err
+		}
+	}
+	if err := validarTexto("leyenda", v.Leyenda, 1, 200); err != nil {
+		return err
+	}
+	if err := validarTexto("usuario", v.Usuario, 1, 100); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoInterno", v.CodigoInterno, 1, 10); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoDocumentoSector", decimal.NewFromInt(v.CodigoDocumentoSector), 0, 0, "", "", false); err != nil {
+		return err
+	}
+	if !decimal.NewFromInt(v.CodigoDocumentoSector).Equal(decimal.RequireFromString("24")) {
+		return fmt.Errorf("codigoDocumentoSector: valor fijo inválido")
+	}
+	return nil
+}
+
 type DetalleNotaCreditoDebito struct {
 	NroItem                  int64                     `xml:"nroItem" json:"nroItem"`
 	ActividadEconomica       string                    `xml:"actividadEconomica" json:"actividadEconomica"`
@@ -792,6 +2347,46 @@ type DetalleNotaCreditoDebito struct {
 	MontoDescuento           Optional[decimal.Decimal] `xml:"montoDescuento" json:"montoDescuento"`
 	SubTotal                 decimal.Decimal           `xml:"subTotal" json:"subTotal"`
 	CodigoDetalleTransaccion int64                     `xml:"codigoDetalleTransaccion" json:"codigoDetalleTransaccion"`
+}
+
+func (v DetalleNotaCreditoDebito) validarXSD() error {
+	if err := validarNumero("nroItem", decimal.NewFromInt(v.NroItem), 0, 0, "1", "500", false); err != nil {
+		return err
+	}
+	if err := validarTexto("actividadEconomica", v.ActividadEconomica, 1, 10); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoProductoSin", decimal.NewFromInt(v.CodigoProductoSin), 0, 0, "1", "99999999", false); err != nil {
+		return err
+	}
+	if err := validarTexto("codigoProducto", v.CodigoProducto, 1, 50); err != nil {
+		return err
+	}
+	if err := validarTexto("descripcion", v.Descripcion, 1, 500); err != nil {
+		return err
+	}
+	if err := validarNumero("cantidad", v.Cantidad, 25, 10, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("unidadMedida", decimal.NewFromInt(v.UnidadMedida), 0, 0, "1", "500", false); err != nil {
+		return err
+	}
+	if err := validarNumero("precioNetoUnitario", v.PrecioNetoUnitario, 25, 10, "0", "", true); err != nil {
+		return err
+	}
+	if v.MontoDescuento.Value != nil {
+		value := *v.MontoDescuento.Value
+		if err := validarNumero("montoDescuento", value, 25, 10, "0", "", false); err != nil {
+			return err
+		}
+	}
+	if err := validarNumero("subTotal", v.SubTotal, 25, 10, "0", "", true); err != nil {
+		return err
+	}
+	if err := validarNumero("codigoDetalleTransaccion", decimal.NewFromInt(v.CodigoDetalleTransaccion), 0, 0, "1", "2", false); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (d NotaCreditoDebito) esV3()                      {}
@@ -808,8 +2403,16 @@ func (d NotaCreditoDebito) Validar() error {
 	if d.Cabecera.CodigoDocumentoSector != 24 {
 		return fmt.Errorf("sector de cabecera distinto de 24")
 	}
-	if len(d.Detalle) == 0 {
-		return fmt.Errorf("el documento requiere al menos un detalle")
+	if len(d.Detalle) == 0 || len(d.Detalle) > 500 {
+		return fmt.Errorf("el documento requiere entre 1 y 500 detalles")
+	}
+	if err := d.Cabecera.validarXSD(); err != nil {
+		return fmt.Errorf("cabecera: %w", err)
+	}
+	for n, detail := range d.Detalle {
+		if err := detail.validarXSD(); err != nil {
+			return fmt.Errorf("detalle %d: %w", n+1, err)
+		}
 	}
 	return nil
 }
@@ -817,95 +2420,6 @@ func (d NotaCreditoDebito) MarshalXML(e *xml.Encoder, start xml.StartElement) er
 	start.Name = xml.Name{Local: "notaFiscalElectronicaCreditoDebito"}
 	start.Attr = append(start.Attr, xml.Attr{Name: xml.Name{Local: "xmlns:xsi"}, Value: xsi}, xml.Attr{Name: xml.Name{Local: "xsi:noNamespaceSchemaLocation"}, Value: "notaElectronicaCreditoDebito.xsd"})
 	type payload NotaCreditoDebito
-	return e.EncodeElement(payload(d), start)
-}
-
-type NotaCreditoDebitoICE struct {
-	Cabecera CabeceraNotaCreditoDebitoICE  `xml:"cabecera" json:"cabecera"`
-	Detalle  []DetalleNotaCreditoDebitoICE `xml:"detalle" json:"detalle"`
-}
-type CabeceraNotaCreditoDebitoICE struct {
-	NitEmisor                    int64            `xml:"nitEmisor" json:"nitEmisor"`
-	RazonSocialEmisor            string           `xml:"razonSocialEmisor" json:"razonSocialEmisor"`
-	Municipio                    string           `xml:"municipio" json:"municipio"`
-	Telefono                     Optional[string] `xml:"telefono" json:"telefono"`
-	NumeroNotaCreditoDebito      int64            `xml:"numeroNotaCreditoDebito" json:"numeroNotaCreditoDebito"`
-	Cuf                          string           `xml:"cuf" json:"cuf"`
-	Cufd                         string           `xml:"cufd" json:"cufd"`
-	CodigoSucursal               int64            `xml:"codigoSucursal" json:"codigoSucursal"`
-	Direccion                    string           `xml:"direccion" json:"direccion"`
-	CodigoPuntoVenta             Optional[int64]  `xml:"codigoPuntoVenta" json:"codigoPuntoVenta"`
-	FechaEmision                 Time             `xml:"fechaEmision" json:"fechaEmision"`
-	NombreRazonSocial            Optional[string] `xml:"nombreRazonSocial" json:"nombreRazonSocial"`
-	CodigoTipoDocumentoIdentidad int64            `xml:"codigoTipoDocumentoIdentidad" json:"codigoTipoDocumentoIdentidad"`
-	NumeroDocumento              string           `xml:"numeroDocumento" json:"numeroDocumento"`
-	Complemento                  string           `xml:"complemento" json:"complemento"`
-	CodigoCliente                string           `xml:"codigoCliente" json:"codigoCliente"`
-	NumeroFactura                int64            `xml:"numeroFactura" json:"numeroFactura"`
-	NumeroAutorizacionCuf        string           `xml:"numeroAutorizacionCuf" json:"numeroAutorizacionCuf"`
-	FechaEmisionFactura          Time             `xml:"fechaEmisionFactura" json:"fechaEmisionFactura"`
-	SubTotalNetoOriginal         decimal.Decimal  `xml:"subTotalNetoOriginal" json:"subTotalNetoOriginal"`
-	TotalPrecioNetoOriginal      decimal.Decimal  `xml:"totalPrecioNetoOriginal" json:"totalPrecioNetoOriginal"`
-	TotaIcePorcentualOriginal    decimal.Decimal  `xml:"totaIcePorcentualOriginal" json:"totaIcePorcentualOriginal"`
-	TotaIceEspecificoOriginal    decimal.Decimal  `xml:"totaIceEspecificoOriginal" json:"totaIceEspecificoOriginal"`
-	IvaOriginal                  decimal.Decimal  `xml:"ivaOriginal" json:"ivaOriginal"`
-	MontoaPagarOriginal          decimal.Decimal  `xml:"montoaPagarOriginal" json:"montoaPagarOriginal"`
-	SubTotalNetoDevuelto         decimal.Decimal  `xml:"subTotalNetoDevuelto" json:"subTotalNetoDevuelto"`
-	TotalPrecioNetoDevuelto      decimal.Decimal  `xml:"totalPrecioNetoDevuelto" json:"totalPrecioNetoDevuelto"`
-	IvaDevuelto                  decimal.Decimal  `xml:"ivaDevuelto" json:"ivaDevuelto"`
-	MontoaPagarDevuelto          decimal.Decimal  `xml:"montoaPagarDevuelto" json:"montoaPagarDevuelto"`
-	DescuentoAdicionalOriginal   decimal.Decimal  `xml:"descuentoAdicionalOriginal" json:"descuentoAdicionalOriginal"`
-	MontoDescuentoDevuelto       decimal.Decimal  `xml:"montoDescuentoDevuelto" json:"montoDescuentoDevuelto"`
-	CodigoExcepcion              Optional[int64]  `xml:"codigoExcepcion" json:"codigoExcepcion"`
-	Leyenda                      string           `xml:"leyenda" json:"leyenda"`
-	Usuario                      string           `xml:"usuario" json:"usuario"`
-	CodigoInterno                string           `xml:"codigoInterno" json:"codigoInterno"`
-	CodigoDocumentoSector        int64            `xml:"codigoDocumentoSector" json:"codigoDocumentoSector"`
-}
-type DetalleNotaCreditoDebitoICE struct {
-	NroItem                  int64                     `xml:"nroItem" json:"nroItem"`
-	ActividadEconomica       string                    `xml:"actividadEconomica" json:"actividadEconomica"`
-	CodigoProductoSin        int64                     `xml:"codigoProductoSin" json:"codigoProductoSin"`
-	CodigoProducto           string                    `xml:"codigoProducto" json:"codigoProducto"`
-	Descripcion              string                    `xml:"descripcion" json:"descripcion"`
-	Cantidad                 decimal.Decimal           `xml:"cantidad" json:"cantidad"`
-	UnidadMedida             int64                     `xml:"unidadMedida" json:"unidadMedida"`
-	PrecioNetoUnitario       decimal.Decimal           `xml:"precioNetoUnitario" json:"precioNetoUnitario"`
-	MontoDescuento           Optional[decimal.Decimal] `xml:"montoDescuento" json:"montoDescuento"`
-	SubTotal                 decimal.Decimal           `xml:"subTotal" json:"subTotal"`
-	MarcaIce                 int64                     `xml:"marcaIce" json:"marcaIce"`
-	PrecioNetoVentaIce       Optional[decimal.Decimal] `xml:"precioNetoVentaIce" json:"precioNetoVentaIce"`
-	AlicuotaEspecifica       Optional[decimal.Decimal] `xml:"alicuotaEspecifica" json:"alicuotaEspecifica"`
-	AlicuotaPorcentual       Optional[decimal.Decimal] `xml:"alicuotaPorcentual" json:"alicuotaPorcentual"`
-	MontoIceEspecifico       Optional[decimal.Decimal] `xml:"montoIceEspecifico" json:"montoIceEspecifico"`
-	MontoIcePorcentual       Optional[decimal.Decimal] `xml:"montoIcePorcentual" json:"montoIcePorcentual"`
-	CantidadIce              Optional[decimal.Decimal] `xml:"cantidadIce" json:"cantidadIce"`
-	CodigoDetalleTransaccion int64                     `xml:"codigoDetalleTransaccion" json:"codigoDetalleTransaccion"`
-}
-
-func (d NotaCreditoDebitoICE) esV3()                      {}
-func (d NotaCreditoDebitoICE) CodigoDocumentoSector() int { return 48 }
-func (d NotaCreditoDebitoICE) TipoFacturaDocumento() int  { return 3 }
-func (d NotaCreditoDebitoICE) Informacion() Info {
-	h := d.Cabecera
-	return Info{Nit: h.NitEmisor, Numero: h.NumeroNotaCreditoDebito, CUF: h.Cuf, CUFD: h.Cufd, CodigoInterno: h.CodigoInterno, Sucursal: int(h.CodigoSucursal), POS: int(h.CodigoPuntoVenta.OrZero()), Fecha: h.FechaEmision.Time(), Sector: 48, Tipo: 3}
-}
-func (d NotaCreditoDebitoICE) Validar() error {
-	if err := validarInfo(d.Informacion()); err != nil {
-		return err
-	}
-	if d.Cabecera.CodigoDocumentoSector != 48 {
-		return fmt.Errorf("sector de cabecera distinto de 48")
-	}
-	if len(d.Detalle) == 0 {
-		return fmt.Errorf("el documento requiere al menos un detalle")
-	}
-	return nil
-}
-func (d NotaCreditoDebitoICE) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	start.Name = xml.Name{Local: "notaElectronicaCreditoDebitoIce"}
-	start.Attr = append(start.Attr, xml.Attr{Name: xml.Name{Local: "xmlns:xsi"}, Value: xsi}, xml.Attr{Name: xml.Name{Local: "xsi:noNamespaceSchemaLocation"}, Value: "notaElectronicaCreditoDebitoIce.xsd"})
-	type payload NotaCreditoDebitoICE
 	return e.EncodeElement(payload(d), start)
 }
 func Nuevo(sector int) (Documento, error) {
@@ -922,16 +2436,12 @@ func Nuevo(sector int) (Documento, error) {
 		return &ExportacionServicios{}, nil
 	case 34:
 		return &Seguros{}, nil
-	case 14:
-		return &AlcanzadaICE{}, nil
 	case 16:
 		return &Hotel{}, nil
 	case 17:
 		return &Hospital{}, nil
 	case 24:
 		return &NotaCreditoDebito{}, nil
-	case 48:
-		return &NotaCreditoDebitoICE{}, nil
 	default:
 		return nil, fmt.Errorf("sector V3 no soportado: %d", sector)
 	}

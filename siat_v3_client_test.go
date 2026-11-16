@@ -12,10 +12,10 @@ import (
 	"sync"
 	"testing"
 
-	siat "github.com/ron86i/go-siat/v2"
-	"github.com/ron86i/go-siat/v2/internal/core/ports"
-	"github.com/ron86i/go-siat/v2/pkg/models"
 	"github.com/stretchr/testify/require"
+	siat "github.com/supay8/go-siat"
+	"github.com/supay8/go-siat/internal/core/ports"
+	"github.com/supay8/go-siat/pkg/models"
 )
 
 func config() siat.Config {

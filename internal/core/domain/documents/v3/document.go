@@ -1,4 +1,4 @@
-// Package invoices contiene modelos exclusivos de documentos fiscales SIAT V3.
+// Package v3 contiene los contratos XML internos de documentos fiscales SIAT V3.
 // No convierte ni modifica los documentos del paquete pkg/models/invoices de V2.
 package v3
 
@@ -13,9 +13,11 @@ import (
 const xsi = "http://www.w3.org/2001/XMLSchema-instance"
 const Layout = "2006-01-02T15:04:05.000"
 
+var bolivia = time.FixedZone("America/La_Paz", -4*3600)
+
 type Time time.Time
 
-func (t Time) Time() time.Time              { return time.Time(t) }
+func (t Time) Time() time.Time              { return time.Time(t).In(bolivia).Truncate(time.Millisecond) }
 func (t Time) MarshalText() ([]byte, error) { return []byte(t.Time().Format(Layout)), nil }
 func (t *Time) UnmarshalText(b []byte) error {
 	for _, layout := range []string{Layout, time.RFC3339Nano, "2006-01-02T15:04:05"} {
@@ -58,7 +60,7 @@ func (o Optional[T]) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 }
 func (o *Optional[T]) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	for _, a := range start.Attr {
-		if a.Name.Local == "nil" && a.Value == "true" {
+		if a.Name.Local == "nil" && a.Name.Space == xsi && (a.Value == "true" || a.Value == "1") {
 			o.Value = nil
 			return d.Skip()
 		}
