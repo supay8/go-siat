@@ -6,11 +6,10 @@ import (
 
 	"github.com/shopspring/decimal"
 
-	"github.com/ron86i/go-siat/v2"
-	"github.com/ron86i/go-siat/v2/pkg/models"
+	"github.com/supay8/go-siat/pkg/models"
 
-	"github.com/ron86i/go-siat/v2/internal/core/domain/datatype"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/documents"
+	"github.com/supay8/go-siat/internal/core/domain/datatype"
+	"github.com/supay8/go-siat/internal/core/domain/documents"
 )
 
 // AlcanzadaIce representa la estructura completa de una factura Sector 14
@@ -79,10 +78,10 @@ func (b *alcanzadaIceBuilder) AddDetalle(req AlcanzadaIceDetalle) *alcanzadaIceB
 
 func (b *alcanzadaIceBuilder) WithModalidad(tipo int) *alcanzadaIceBuilder {
 	switch tipo {
-	case siat.ModalidadElectronica:
+	case models.ModalidadElectronica:
 		b.factura.XMLName = xml.Name{Local: "facturaElectronicaAlcanzadaIce"}
 		b.factura.XsiSchemaLocation = "facturaElectronicaAlcanzadaIce.xsd"
-	case siat.ModalidadComputarizada:
+	case models.ModalidadComputarizada:
 		b.factura.XMLName = xml.Name{Local: "facturaComputarizadaAlcanzadaIce"}
 		b.factura.XsiSchemaLocation = "facturaComputarizadaAlcanzadaIce.xsd"
 	}

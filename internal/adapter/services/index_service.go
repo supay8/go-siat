@@ -10,10 +10,10 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/ron86i/go-siat/v2/internal/core/domain/datatype/soap"
-	siatErrors "github.com/ron86i/go-siat/v2/internal/core/errors"
-	"github.com/ron86i/go-siat/v2/internal/core/ports"
-	"github.com/ron86i/go-siat/v2/pkg/models"
+	"github.com/supay8/go-siat/internal/core/domain/datatype/soap"
+	siatErrors "github.com/supay8/go-siat/internal/core/errors"
+	"github.com/supay8/go-siat/internal/core/ports"
+	"github.com/supay8/go-siat/pkg/models"
 )
 
 // SiatService define los diferentes servicios disponibles en el SIAT.
@@ -161,29 +161,19 @@ performSoapRequest es una función genérica que encapsula el flujo completo de 
 */
 func performSoapRequest[TReq any, TResp any](ctx context.Context, httpClient *http.Client, url string, config ports.Config, opaqueReq any) (*soap.EnvelopeResponse[TResp], error) {
 
-	// Merge con config dinámica si existe en el contexto
-	if dynCfg, ok := ports.GetConfigFromContext(ctx); ok {
-		if dynCfg.Token != "" {
-			config.Token = dynCfg.Token
-		}
-		if dynCfg.Nit != 0 {
-			config.Nit = dynCfg.Nit
-		}
-		if dynCfg.CodigoSistema != "" {
-			config.CodigoSistema = dynCfg.CodigoSistema
-		}
-		if dynCfg.CodigoAmbiente != 0 {
-			config.CodigoAmbiente = dynCfg.CodigoAmbiente
-		}
-		if dynCfg.TraceId != "" {
-			config.TraceId = dynCfg.TraceId
-		}
-		if dynCfg.CredentialSign.GetType() != "UNKNOWN" {
-			config.CredentialSign = dynCfg.CredentialSign
-		}
-	}
+	config = ports.ResolveConfig(ctx, config)
 
 	req := getInternalRequest[TReq](opaqueReq)
+	if req == nil {
+		return nil, fmt.Errorf("solicitud sin construir")
+	}
+	if v, ok := any(req).(interface {
+		ValidarIdentidad(int64, string, int) error
+	}); ok {
+		if err := v.ValidarIdentidad(config.Nit, config.CodigoSistema, config.CodigoAmbiente); err != nil {
+			return nil, err
+		}
+	}
 	injectCredenciales(req, config)
 
 	xmlBody, err := buildRequest(req)

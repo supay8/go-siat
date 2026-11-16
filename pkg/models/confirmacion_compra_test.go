@@ -3,9 +3,9 @@ package models_test
 import (
 	"testing"
 
-	"github.com/ron86i/go-siat/v2/pkg/models"
-	"github.com/ron86i/go-siat/v2/pkg/utils"
 	"github.com/stretchr/testify/require"
+	"github.com/supay8/go-siat/pkg/models"
+	"github.com/supay8/go-siat/pkg/utils"
 )
 
 func TestConfirmacionCompraBuilder_SerializaXMLDelXSD(t *testing.T) {

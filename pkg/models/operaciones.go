@@ -3,8 +3,8 @@ package models
 import (
 	"time"
 
-	"github.com/ron86i/go-siat/v2/internal/core/domain/datatype"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/siat/operaciones"
+	"github.com/supay8/go-siat/internal/core/domain/datatype"
+	"github.com/supay8/go-siat/internal/core/domain/siat/operaciones"
 )
 
 // --- Interfaces opacas para las solicitudes de Operaciones ---

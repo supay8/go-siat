@@ -6,11 +6,10 @@ import (
 
 	"github.com/shopspring/decimal"
 
-	"github.com/ron86i/go-siat/v2"
-	"github.com/ron86i/go-siat/v2/pkg/models"
+	"github.com/supay8/go-siat/pkg/models"
 
-	"github.com/ron86i/go-siat/v2/internal/core/domain/datatype"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/documents"
+	"github.com/supay8/go-siat/internal/core/domain/datatype"
+	"github.com/supay8/go-siat/internal/core/domain/documents"
 )
 
 // Biodiesel representa la estructura completa de una factura de Biodiesel lista para ser procesada.
@@ -79,10 +78,10 @@ func (b *biodieselBuilder) AddDetalle(req BiodieselDetalle) *biodieselBuilder {
 
 func (b *biodieselBuilder) WithModalidad(tipo int) *biodieselBuilder {
 	switch tipo {
-	case siat.ModalidadElectronica:
+	case models.ModalidadElectronica:
 		b.factura.XMLName = xml.Name{Local: "facturaElectronicaBiodiesel"}
 		b.factura.XsiSchemaLocation = "facturaElectronicaBiodiesel.xsd"
-	case siat.ModalidadComputarizada:
+	case models.ModalidadComputarizada:
 		b.factura.XMLName = xml.Name{Local: "facturaComputarizadaBiodiesel"}
 		b.factura.XsiSchemaLocation = "facturaComputarizadaBiodiesel.xsd"
 	}

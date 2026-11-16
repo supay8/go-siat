@@ -4,10 +4,9 @@ import (
 	"encoding/xml"
 	"time"
 
-	"github.com/ron86i/go-siat/v2"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/datatype"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/documents"
-	"github.com/ron86i/go-siat/v2/pkg/models"
+	"github.com/supay8/go-siat/internal/core/domain/datatype"
+	"github.com/supay8/go-siat/internal/core/domain/documents"
+	"github.com/supay8/go-siat/pkg/models"
 )
 
 // NotaCreditoDebitoIce representa la estructura completa de una nota de crédito/débito/descuento ICE lista para procesarse.
@@ -75,10 +74,10 @@ func (b *notaCreditoDebitoIceBuilder) AddDetalle(req NotaDetalleCreditoDebitoIce
 
 func (b *notaCreditoDebitoIceBuilder) WithModalidad(tipo int) *notaCreditoDebitoIceBuilder {
 	switch tipo {
-	case siat.ModalidadElectronica:
+	case models.ModalidadElectronica:
 		b.nota.XMLName = xml.Name{Local: "notaElectronicaCreditoDebitoIce"}
 		b.nota.XsiSchemaLocation = "notaElectronicaCreditoDebitoIce.xsd"
-	case siat.ModalidadComputarizada:
+	case models.ModalidadComputarizada:
 		b.nota.XMLName = xml.Name{Local: "notaComputarizadaCreditoDebitoIce"}
 		b.nota.XsiSchemaLocation = "notaComputarizadaCreditoDebitoIce.xsd"
 	}

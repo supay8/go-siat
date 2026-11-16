@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/ron86i/go-siat/v2/pkg/utils"
+	"github.com/supay8/go-siat/pkg/utils"
 )
 
 // CredentialSign representa las credenciales de firma digital de manera tipada y estructurada.
@@ -161,4 +161,31 @@ func WithDynamicConfig(ctx context.Context, config Config) context.Context {
 func GetConfigFromContext(ctx context.Context) (Config, bool) {
 	cfg, ok := ctx.Value(dynamicConfigKey).(Config)
 	return cfg, ok
+}
+
+// ResolveConfig applies per-request overrides without mutating the client.
+func ResolveConfig(ctx context.Context, config Config) Config {
+	// Merge con config dinámica si existe en el contexto
+	if dynCfg, ok := GetConfigFromContext(ctx); ok {
+		if dynCfg.Token != "" {
+			config.Token = dynCfg.Token
+		}
+		if dynCfg.Nit != 0 {
+			config.Nit = dynCfg.Nit
+		}
+		if dynCfg.CodigoSistema != "" {
+			config.CodigoSistema = dynCfg.CodigoSistema
+		}
+		if dynCfg.CodigoAmbiente != 0 {
+			config.CodigoAmbiente = dynCfg.CodigoAmbiente
+		}
+		if dynCfg.TraceId != "" {
+			config.TraceId = dynCfg.TraceId
+		}
+		if dynCfg.CredentialSign.GetType() != "UNKNOWN" {
+			config.CredentialSign = dynCfg.CredentialSign
+		}
+	}
+
+	return config
 }

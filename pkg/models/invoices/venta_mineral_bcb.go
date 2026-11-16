@@ -6,11 +6,10 @@ import (
 
 	"github.com/shopspring/decimal"
 
-	"github.com/ron86i/go-siat/v2"
-	"github.com/ron86i/go-siat/v2/pkg/models"
+	"github.com/supay8/go-siat/pkg/models"
 
-	"github.com/ron86i/go-siat/v2/internal/core/domain/datatype"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/documents"
+	"github.com/supay8/go-siat/internal/core/domain/datatype"
+	"github.com/supay8/go-siat/internal/core/domain/documents"
 )
 
 // VentaMineralBCB representa la estructura completa de una factura de Venta de Minerales para el BCB lista para ser procesada.
@@ -84,10 +83,10 @@ func (b *ventaMineralBCBBuilder) AddDetalle(req VentaMineralBCBDetalle) *ventaMi
 
 func (b *ventaMineralBCBBuilder) WithModalidad(tipo int) *ventaMineralBCBBuilder {
 	switch tipo {
-	case siat.ModalidadElectronica:
+	case models.ModalidadElectronica:
 		b.factura.XMLName = xml.Name{Local: "facturaElectronicaVentaMineralBCB"}
 		b.factura.XsiSchemaLocation = "facturaElectronicaVentaMineralBCB.xsd"
-	case siat.ModalidadComputarizada:
+	case models.ModalidadComputarizada:
 		b.factura.XMLName = xml.Name{Local: "facturaComputarizadaVentaMineralBCB"}
 		b.factura.XsiSchemaLocation = "facturaComputarizadaVentaMineralBCB.xsd"
 	}

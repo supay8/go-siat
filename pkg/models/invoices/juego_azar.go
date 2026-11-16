@@ -6,11 +6,10 @@ import (
 
 	"github.com/shopspring/decimal"
 
-	"github.com/ron86i/go-siat/v2"
-	"github.com/ron86i/go-siat/v2/pkg/models"
+	"github.com/supay8/go-siat/pkg/models"
 
-	"github.com/ron86i/go-siat/v2/internal/core/domain/datatype"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/documents"
+	"github.com/supay8/go-siat/internal/core/domain/datatype"
+	"github.com/supay8/go-siat/internal/core/domain/documents"
 )
 
 // JuegoAzar representa la estructura completa de una factura de Juego de Azar lista para ser procesada.
@@ -78,10 +77,10 @@ func (b *juegoAzarBuilder) AddDetalle(req JuegoAzarDetalle) *juegoAzarBuilder {
 
 func (b *juegoAzarBuilder) WithModalidad(tipo int) *juegoAzarBuilder {
 	switch tipo {
-	case siat.ModalidadElectronica:
+	case models.ModalidadElectronica:
 		b.factura.XMLName = xml.Name{Local: "facturaElectronicaJuegoAzar"}
 		b.factura.XsiSchemaLocation = "facturaElectronicaJuegoAzar.xsd"
-	case siat.ModalidadComputarizada:
+	case models.ModalidadComputarizada:
 		b.factura.XMLName = xml.Name{Local: "facturaComputarizadaJuegoAzar"}
 		b.factura.XsiSchemaLocation = "facturaComputarizadaJuegoAzar.xsd"
 	}

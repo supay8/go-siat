@@ -6,11 +6,10 @@ import (
 
 	"github.com/shopspring/decimal"
 
-	"github.com/ron86i/go-siat/v2"
-	"github.com/ron86i/go-siat/v2/pkg/models"
+	"github.com/supay8/go-siat/pkg/models"
 
-	"github.com/ron86i/go-siat/v2/internal/core/domain/datatype"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/documents"
+	"github.com/supay8/go-siat/internal/core/domain/datatype"
+	"github.com/supay8/go-siat/internal/core/domain/documents"
 )
 
 // VentaCombustibleSinSubvencion representa la estructura completa de una factura de Venta de Combustible Sin Subvención lista para ser procesada.
@@ -78,10 +77,10 @@ func (b *ventaCombustibleSinSubvencionBuilder) AddDetalle(req VentaCombustibleSi
 
 func (b *ventaCombustibleSinSubvencionBuilder) WithModalidad(tipo int) *ventaCombustibleSinSubvencionBuilder {
 	switch tipo {
-	case siat.ModalidadElectronica:
+	case models.ModalidadElectronica:
 		b.factura.XMLName = xml.Name{Local: "facturaElectronicaVentaCombustibleSinSubvencion"}
 		b.factura.XsiSchemaLocation = "facturaElectronicaVentaCombustibleSinSubvencion.xsd"
-	case siat.ModalidadComputarizada:
+	case models.ModalidadComputarizada:
 		b.factura.XMLName = xml.Name{Local: "facturaComputarizadaVentaCombustibleSinSubvencion"}
 		b.factura.XsiSchemaLocation = "facturaComputarizadaVentaCombustibleSinSubvencion.xsd"
 	}

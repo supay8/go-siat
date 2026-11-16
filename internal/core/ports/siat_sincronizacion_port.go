@@ -3,9 +3,9 @@ package ports
 import (
 	"context"
 
-	"github.com/ron86i/go-siat/v2/internal/core/domain/datatype/soap"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/siat/sincronizacion"
-	"github.com/ron86i/go-siat/v2/pkg/models"
+	"github.com/supay8/go-siat/internal/core/domain/datatype/soap"
+	"github.com/supay8/go-siat/internal/core/domain/siat/sincronizacion"
+	"github.com/supay8/go-siat/pkg/models"
 )
 
 // SiatSincronizacionService define las operaciones para la sincronización de catálogos y parámetros del SIAT.

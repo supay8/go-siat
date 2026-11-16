@@ -9,9 +9,9 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
-	"github.com/ron86i/go-siat/v2"
-	"github.com/ron86i/go-siat/v2/pkg/models"
 	"github.com/stretchr/testify/require"
+	"github.com/supay8/go-siat"
+	"github.com/supay8/go-siat/pkg/models"
 )
 
 func siatRecepcionComprasIntegrationConfig(t *testing.T) siat.Config {

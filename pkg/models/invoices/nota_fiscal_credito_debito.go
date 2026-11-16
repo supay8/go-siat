@@ -4,11 +4,10 @@ import (
 	"encoding/xml"
 	"time"
 
-	"github.com/ron86i/go-siat/v2"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/datatype"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/documents"
-	"github.com/ron86i/go-siat/v2/pkg/models"
 	"github.com/shopspring/decimal"
+	"github.com/supay8/go-siat/internal/core/domain/datatype"
+	"github.com/supay8/go-siat/internal/core/domain/documents"
+	"github.com/supay8/go-siat/pkg/models"
 )
 
 // NotaFiscalCreditoDebito representa la estructura completa de una nota de crédito/débito standard (Sector 24) lista para ser procesada.
@@ -76,10 +75,10 @@ func (b *notaFiscalCreditoDebitoBuilder) AddDetalle(req NotaDetalleFiscalCredito
 
 func (b *notaFiscalCreditoDebitoBuilder) WithModalidad(tipo int) *notaFiscalCreditoDebitoBuilder {
 	switch tipo {
-	case siat.ModalidadElectronica:
+	case models.ModalidadElectronica:
 		b.nota.XMLName = xml.Name{Local: "notaFiscalElectronicaCreditoDebito"}
 		b.nota.XsiSchemaLocation = "notaFiscalElectronicaCreditoDebito.xsd"
-	case siat.ModalidadComputarizada:
+	case models.ModalidadComputarizada:
 		b.nota.XMLName = xml.Name{Local: "notaFiscalComputarizadaCreditoDebito"}
 		b.nota.XsiSchemaLocation = "notaFiscalComputarizadaCreditoDebito.xsd"
 	}

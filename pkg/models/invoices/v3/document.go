@@ -5,7 +5,7 @@ package invoices
 
 import (
 	"encoding/xml"
-	domain "github.com/ron86i/go-siat/v2/internal/core/domain/documents/v3"
+	domain "github.com/supay8/go-siat/internal/core/domain/documents/v3"
 )
 
 const Layout = domain.Layout

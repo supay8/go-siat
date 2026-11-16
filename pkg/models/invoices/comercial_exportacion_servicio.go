@@ -6,11 +6,10 @@ import (
 
 	"github.com/shopspring/decimal"
 
-	"github.com/ron86i/go-siat/v2"
-	"github.com/ron86i/go-siat/v2/pkg/models"
+	"github.com/supay8/go-siat/pkg/models"
 
-	"github.com/ron86i/go-siat/v2/internal/core/domain/datatype"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/documents"
+	"github.com/supay8/go-siat/internal/core/domain/datatype"
+	"github.com/supay8/go-siat/internal/core/domain/documents"
 )
 
 // ComercialExportacionServicio representa la estructura completa de una factura comercial
@@ -82,10 +81,10 @@ func (b *comercialExportacionServicioBuilder) AddDetalle(req ComercialExportacio
 
 func (b *comercialExportacionServicioBuilder) WithModalidad(tipo int) *comercialExportacionServicioBuilder {
 	switch tipo {
-	case siat.ModalidadElectronica:
+	case models.ModalidadElectronica:
 		b.factura.XMLName = xml.Name{Local: "facturaElectronicaComercialExportacionServicio"}
 		b.factura.XsiSchemaLocation = "facturaElectronicaComercialExportacionServicio.xsd"
-	case siat.ModalidadComputarizada:
+	case models.ModalidadComputarizada:
 		b.factura.XMLName = xml.Name{Local: "facturaComputarizadaComercialExportacionServicio"}
 		b.factura.XsiSchemaLocation = "facturaComputarizadaComercialExportacionServicio.xsd"
 	}

@@ -19,9 +19,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ron86i/go-siat/v2/pkg/utils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/supay8/go-siat/pkg/utils"
 )
 
 type batchTestInvoice struct {

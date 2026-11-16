@@ -87,3 +87,26 @@ func TestOptionalAndComplementV3(t *testing.T) {
 	_, err := Nuevo(99)
 	require.Error(t, err)
 }
+
+func TestV3CompraVentaBuilderPreservesWireDocument(t *testing.T) {
+	data, err := os.ReadFile(filepath.Join("testdata", "xml", "facturaElectronicaCompraVenta.xml"))
+	require.NoError(t, err)
+	var parts struct {
+		Header  CompraVentaCabecera  `xml:"cabecera"`
+		Details []CompraVentaDetalle `xml:"detalle"`
+	}
+	require.NoError(t, xml.Unmarshal(data, &parts))
+	builder := NewCompraVentaBuilder().WithCabecera(parts.Header)
+	for _, detail := range parts.Details {
+		builder.AddDetalle(detail)
+	}
+	document := builder.Build()
+	require.NoError(t, document.Validar())
+	var reference CompraVenta
+	require.NoError(t, xml.Unmarshal(data, &reference))
+	expected, err := xml.Marshal(reference)
+	require.NoError(t, err)
+	actual, err := xml.Marshal(document)
+	require.NoError(t, err)
+	require.Equal(t, expected, actual, "usar builders conserva el contrato XML completo")
+}

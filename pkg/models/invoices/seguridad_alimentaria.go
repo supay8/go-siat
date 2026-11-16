@@ -6,11 +6,10 @@ import (
 
 	"github.com/shopspring/decimal"
 
-	"github.com/ron86i/go-siat/v2"
-	"github.com/ron86i/go-siat/v2/pkg/models"
+	"github.com/supay8/go-siat/pkg/models"
 
-	"github.com/ron86i/go-siat/v2/internal/core/domain/datatype"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/documents"
+	"github.com/supay8/go-siat/internal/core/domain/datatype"
+	"github.com/supay8/go-siat/internal/core/domain/documents"
 )
 
 // SeguridadAlimentaria representa la estructura completa de una factura de Seguridad Alimentaria lista para ser procesada.
@@ -80,10 +79,10 @@ func (b *seguridadAlimentariaBuilder) AddDetalle(req SeguridadAlimentariaDetalle
 
 func (b *seguridadAlimentariaBuilder) WithModalidad(tipo int) *seguridadAlimentariaBuilder {
 	switch tipo {
-	case siat.ModalidadElectronica:
+	case models.ModalidadElectronica:
 		b.factura.XMLName = xml.Name{Local: "facturaElectronicaSeguridadAlimentaria"}
 		b.factura.XsiSchemaLocation = "facturaElectronicaSeguridadAlimentaria.xsd"
-	case siat.ModalidadComputarizada:
+	case models.ModalidadComputarizada:
 		b.factura.XMLName = xml.Name{Local: "facturaComputarizadaSeguridadAlimentaria"}
 		b.factura.XsiSchemaLocation = "facturaComputarizadaSeguridadAlimentaria.xsd"
 	}

@@ -10,10 +10,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ron86i/go-siat/v2"
-	"github.com/ron86i/go-siat/v2/internal/core/ports"
-	"github.com/ron86i/go-siat/v2/pkg/models"
 	"github.com/stretchr/testify/require"
+	"github.com/supay8/go-siat"
+	"github.com/supay8/go-siat/internal/core/ports"
+	"github.com/supay8/go-siat/pkg/models"
 )
 
 // sincronizacionIntegrationContext obtiene un CUIS una vez para todos los

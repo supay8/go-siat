@@ -5,9 +5,10 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
-	domain "github.com/ron86i/go-siat/v2/internal/core/domain/documents/v3"
-	"github.com/ron86i/go-siat/v2/pkg/models"
+
 	"github.com/shopspring/decimal"
+	domain "github.com/supay8/go-siat/internal/core/domain/documents/v3"
+	"github.com/supay8/go-siat/pkg/models"
 )
 
 type CompraVenta struct {
@@ -29,6 +30,9 @@ func (d *CompraVenta) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *CompraVenta) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+	if start.Name.Local != "facturaElectronicaCompraVenta" || start.Name.Space != "" {
+		return fmt.Errorf("raíz XML incompatible con CompraVenta V3")
+	}
 	value := new(domain.CompraVenta)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -56,6 +60,7 @@ func (d *CompraVentaCabecera) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *CompraVentaCabecera) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+
 	value := new(domain.CabeceraCompraVenta)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -83,6 +88,7 @@ func (d *CompraVentaDetalle) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *CompraVentaDetalle) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+
 	value := new(domain.DetalleCompraVenta)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -338,6 +344,9 @@ func (d *Alquiler) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *Alquiler) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+	if start.Name.Local != "facturaElectronicaAlquilerBienInmueble" || start.Name.Space != "" {
+		return fmt.Errorf("raíz XML incompatible con Alquiler V3")
+	}
 	value := new(domain.Alquiler)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -365,6 +374,7 @@ func (d *AlquilerCabecera) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *AlquilerCabecera) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+
 	value := new(domain.CabeceraAlquiler)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -392,6 +402,7 @@ func (d *AlquilerDetalle) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *AlquilerDetalle) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+
 	value := new(domain.DetalleAlquiler)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -637,6 +648,9 @@ func (d *Educativo) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *Educativo) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+	if start.Name.Local != "facturaElectronicaSectorEducativo" || start.Name.Space != "" {
+		return fmt.Errorf("raíz XML incompatible con Educativo V3")
+	}
 	value := new(domain.Educativo)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -664,6 +678,7 @@ func (d *EducativoCabecera) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *EducativoCabecera) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+
 	value := new(domain.CabeceraEducativo)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -691,6 +706,7 @@ func (d *EducativoDetalle) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *EducativoDetalle) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+
 	value := new(domain.DetalleEducativo)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -944,6 +960,9 @@ func (d *ServicioBasico) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *ServicioBasico) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+	if start.Name.Local != "facturaElectronicaServicioBasico" || start.Name.Space != "" {
+		return fmt.Errorf("raíz XML incompatible con ServicioBasico V3")
+	}
 	value := new(domain.ServicioBasico)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -971,6 +990,7 @@ func (d *ServicioBasicoCabecera) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *ServicioBasicoCabecera) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+
 	value := new(domain.CabeceraServicioBasico)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -998,6 +1018,7 @@ func (d *ServicioBasicoDetalle) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *ServicioBasicoDetalle) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+
 	value := new(domain.DetalleServicioBasico)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -1315,6 +1336,9 @@ func (d *ExportacionServicios) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *ExportacionServicios) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+	if start.Name.Local != "facturaElectronicaComercialExportacionServicio" || start.Name.Space != "" {
+		return fmt.Errorf("raíz XML incompatible con ExportacionServicios V3")
+	}
 	value := new(domain.ExportacionServicios)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -1342,6 +1366,7 @@ func (d *ExportacionServiciosCabecera) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *ExportacionServiciosCabecera) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+
 	value := new(domain.CabeceraExportacionServicios)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -1369,6 +1394,7 @@ func (d *ExportacionServiciosDetalle) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *ExportacionServiciosDetalle) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+
 	value := new(domain.DetalleExportacionServicios)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -1632,6 +1658,9 @@ func (d *Seguros) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *Seguros) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+	if start.Name.Local != "facturaElectronicaSeguros" || start.Name.Space != "" {
+		return fmt.Errorf("raíz XML incompatible con Seguros V3")
+	}
 	value := new(domain.Seguros)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -1659,6 +1688,7 @@ func (d *SegurosCabecera) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *SegurosCabecera) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+
 	value := new(domain.CabeceraSeguros)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -1686,6 +1716,7 @@ func (d *SegurosDetalle) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *SegurosDetalle) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+
 	value := new(domain.DetalleSeguros)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -1916,339 +1947,6 @@ func (b *SegurosDetalleBuilder) WithSubTotal(value decimal.Decimal) *SegurosDeta
 	return b
 }
 
-type AlcanzadaICE struct {
-	models.RequestWrapper[domain.AlcanzadaICE]
-}
-
-func (d AlcanzadaICE) MarshalJSON() ([]byte, error) {
-	return json.Marshal(models.UnwrapInternalRequest[domain.AlcanzadaICE](d))
-}
-func (d *AlcanzadaICE) UnmarshalJSON(data []byte) error {
-	value := new(domain.AlcanzadaICE)
-	if previous := models.UnwrapInternalRequest[domain.AlcanzadaICE](*d); previous != nil {
-		*value = *previous
-	}
-	if err := json.Unmarshal(data, value); err != nil {
-		return err
-	}
-	d.RequestWrapper = models.NewRequestWrapper(value)
-	return nil
-}
-func (d *AlcanzadaICE) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
-	value := new(domain.AlcanzadaICE)
-	if err := decoder.DecodeElement(value, &start); err != nil {
-		return err
-	}
-	d.RequestWrapper = models.NewRequestWrapper(value)
-	return nil
-}
-
-type AlcanzadaICECabecera struct {
-	models.RequestWrapper[domain.CabeceraAlcanzadaICE]
-}
-
-func (d AlcanzadaICECabecera) MarshalJSON() ([]byte, error) {
-	return json.Marshal(models.UnwrapInternalRequest[domain.CabeceraAlcanzadaICE](d))
-}
-func (d *AlcanzadaICECabecera) UnmarshalJSON(data []byte) error {
-	value := new(domain.CabeceraAlcanzadaICE)
-	if previous := models.UnwrapInternalRequest[domain.CabeceraAlcanzadaICE](*d); previous != nil {
-		*value = *previous
-	}
-	if err := json.Unmarshal(data, value); err != nil {
-		return err
-	}
-	d.RequestWrapper = models.NewRequestWrapper(value)
-	return nil
-}
-func (d *AlcanzadaICECabecera) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
-	value := new(domain.CabeceraAlcanzadaICE)
-	if err := decoder.DecodeElement(value, &start); err != nil {
-		return err
-	}
-	d.RequestWrapper = models.NewRequestWrapper(value)
-	return nil
-}
-
-type AlcanzadaICEDetalle struct {
-	models.RequestWrapper[domain.DetalleAlcanzadaICE]
-}
-
-func (d AlcanzadaICEDetalle) MarshalJSON() ([]byte, error) {
-	return json.Marshal(models.UnwrapInternalRequest[domain.DetalleAlcanzadaICE](d))
-}
-func (d *AlcanzadaICEDetalle) UnmarshalJSON(data []byte) error {
-	value := new(domain.DetalleAlcanzadaICE)
-	if previous := models.UnwrapInternalRequest[domain.DetalleAlcanzadaICE](*d); previous != nil {
-		*value = *previous
-	}
-	if err := json.Unmarshal(data, value); err != nil {
-		return err
-	}
-	d.RequestWrapper = models.NewRequestWrapper(value)
-	return nil
-}
-func (d *AlcanzadaICEDetalle) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
-	value := new(domain.DetalleAlcanzadaICE)
-	if err := decoder.DecodeElement(value, &start); err != nil {
-		return err
-	}
-	d.RequestWrapper = models.NewRequestWrapper(value)
-	return nil
-}
-func (d AlcanzadaICE) esV3()                      {}
-func (d AlcanzadaICE) CodigoDocumentoSector() int { return 14 }
-func (d AlcanzadaICE) TipoFacturaDocumento() int  { return 1 }
-func (d AlcanzadaICE) Informacion() Info {
-	value := models.UnwrapInternalRequest[domain.AlcanzadaICE](d)
-	if value == nil {
-		return Info{}
-	}
-	return value.Informacion()
-}
-func (d AlcanzadaICE) Validar() error {
-	value := models.UnwrapInternalRequest[domain.AlcanzadaICE](d)
-	if value == nil {
-		return fmt.Errorf("documento V3 sin construir")
-	}
-	return value.Validar()
-}
-
-type AlcanzadaICEBuilder struct{ value *domain.AlcanzadaICE }
-
-func NewAlcanzadaICEBuilder() *AlcanzadaICEBuilder {
-	return &AlcanzadaICEBuilder{value: new(domain.AlcanzadaICE)}
-}
-func (b *AlcanzadaICEBuilder) WithCabecera(header AlcanzadaICECabecera) *AlcanzadaICEBuilder {
-	if value := models.UnwrapInternalRequest[domain.CabeceraAlcanzadaICE](header); value != nil {
-		b.value.Cabecera = *value
-	}
-	return b
-}
-func (b *AlcanzadaICEBuilder) AddDetalle(detail AlcanzadaICEDetalle) *AlcanzadaICEBuilder {
-	if value := models.UnwrapInternalRequest[domain.DetalleAlcanzadaICE](detail); value != nil {
-		b.value.Detalle = append(b.value.Detalle, *value)
-	}
-	return b
-}
-func (b *AlcanzadaICEBuilder) Build() AlcanzadaICE {
-	return AlcanzadaICE{RequestWrapper: models.NewRequestWrapper(b.value)}
-}
-
-type AlcanzadaICECabeceraBuilder struct{ value *domain.CabeceraAlcanzadaICE }
-
-func NewAlcanzadaICECabeceraBuilder() *AlcanzadaICECabeceraBuilder {
-	value := new(domain.CabeceraAlcanzadaICE)
-	value.CodigoDocumentoSector = 14
-	return &AlcanzadaICECabeceraBuilder{value: value}
-}
-func (b *AlcanzadaICECabeceraBuilder) Build() AlcanzadaICECabecera {
-	return AlcanzadaICECabecera{RequestWrapper: models.NewRequestWrapper(b.value)}
-}
-func (b *AlcanzadaICECabeceraBuilder) WithNitEmisor(value int64) *AlcanzadaICECabeceraBuilder {
-	b.value.NitEmisor = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithRazonSocialEmisor(value string) *AlcanzadaICECabeceraBuilder {
-	b.value.RazonSocialEmisor = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithMunicipio(value string) *AlcanzadaICECabeceraBuilder {
-	b.value.Municipio = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithTelefono(value Optional[string]) *AlcanzadaICECabeceraBuilder {
-	b.value.Telefono = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithNumeroFactura(value int64) *AlcanzadaICECabeceraBuilder {
-	b.value.NumeroFactura = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithCuf(value string) *AlcanzadaICECabeceraBuilder {
-	b.value.Cuf = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithCufd(value string) *AlcanzadaICECabeceraBuilder {
-	b.value.Cufd = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithCodigoSucursal(value int64) *AlcanzadaICECabeceraBuilder {
-	b.value.CodigoSucursal = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithDireccion(value string) *AlcanzadaICECabeceraBuilder {
-	b.value.Direccion = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithCodigoPuntoVenta(value Optional[int64]) *AlcanzadaICECabeceraBuilder {
-	b.value.CodigoPuntoVenta = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithFechaEmision(value Time) *AlcanzadaICECabeceraBuilder {
-	b.value.FechaEmision = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithNombreRazonSocial(value Optional[string]) *AlcanzadaICECabeceraBuilder {
-	b.value.NombreRazonSocial = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithCodigoTipoDocumentoIdentidad(value int64) *AlcanzadaICECabeceraBuilder {
-	b.value.CodigoTipoDocumentoIdentidad = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithNumeroDocumento(value string) *AlcanzadaICECabeceraBuilder {
-	b.value.NumeroDocumento = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithComplemento(value string) *AlcanzadaICECabeceraBuilder {
-	b.value.Complemento = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithCodigoCliente(value string) *AlcanzadaICECabeceraBuilder {
-	b.value.CodigoCliente = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithCodigoMetodoPago(value int64) *AlcanzadaICECabeceraBuilder {
-	b.value.CodigoMetodoPago = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithNumeroTarjeta(value Optional[int64]) *AlcanzadaICECabeceraBuilder {
-	b.value.NumeroTarjeta = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithSubTotalNeto(value decimal.Decimal) *AlcanzadaICECabeceraBuilder {
-	b.value.SubTotalNeto = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithTotalPrecioNeto(value decimal.Decimal) *AlcanzadaICECabeceraBuilder {
-	b.value.TotalPrecioNeto = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithIva(value decimal.Decimal) *AlcanzadaICECabeceraBuilder {
-	b.value.Iva = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithMontoaPagar(value decimal.Decimal) *AlcanzadaICECabeceraBuilder {
-	b.value.MontoaPagar = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithTotalIceEspecifico(value Optional[decimal.Decimal]) *AlcanzadaICECabeceraBuilder {
-	b.value.TotalIceEspecifico = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithTotalIcePorcentual(value Optional[decimal.Decimal]) *AlcanzadaICECabeceraBuilder {
-	b.value.TotalIcePorcentual = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithCodigoMoneda(value int64) *AlcanzadaICECabeceraBuilder {
-	b.value.CodigoMoneda = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithTipoCambio(value decimal.Decimal) *AlcanzadaICECabeceraBuilder {
-	b.value.TipoCambio = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithMontoTotalMoneda(value decimal.Decimal) *AlcanzadaICECabeceraBuilder {
-	b.value.MontoTotalMoneda = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithDescuentoAdicional(value Optional[decimal.Decimal]) *AlcanzadaICECabeceraBuilder {
-	b.value.DescuentoAdicional = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithCodigoExcepcion(value Optional[int64]) *AlcanzadaICECabeceraBuilder {
-	b.value.CodigoExcepcion = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithLeyenda(value string) *AlcanzadaICECabeceraBuilder {
-	b.value.Leyenda = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithUsuario(value string) *AlcanzadaICECabeceraBuilder {
-	b.value.Usuario = value
-	return b
-}
-func (b *AlcanzadaICECabeceraBuilder) WithCodigoInterno(value string) *AlcanzadaICECabeceraBuilder {
-	b.value.CodigoInterno = value
-	return b
-}
-
-type AlcanzadaICEDetalleBuilder struct{ value *domain.DetalleAlcanzadaICE }
-
-func NewAlcanzadaICEDetalleBuilder() *AlcanzadaICEDetalleBuilder {
-	value := new(domain.DetalleAlcanzadaICE)
-
-	return &AlcanzadaICEDetalleBuilder{value: value}
-}
-func (b *AlcanzadaICEDetalleBuilder) Build() AlcanzadaICEDetalle {
-	return AlcanzadaICEDetalle{RequestWrapper: models.NewRequestWrapper(b.value)}
-}
-func (b *AlcanzadaICEDetalleBuilder) WithActividadEconomica(value string) *AlcanzadaICEDetalleBuilder {
-	b.value.ActividadEconomica = value
-	return b
-}
-func (b *AlcanzadaICEDetalleBuilder) WithCodigoProductoSin(value int64) *AlcanzadaICEDetalleBuilder {
-	b.value.CodigoProductoSin = value
-	return b
-}
-func (b *AlcanzadaICEDetalleBuilder) WithCodigoProducto(value string) *AlcanzadaICEDetalleBuilder {
-	b.value.CodigoProducto = value
-	return b
-}
-func (b *AlcanzadaICEDetalleBuilder) WithDescripcion(value string) *AlcanzadaICEDetalleBuilder {
-	b.value.Descripcion = value
-	return b
-}
-func (b *AlcanzadaICEDetalleBuilder) WithCantidad(value decimal.Decimal) *AlcanzadaICEDetalleBuilder {
-	b.value.Cantidad = value
-	return b
-}
-func (b *AlcanzadaICEDetalleBuilder) WithUnidadMedida(value int64) *AlcanzadaICEDetalleBuilder {
-	b.value.UnidadMedida = value
-	return b
-}
-func (b *AlcanzadaICEDetalleBuilder) WithPrecioNetoUnitario(value decimal.Decimal) *AlcanzadaICEDetalleBuilder {
-	b.value.PrecioNetoUnitario = value
-	return b
-}
-func (b *AlcanzadaICEDetalleBuilder) WithMontoDescuento(value Optional[decimal.Decimal]) *AlcanzadaICEDetalleBuilder {
-	b.value.MontoDescuento = value
-	return b
-}
-func (b *AlcanzadaICEDetalleBuilder) WithSubTotal(value decimal.Decimal) *AlcanzadaICEDetalleBuilder {
-	b.value.SubTotal = value
-	return b
-}
-func (b *AlcanzadaICEDetalleBuilder) WithMarcaIce(value int64) *AlcanzadaICEDetalleBuilder {
-	b.value.MarcaIce = value
-	return b
-}
-func (b *AlcanzadaICEDetalleBuilder) WithPrecioNetoVentaIce(value Optional[decimal.Decimal]) *AlcanzadaICEDetalleBuilder {
-	b.value.PrecioNetoVentaIce = value
-	return b
-}
-func (b *AlcanzadaICEDetalleBuilder) WithAlicuotaEspecifica(value Optional[decimal.Decimal]) *AlcanzadaICEDetalleBuilder {
-	b.value.AlicuotaEspecifica = value
-	return b
-}
-func (b *AlcanzadaICEDetalleBuilder) WithAlicuotaPorcentual(value Optional[decimal.Decimal]) *AlcanzadaICEDetalleBuilder {
-	b.value.AlicuotaPorcentual = value
-	return b
-}
-func (b *AlcanzadaICEDetalleBuilder) WithMontoIceEspecifico(value Optional[decimal.Decimal]) *AlcanzadaICEDetalleBuilder {
-	b.value.MontoIceEspecifico = value
-	return b
-}
-func (b *AlcanzadaICEDetalleBuilder) WithMontoIcePorcentual(value Optional[decimal.Decimal]) *AlcanzadaICEDetalleBuilder {
-	b.value.MontoIcePorcentual = value
-	return b
-}
-func (b *AlcanzadaICEDetalleBuilder) WithCantidadIce(value Optional[decimal.Decimal]) *AlcanzadaICEDetalleBuilder {
-	b.value.CantidadIce = value
-	return b
-}
-
 type Hotel struct {
 	models.RequestWrapper[domain.Hotel]
 }
@@ -2268,6 +1966,9 @@ func (d *Hotel) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *Hotel) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+	if start.Name.Local != "facturaElectronicaHotel" || start.Name.Space != "" {
+		return fmt.Errorf("raíz XML incompatible con Hotel V3")
+	}
 	value := new(domain.Hotel)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -2295,6 +1996,7 @@ func (d *HotelCabecera) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *HotelCabecera) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+
 	value := new(domain.CabeceraHotel)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -2322,6 +2024,7 @@ func (d *HotelDetalle) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *HotelDetalle) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+
 	value := new(domain.DetalleHotel)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -2593,6 +2296,9 @@ func (d *Hospital) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *Hospital) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+	if start.Name.Local != "facturaElectronicaHospitalClinica" || start.Name.Space != "" {
+		return fmt.Errorf("raíz XML incompatible con Hospital V3")
+	}
 	value := new(domain.Hospital)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -2620,6 +2326,7 @@ func (d *HospitalCabecera) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *HospitalCabecera) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+
 	value := new(domain.CabeceraHospital)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -2647,6 +2354,7 @@ func (d *HospitalDetalle) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *HospitalDetalle) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+
 	value := new(domain.DetalleHospital)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -2928,6 +2636,9 @@ func (d *NotaCreditoDebito) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *NotaCreditoDebito) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+	if start.Name.Local != "notaFiscalElectronicaCreditoDebito" || start.Name.Space != "" {
+		return fmt.Errorf("raíz XML incompatible con NotaCreditoDebito V3")
+	}
 	value := new(domain.NotaCreditoDebito)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -2955,6 +2666,7 @@ func (d *NotaCreditoDebitoCabecera) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *NotaCreditoDebitoCabecera) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+
 	value := new(domain.CabeceraNotaCreditoDebito)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -2982,6 +2694,7 @@ func (d *NotaCreditoDebitoDetalle) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (d *NotaCreditoDebitoDetalle) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+
 	value := new(domain.DetalleNotaCreditoDebito)
 	if err := decoder.DecodeElement(value, &start); err != nil {
 		return err
@@ -3229,363 +2942,6 @@ func (b *NotaCreditoDebitoDetalleBuilder) WithCodigoDetalleTransaccion(value int
 	b.value.CodigoDetalleTransaccion = value
 	return b
 }
-
-type NotaCreditoDebitoICE struct {
-	models.RequestWrapper[domain.NotaCreditoDebitoICE]
-}
-
-func (d NotaCreditoDebitoICE) MarshalJSON() ([]byte, error) {
-	return json.Marshal(models.UnwrapInternalRequest[domain.NotaCreditoDebitoICE](d))
-}
-func (d *NotaCreditoDebitoICE) UnmarshalJSON(data []byte) error {
-	value := new(domain.NotaCreditoDebitoICE)
-	if previous := models.UnwrapInternalRequest[domain.NotaCreditoDebitoICE](*d); previous != nil {
-		*value = *previous
-	}
-	if err := json.Unmarshal(data, value); err != nil {
-		return err
-	}
-	d.RequestWrapper = models.NewRequestWrapper(value)
-	return nil
-}
-func (d *NotaCreditoDebitoICE) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
-	value := new(domain.NotaCreditoDebitoICE)
-	if err := decoder.DecodeElement(value, &start); err != nil {
-		return err
-	}
-	d.RequestWrapper = models.NewRequestWrapper(value)
-	return nil
-}
-
-type NotaCreditoDebitoICECabecera struct {
-	models.RequestWrapper[domain.CabeceraNotaCreditoDebitoICE]
-}
-
-func (d NotaCreditoDebitoICECabecera) MarshalJSON() ([]byte, error) {
-	return json.Marshal(models.UnwrapInternalRequest[domain.CabeceraNotaCreditoDebitoICE](d))
-}
-func (d *NotaCreditoDebitoICECabecera) UnmarshalJSON(data []byte) error {
-	value := new(domain.CabeceraNotaCreditoDebitoICE)
-	if previous := models.UnwrapInternalRequest[domain.CabeceraNotaCreditoDebitoICE](*d); previous != nil {
-		*value = *previous
-	}
-	if err := json.Unmarshal(data, value); err != nil {
-		return err
-	}
-	d.RequestWrapper = models.NewRequestWrapper(value)
-	return nil
-}
-func (d *NotaCreditoDebitoICECabecera) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
-	value := new(domain.CabeceraNotaCreditoDebitoICE)
-	if err := decoder.DecodeElement(value, &start); err != nil {
-		return err
-	}
-	d.RequestWrapper = models.NewRequestWrapper(value)
-	return nil
-}
-
-type NotaCreditoDebitoICEDetalle struct {
-	models.RequestWrapper[domain.DetalleNotaCreditoDebitoICE]
-}
-
-func (d NotaCreditoDebitoICEDetalle) MarshalJSON() ([]byte, error) {
-	return json.Marshal(models.UnwrapInternalRequest[domain.DetalleNotaCreditoDebitoICE](d))
-}
-func (d *NotaCreditoDebitoICEDetalle) UnmarshalJSON(data []byte) error {
-	value := new(domain.DetalleNotaCreditoDebitoICE)
-	if previous := models.UnwrapInternalRequest[domain.DetalleNotaCreditoDebitoICE](*d); previous != nil {
-		*value = *previous
-	}
-	if err := json.Unmarshal(data, value); err != nil {
-		return err
-	}
-	d.RequestWrapper = models.NewRequestWrapper(value)
-	return nil
-}
-func (d *NotaCreditoDebitoICEDetalle) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
-	value := new(domain.DetalleNotaCreditoDebitoICE)
-	if err := decoder.DecodeElement(value, &start); err != nil {
-		return err
-	}
-	d.RequestWrapper = models.NewRequestWrapper(value)
-	return nil
-}
-func (d NotaCreditoDebitoICE) esV3()                      {}
-func (d NotaCreditoDebitoICE) CodigoDocumentoSector() int { return 48 }
-func (d NotaCreditoDebitoICE) TipoFacturaDocumento() int  { return 3 }
-func (d NotaCreditoDebitoICE) Informacion() Info {
-	value := models.UnwrapInternalRequest[domain.NotaCreditoDebitoICE](d)
-	if value == nil {
-		return Info{}
-	}
-	return value.Informacion()
-}
-func (d NotaCreditoDebitoICE) Validar() error {
-	value := models.UnwrapInternalRequest[domain.NotaCreditoDebitoICE](d)
-	if value == nil {
-		return fmt.Errorf("documento V3 sin construir")
-	}
-	return value.Validar()
-}
-
-type NotaCreditoDebitoICEBuilder struct{ value *domain.NotaCreditoDebitoICE }
-
-func NewNotaCreditoDebitoICEBuilder() *NotaCreditoDebitoICEBuilder {
-	return &NotaCreditoDebitoICEBuilder{value: new(domain.NotaCreditoDebitoICE)}
-}
-func (b *NotaCreditoDebitoICEBuilder) WithCabecera(header NotaCreditoDebitoICECabecera) *NotaCreditoDebitoICEBuilder {
-	if value := models.UnwrapInternalRequest[domain.CabeceraNotaCreditoDebitoICE](header); value != nil {
-		b.value.Cabecera = *value
-	}
-	return b
-}
-func (b *NotaCreditoDebitoICEBuilder) AddDetalle(detail NotaCreditoDebitoICEDetalle) *NotaCreditoDebitoICEBuilder {
-	if value := models.UnwrapInternalRequest[domain.DetalleNotaCreditoDebitoICE](detail); value != nil {
-		b.value.Detalle = append(b.value.Detalle, *value)
-	}
-	return b
-}
-func (b *NotaCreditoDebitoICEBuilder) Build() NotaCreditoDebitoICE {
-	return NotaCreditoDebitoICE{RequestWrapper: models.NewRequestWrapper(b.value)}
-}
-
-type NotaCreditoDebitoICECabeceraBuilder struct {
-	value *domain.CabeceraNotaCreditoDebitoICE
-}
-
-func NewNotaCreditoDebitoICECabeceraBuilder() *NotaCreditoDebitoICECabeceraBuilder {
-	value := new(domain.CabeceraNotaCreditoDebitoICE)
-	value.CodigoDocumentoSector = 48
-	return &NotaCreditoDebitoICECabeceraBuilder{value: value}
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) Build() NotaCreditoDebitoICECabecera {
-	return NotaCreditoDebitoICECabecera{RequestWrapper: models.NewRequestWrapper(b.value)}
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithNitEmisor(value int64) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.NitEmisor = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithRazonSocialEmisor(value string) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.RazonSocialEmisor = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithMunicipio(value string) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.Municipio = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithTelefono(value Optional[string]) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.Telefono = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithNumeroNotaCreditoDebito(value int64) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.NumeroNotaCreditoDebito = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithCuf(value string) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.Cuf = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithCufd(value string) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.Cufd = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithCodigoSucursal(value int64) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.CodigoSucursal = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithDireccion(value string) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.Direccion = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithCodigoPuntoVenta(value Optional[int64]) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.CodigoPuntoVenta = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithFechaEmision(value Time) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.FechaEmision = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithNombreRazonSocial(value Optional[string]) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.NombreRazonSocial = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithCodigoTipoDocumentoIdentidad(value int64) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.CodigoTipoDocumentoIdentidad = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithNumeroDocumento(value string) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.NumeroDocumento = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithComplemento(value string) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.Complemento = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithCodigoCliente(value string) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.CodigoCliente = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithNumeroFactura(value int64) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.NumeroFactura = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithNumeroAutorizacionCuf(value string) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.NumeroAutorizacionCuf = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithFechaEmisionFactura(value Time) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.FechaEmisionFactura = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithSubTotalNetoOriginal(value decimal.Decimal) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.SubTotalNetoOriginal = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithTotalPrecioNetoOriginal(value decimal.Decimal) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.TotalPrecioNetoOriginal = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithTotaIcePorcentualOriginal(value decimal.Decimal) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.TotaIcePorcentualOriginal = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithTotaIceEspecificoOriginal(value decimal.Decimal) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.TotaIceEspecificoOriginal = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithIvaOriginal(value decimal.Decimal) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.IvaOriginal = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithMontoaPagarOriginal(value decimal.Decimal) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.MontoaPagarOriginal = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithSubTotalNetoDevuelto(value decimal.Decimal) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.SubTotalNetoDevuelto = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithTotalPrecioNetoDevuelto(value decimal.Decimal) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.TotalPrecioNetoDevuelto = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithIvaDevuelto(value decimal.Decimal) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.IvaDevuelto = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithMontoaPagarDevuelto(value decimal.Decimal) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.MontoaPagarDevuelto = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithDescuentoAdicionalOriginal(value decimal.Decimal) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.DescuentoAdicionalOriginal = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithMontoDescuentoDevuelto(value decimal.Decimal) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.MontoDescuentoDevuelto = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithCodigoExcepcion(value Optional[int64]) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.CodigoExcepcion = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithLeyenda(value string) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.Leyenda = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithUsuario(value string) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.Usuario = value
-	return b
-}
-func (b *NotaCreditoDebitoICECabeceraBuilder) WithCodigoInterno(value string) *NotaCreditoDebitoICECabeceraBuilder {
-	b.value.CodigoInterno = value
-	return b
-}
-
-type NotaCreditoDebitoICEDetalleBuilder struct {
-	value *domain.DetalleNotaCreditoDebitoICE
-}
-
-func NewNotaCreditoDebitoICEDetalleBuilder() *NotaCreditoDebitoICEDetalleBuilder {
-	value := new(domain.DetalleNotaCreditoDebitoICE)
-
-	return &NotaCreditoDebitoICEDetalleBuilder{value: value}
-}
-func (b *NotaCreditoDebitoICEDetalleBuilder) Build() NotaCreditoDebitoICEDetalle {
-	return NotaCreditoDebitoICEDetalle{RequestWrapper: models.NewRequestWrapper(b.value)}
-}
-func (b *NotaCreditoDebitoICEDetalleBuilder) WithNroItem(value int64) *NotaCreditoDebitoICEDetalleBuilder {
-	b.value.NroItem = value
-	return b
-}
-func (b *NotaCreditoDebitoICEDetalleBuilder) WithActividadEconomica(value string) *NotaCreditoDebitoICEDetalleBuilder {
-	b.value.ActividadEconomica = value
-	return b
-}
-func (b *NotaCreditoDebitoICEDetalleBuilder) WithCodigoProductoSin(value int64) *NotaCreditoDebitoICEDetalleBuilder {
-	b.value.CodigoProductoSin = value
-	return b
-}
-func (b *NotaCreditoDebitoICEDetalleBuilder) WithCodigoProducto(value string) *NotaCreditoDebitoICEDetalleBuilder {
-	b.value.CodigoProducto = value
-	return b
-}
-func (b *NotaCreditoDebitoICEDetalleBuilder) WithDescripcion(value string) *NotaCreditoDebitoICEDetalleBuilder {
-	b.value.Descripcion = value
-	return b
-}
-func (b *NotaCreditoDebitoICEDetalleBuilder) WithCantidad(value decimal.Decimal) *NotaCreditoDebitoICEDetalleBuilder {
-	b.value.Cantidad = value
-	return b
-}
-func (b *NotaCreditoDebitoICEDetalleBuilder) WithUnidadMedida(value int64) *NotaCreditoDebitoICEDetalleBuilder {
-	b.value.UnidadMedida = value
-	return b
-}
-func (b *NotaCreditoDebitoICEDetalleBuilder) WithPrecioNetoUnitario(value decimal.Decimal) *NotaCreditoDebitoICEDetalleBuilder {
-	b.value.PrecioNetoUnitario = value
-	return b
-}
-func (b *NotaCreditoDebitoICEDetalleBuilder) WithMontoDescuento(value Optional[decimal.Decimal]) *NotaCreditoDebitoICEDetalleBuilder {
-	b.value.MontoDescuento = value
-	return b
-}
-func (b *NotaCreditoDebitoICEDetalleBuilder) WithSubTotal(value decimal.Decimal) *NotaCreditoDebitoICEDetalleBuilder {
-	b.value.SubTotal = value
-	return b
-}
-func (b *NotaCreditoDebitoICEDetalleBuilder) WithMarcaIce(value int64) *NotaCreditoDebitoICEDetalleBuilder {
-	b.value.MarcaIce = value
-	return b
-}
-func (b *NotaCreditoDebitoICEDetalleBuilder) WithPrecioNetoVentaIce(value Optional[decimal.Decimal]) *NotaCreditoDebitoICEDetalleBuilder {
-	b.value.PrecioNetoVentaIce = value
-	return b
-}
-func (b *NotaCreditoDebitoICEDetalleBuilder) WithAlicuotaEspecifica(value Optional[decimal.Decimal]) *NotaCreditoDebitoICEDetalleBuilder {
-	b.value.AlicuotaEspecifica = value
-	return b
-}
-func (b *NotaCreditoDebitoICEDetalleBuilder) WithAlicuotaPorcentual(value Optional[decimal.Decimal]) *NotaCreditoDebitoICEDetalleBuilder {
-	b.value.AlicuotaPorcentual = value
-	return b
-}
-func (b *NotaCreditoDebitoICEDetalleBuilder) WithMontoIceEspecifico(value Optional[decimal.Decimal]) *NotaCreditoDebitoICEDetalleBuilder {
-	b.value.MontoIceEspecifico = value
-	return b
-}
-func (b *NotaCreditoDebitoICEDetalleBuilder) WithMontoIcePorcentual(value Optional[decimal.Decimal]) *NotaCreditoDebitoICEDetalleBuilder {
-	b.value.MontoIcePorcentual = value
-	return b
-}
-func (b *NotaCreditoDebitoICEDetalleBuilder) WithCantidadIce(value Optional[decimal.Decimal]) *NotaCreditoDebitoICEDetalleBuilder {
-	b.value.CantidadIce = value
-	return b
-}
-func (b *NotaCreditoDebitoICEDetalleBuilder) WithCodigoDetalleTransaccion(value int64) *NotaCreditoDebitoICEDetalleBuilder {
-	b.value.CodigoDetalleTransaccion = value
-	return b
-}
 func Nuevo(sector int) (Documento, error) {
 	switch sector {
 	case 1:
@@ -3600,16 +2956,12 @@ func Nuevo(sector int) (Documento, error) {
 		return &ExportacionServicios{}, nil
 	case 34:
 		return &Seguros{}, nil
-	case 14:
-		return &AlcanzadaICE{}, nil
 	case 16:
 		return &Hotel{}, nil
 	case 17:
 		return &Hospital{}, nil
 	case 24:
 		return &NotaCreditoDebito{}, nil
-	case 48:
-		return &NotaCreditoDebitoICE{}, nil
 	default:
 		return nil, fmt.Errorf("sector V3 no soportado: %d", sector)
 	}

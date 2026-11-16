@@ -4,7 +4,7 @@ import (
 	"encoding/xml"
 	"time"
 
-	"github.com/ron86i/go-siat/v2/internal/core/domain/datatype"
+	"github.com/supay8/go-siat/internal/core/domain/datatype"
 )
 
 // RegistroEventoSignificativo es el wrapper para registrar un evento

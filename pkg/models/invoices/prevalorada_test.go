@@ -7,11 +7,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ron86i/go-siat/v2"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/datatype/soap"
-	"github.com/ron86i/go-siat/v2/pkg/models"
-	"github.com/ron86i/go-siat/v2/pkg/models/invoices"
-	"github.com/ron86i/go-siat/v2/pkg/utils"
+	"github.com/supay8/go-siat"
+	"github.com/supay8/go-siat/internal/core/domain/datatype/soap"
+	"github.com/supay8/go-siat/pkg/models"
+	"github.com/supay8/go-siat/pkg/models/invoices"
+	"github.com/supay8/go-siat/pkg/utils"
 )
 
 func TestPrevalorada_Computarizada(t *testing.T) {

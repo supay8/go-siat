@@ -4,11 +4,11 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/ron86i/go-siat/v2/internal/core/domain/datatype/soap"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/siat/compra_venta"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/siat/facturacion"
-	"github.com/ron86i/go-siat/v2/internal/core/ports"
-	"github.com/ron86i/go-siat/v2/pkg/models"
+	"github.com/supay8/go-siat/internal/core/domain/datatype/soap"
+	"github.com/supay8/go-siat/internal/core/domain/siat/compra_venta"
+	"github.com/supay8/go-siat/internal/core/domain/siat/facturacion"
+	"github.com/supay8/go-siat/internal/core/ports"
+	"github.com/supay8/go-siat/pkg/models"
 )
 
 type FacturacionServiceImpl struct {

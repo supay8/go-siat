@@ -6,11 +6,10 @@ import (
 
 	"github.com/shopspring/decimal"
 
-	"github.com/ron86i/go-siat/v2"
-	"github.com/ron86i/go-siat/v2/pkg/models"
+	"github.com/supay8/go-siat/pkg/models"
 
-	"github.com/ron86i/go-siat/v2/internal/core/domain/datatype"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/documents"
+	"github.com/supay8/go-siat/internal/core/domain/datatype"
+	"github.com/supay8/go-siat/internal/core/domain/documents"
 )
 
 type FacturaPrevaloradaSinDerechoCreditoFiscal struct {
@@ -51,10 +50,10 @@ func (b *prevaloradaSinDerechoCreditoFiscalBuilder) WithCabecera(req FacturaPrev
 
 func (b *prevaloradaSinDerechoCreditoFiscalBuilder) WithModalidad(tipo int) *prevaloradaSinDerechoCreditoFiscalBuilder {
 	switch tipo {
-	case siat.ModalidadElectronica:
+	case models.ModalidadElectronica:
 		b.factura.XMLName = xml.Name{Local: "facturaElectronicaPrevaloradaSD"}
 		b.factura.XsiSchemaLocation = "facturaElectronicaPrevaloradaSD.xsd"
-	case siat.ModalidadComputarizada:
+	case models.ModalidadComputarizada:
 		b.factura.XMLName = xml.Name{Local: "facturaComputarizadaPrevaloradaSD"}
 		b.factura.XsiSchemaLocation = "facturaComputarizadaPrevaloradaSD.xsd"
 	}

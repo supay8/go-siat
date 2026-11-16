@@ -6,10 +6,9 @@ import (
 
 	"github.com/shopspring/decimal"
 
-	"github.com/ron86i/go-siat/v2"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/datatype"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/documents"
-	"github.com/ron86i/go-siat/v2/pkg/models"
+	"github.com/supay8/go-siat/internal/core/domain/datatype"
+	"github.com/supay8/go-siat/internal/core/domain/documents"
+	"github.com/supay8/go-siat/pkg/models"
 )
 
 // CompraVentaBonificaciones representa una factura de compra-venta con bonificaciones lista para procesar.
@@ -72,10 +71,10 @@ func (b *compraVentaBonificacionesBuilder) WithTipoFacturaDocumento(tipo int) *c
 // WithModalidad configura los metadatos XML según la modalidad.
 func (b *compraVentaBonificacionesBuilder) WithModalidad(tipo int) *compraVentaBonificacionesBuilder {
 	switch tipo {
-	case siat.ModalidadElectronica:
+	case models.ModalidadElectronica:
 		b.factura.XMLName = xml.Name{Local: "facturaElectronicaCompraVentaBon"}
 		b.factura.XsiSchemaLocation = "facturaElectronicaCompraVentaBon.xsd"
-	case siat.ModalidadComputarizada:
+	case models.ModalidadComputarizada:
 		b.factura.XMLName = xml.Name{Local: "facturaComputarizadaCompraVentaBon"}
 		b.factura.XsiSchemaLocation = "facturaComputarizadaCompraVentaBon.xsd"
 	}

@@ -10,11 +10,11 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
-	"github.com/ron86i/go-siat/v2"
-	"github.com/ron86i/go-siat/v2/internal/core/ports"
-	"github.com/ron86i/go-siat/v2/pkg/models"
-	"github.com/ron86i/go-siat/v2/pkg/utils"
 	"github.com/stretchr/testify/assert"
+	"github.com/supay8/go-siat"
+	"github.com/supay8/go-siat/internal/core/ports"
+	"github.com/supay8/go-siat/pkg/models"
+	"github.com/supay8/go-siat/pkg/utils"
 )
 
 // TestNotificaCertificadoRevocado valida que el servicio sea capaz de informar al SIAT

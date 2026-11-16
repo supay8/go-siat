@@ -4,11 +4,10 @@ import (
 	"encoding/xml"
 	"time"
 
-	"github.com/ron86i/go-siat/v2"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/datatype"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/documents"
-	"github.com/ron86i/go-siat/v2/pkg/models"
 	"github.com/shopspring/decimal"
+	"github.com/supay8/go-siat/internal/core/domain/datatype"
+	"github.com/supay8/go-siat/internal/core/domain/documents"
+	"github.com/supay8/go-siat/pkg/models"
 )
 
 // NotaConciliacion representa la estructura completa de una nota de conciliación lista para ser procesada.
@@ -95,10 +94,10 @@ func (b *notaConciliacionBuilder) AddDetalleConciliacion(req NotaDetalleConcilia
 
 func (b *notaConciliacionBuilder) WithModalidad(tipo int) *notaConciliacionBuilder {
 	switch tipo {
-	case siat.ModalidadElectronica:
+	case models.ModalidadElectronica:
 		b.nota.XMLName = xml.Name{Local: "notaElectronicaConciliacion"}
 		b.nota.XsiSchemaLocation = "notaElectronicaConciliacion.xsd"
-	case siat.ModalidadComputarizada:
+	case models.ModalidadComputarizada:
 		// Se asume el mismo patrón que otros documentos sectoriales
 		b.nota.XMLName = xml.Name{Local: "notaComputarizadaConciliacion"}
 		b.nota.XsiSchemaLocation = "notaComputarizadaConciliacion.xsd"

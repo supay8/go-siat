@@ -22,5 +22,5 @@ Cada página contiene la descarga del ZIP usado en esta instantánea.
 `SignatureSchema.xsd` procede de
 `/images/archivos_tecnicos/archivos_apoyo/SignatureSchema.xsd`.
 
-Regeneración: `go generate ./siatv3/invoices` desde la raíz. El generador no
-necesita red ni dependencias Python externas. Después ejecutar las pruebas.
+Regeneración: `go generate ./pkg/models/invoices/v3` desde la raíz. El generador no
+necesita red ni dependencias Python externas. Después ejecutar las pruebas. Los sectores ICE 14 y 48 se conservan aquí como referencias; no forman parte de la API pública V3.

@@ -6,11 +6,10 @@ import (
 
 	"github.com/shopspring/decimal"
 
-	"github.com/ron86i/go-siat/v2"
-	"github.com/ron86i/go-siat/v2/pkg/models"
+	"github.com/supay8/go-siat/pkg/models"
 
-	"github.com/ron86i/go-siat/v2/internal/core/domain/datatype"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/documents"
+	"github.com/supay8/go-siat/internal/core/domain/datatype"
+	"github.com/supay8/go-siat/internal/core/domain/documents"
 )
 
 // SectorEducativo representa la estructura completa de una factura del Sector Educativo lista para ser procesada.
@@ -84,10 +83,10 @@ func (b *sectorEducativoBuilder) AddDetalle(req SectorEducativoDetalle) *sectorE
 
 func (b *sectorEducativoBuilder) WithModalidad(tipo int) *sectorEducativoBuilder {
 	switch tipo {
-	case siat.ModalidadElectronica:
+	case models.ModalidadElectronica:
 		b.factura.XMLName = xml.Name{Local: "facturaElectronicaSectorEducativo"}
 		b.factura.XsiSchemaLocation = "facturaElectronicaSectorEducativo.xsd"
-	case siat.ModalidadComputarizada:
+	case models.ModalidadComputarizada:
 		b.factura.XMLName = xml.Name{Local: "facturaComputarizadaSectorEducativo"}
 		b.factura.XsiSchemaLocation = "facturaComputarizadaSectorEducativo.xsd"
 	}

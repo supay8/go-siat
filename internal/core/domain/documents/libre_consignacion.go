@@ -3,7 +3,7 @@ package documents
 import (
 	"encoding/xml"
 
-	"github.com/ron86i/go-siat/v2/internal/core/domain/datatype"
+	"github.com/supay8/go-siat/internal/core/domain/datatype"
 )
 
 // FacturaLibreConsignacion representa la estructura completa de una factura Libre Consignación para el SIAT.

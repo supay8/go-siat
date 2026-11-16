@@ -6,11 +6,10 @@ import (
 
 	"github.com/shopspring/decimal"
 
-	"github.com/ron86i/go-siat/v2"
-	"github.com/ron86i/go-siat/v2/pkg/models"
+	"github.com/supay8/go-siat/pkg/models"
 
-	"github.com/ron86i/go-siat/v2/internal/core/domain/datatype"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/documents"
+	"github.com/supay8/go-siat/internal/core/domain/datatype"
+	"github.com/supay8/go-siat/internal/core/domain/documents"
 )
 
 // TurismoHospedaje representa la estructura completa de una factura de Turismo y Hospedaje lista para ser procesada.
@@ -85,10 +84,10 @@ func (b *turismoHospedajeBuilder) AddDetalle(req TurismoHospedajeDetalle) *turis
 
 func (b *turismoHospedajeBuilder) WithModalidad(tipo int) *turismoHospedajeBuilder {
 	switch tipo {
-	case siat.ModalidadElectronica:
+	case models.ModalidadElectronica:
 		b.factura.XMLName = xml.Name{Local: "facturaElectronicaServicioTuristicoHospedaje"}
 		b.factura.XsiSchemaLocation = "facturaElectronicaServicioTuristicoHospedaje.xsd"
-	case siat.ModalidadComputarizada:
+	case models.ModalidadComputarizada:
 		b.factura.XMLName = xml.Name{Local: "facturaComputarizadaServicioTuristicoHospedaje"}
 		b.factura.XsiSchemaLocation = "facturaComputarizadaServicioTuristicoHospedaje.xsd"
 	}

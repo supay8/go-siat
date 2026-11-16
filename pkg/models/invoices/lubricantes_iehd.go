@@ -6,11 +6,10 @@ import (
 
 	"github.com/shopspring/decimal"
 
-	"github.com/ron86i/go-siat/v2"
-	"github.com/ron86i/go-siat/v2/pkg/models"
+	"github.com/supay8/go-siat/pkg/models"
 
-	"github.com/ron86i/go-siat/v2/internal/core/domain/datatype"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/documents"
+	"github.com/supay8/go-siat/internal/core/domain/datatype"
+	"github.com/supay8/go-siat/internal/core/domain/documents"
 )
 
 // LubricantesIehd representa la estructura completa de una factura Sector 53
@@ -79,10 +78,10 @@ func (b *lubricantesIehdBuilder) AddDetalle(req LubricantesIehdDetalle) *lubrica
 
 func (b *lubricantesIehdBuilder) WithModalidad(tipo int) *lubricantesIehdBuilder {
 	switch tipo {
-	case siat.ModalidadElectronica:
+	case models.ModalidadElectronica:
 		b.factura.XMLName = xml.Name{Local: "facturaElectronicaImportacionComercializacionLubricantesIEHD"}
 		b.factura.XsiSchemaLocation = "facturaElectronicaImportacionComercializacionLubricantesIEHD.xsd"
-	case siat.ModalidadComputarizada:
+	case models.ModalidadComputarizada:
 		b.factura.XMLName = xml.Name{Local: "facturaComputarizadaImportacionComercializacionLubricantesIEHD"}
 		b.factura.XsiSchemaLocation = "facturaComputarizadaImportacionComercializacionLubricantesIEHD.xsd"
 	}

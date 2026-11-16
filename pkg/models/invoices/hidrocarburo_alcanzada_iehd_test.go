@@ -8,11 +8,11 @@ import (
 	"testing"
 	"time"
 
-	siat "github.com/ron86i/go-siat/v2"
-	"github.com/ron86i/go-siat/v2/pkg/models"
-	"github.com/ron86i/go-siat/v2/pkg/models/invoices"
-	"github.com/ron86i/go-siat/v2/pkg/utils"
 	"github.com/stretchr/testify/assert"
+	siat "github.com/supay8/go-siat"
+	"github.com/supay8/go-siat/pkg/models"
+	"github.com/supay8/go-siat/pkg/models/invoices"
+	"github.com/supay8/go-siat/pkg/utils"
 )
 
 // elementOrder extrae los nombres de los elementos hijos directos de <cabecera> o <detalle>

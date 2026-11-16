@@ -6,11 +6,10 @@ import (
 
 	"github.com/shopspring/decimal"
 
-	"github.com/ron86i/go-siat/v2"
-	"github.com/ron86i/go-siat/v2/pkg/models"
+	"github.com/supay8/go-siat/pkg/models"
 
-	"github.com/ron86i/go-siat/v2/internal/core/domain/datatype"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/documents"
+	"github.com/supay8/go-siat/internal/core/domain/datatype"
+	"github.com/supay8/go-siat/internal/core/domain/documents"
 )
 
 // ImportacionComercializacionLubricantes representa la estructura completa de una factura de Sector 44.
@@ -77,9 +76,9 @@ func (b *importacionComercializacionLubricantesBuilder) AddDetalle(req Importaci
 
 func (b *importacionComercializacionLubricantesBuilder) WithModalidad(tipo int) *importacionComercializacionLubricantesBuilder {
 	switch tipo {
-	case siat.ModalidadElectronica:
+	case models.ModalidadElectronica:
 		b.factura.XMLName = xml.Name{Local: "facturaElectronicaImportacionComercializacionLubricantes"}
-	case siat.ModalidadComputarizada:
+	case models.ModalidadComputarizada:
 		b.factura.XMLName = xml.Name{Local: "facturaComputarizadaImportacionComercializacionLubricantes"}
 	}
 	return b

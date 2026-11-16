@@ -4,11 +4,10 @@ import (
 	"encoding/xml"
 	"time"
 
-	"github.com/ron86i/go-siat/v2"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/datatype"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/documents"
-	"github.com/ron86i/go-siat/v2/pkg/models"
 	"github.com/shopspring/decimal"
+	"github.com/supay8/go-siat/internal/core/domain/datatype"
+	"github.com/supay8/go-siat/internal/core/domain/documents"
+	"github.com/supay8/go-siat/pkg/models"
 )
 
 // ServicioBasicoZF representa la estructura completa de una factura de servicio básico ZF lista para ser procesada.
@@ -45,10 +44,10 @@ func NewServicioBasicoZFBuilder() *servicioBasicoZFBuilder {
 
 func (b *servicioBasicoZFBuilder) WithModalidad(tipo int) *servicioBasicoZFBuilder {
 	switch tipo {
-	case siat.ModalidadElectronica:
+	case models.ModalidadElectronica:
 		b.factura.XMLName = xml.Name{Local: "facturaElectronicaServicioBasicoZf"}
 		b.factura.XsiSchemaLocation = "facturaElectronicaServicioBasicoZf.xsd"
-	case siat.ModalidadComputarizada:
+	case models.ModalidadComputarizada:
 		b.factura.XMLName = xml.Name{Local: "facturaComputarizadaServicioBasicoZf"}
 		b.factura.XsiSchemaLocation = "facturaComputarizadaServicioBasicoZf.xsd"
 	}

@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ron86i/go-siat/v2/pkg/models"
+	"github.com/supay8/go-siat/pkg/models"
 )
 
 func TestBuildRequestDeclaraNamespaceXsiCuandoCampoOpcionalEsNulo(t *testing.T) {

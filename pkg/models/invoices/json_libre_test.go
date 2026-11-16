@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/ron86i/go-siat/v2/pkg/models/invoices"
 	"github.com/stretchr/testify/assert"
+	"github.com/supay8/go-siat/pkg/models/invoices"
 )
 
 func TestBuildersConJSONLibreExponenErrorDeSerializacion(t *testing.T) {

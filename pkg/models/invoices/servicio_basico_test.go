@@ -7,11 +7,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ron86i/go-siat/v2"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/documents"
-	"github.com/ron86i/go-siat/v2/pkg/models"
-	"github.com/ron86i/go-siat/v2/pkg/models/invoices"
 	"github.com/stretchr/testify/assert"
+	"github.com/supay8/go-siat"
+	"github.com/supay8/go-siat/internal/core/domain/documents"
+	"github.com/supay8/go-siat/pkg/models"
+	"github.com/supay8/go-siat/pkg/models/invoices"
 )
 
 func TestServicioBasicoBuilder(t *testing.T) {

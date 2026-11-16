@@ -3,9 +3,9 @@ package ports
 import (
 	"context"
 
-	"github.com/ron86i/go-siat/v2/internal/core/domain/datatype/soap"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/siat/operaciones"
-	"github.com/ron86i/go-siat/v2/pkg/models"
+	"github.com/supay8/go-siat/internal/core/domain/datatype/soap"
+	"github.com/supay8/go-siat/internal/core/domain/siat/operaciones"
+	"github.com/supay8/go-siat/pkg/models"
 )
 
 // SiatOperacionesService define el contrato parssa el Servicio Web de Operaciones del SIAT.
