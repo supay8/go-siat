@@ -34,6 +34,7 @@ type CufdResponse struct {
 type RespuestaCufd struct {
 	Codigo        string            `xml:"codigo,omitempty" json:"codigo,omitempty"`
 	CodigoControl string            `xml:"codigoControl,omitempty" json:"codigoControl,omitempty"`
+	CodigoInterno string            `xml:"codigoInterno,omitempty" json:"codigoInterno,omitempty"` // SIAT V3; vacío en V2.
 	Direccion     string            `xml:"direccion,omitempty" json:"direccion,omitempty"`
 	FechaVigencia time.Time         `xml:"fechaVigencia,omitempty" json:"fechaVigencia,omitempty"`
 	MensajesList  []MensajeServicio `xml:"mensajesList,omitempty" json:"mensajesList,omitempty"`

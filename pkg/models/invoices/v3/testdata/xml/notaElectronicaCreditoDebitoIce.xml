@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<notaElectronicaCreditoDebitoIce xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                    xsi:noNamespaceSchemaLocation="/creditoDebito/notaElectronicaCreditoDebitoIce.xsd">
+     <cabecera>
+        <nitEmisor>123456022</nitEmisor>
+        <razonSocialEmisor>EMPRESA BFC S.A.</razonSocialEmisor>
+        <municipio>La Paz</municipio>
+        <telefono>2846005</telefono>
+        <numeroNotaCreditoDebito>1</numeroNotaCreditoDebito>
+        <cuf>44AAEC00DBD34C53C3E5B135433591A5FA086F86A867A75AC82F24C74</cuf>
+        <cufd>BQUE+QytqQUDBKVUFOSVRPQkxVRFZNVFVJBMDAwMDAwM</cufd>
+        <codigoSucursal>0</codigoSucursal>
+        <direccion>AV. JORGE LOPEZ #123</direccion>
+        <codigoPuntoVenta>0</codigoPuntoVenta>
+        <fechaEmision>2027-03-06T16:16:03.570</fechaEmision>
+        <nombreRazonSocial>JAQUELINE ROMAN</nombreRazonSocial>
+        <codigoTipoDocumentoIdentidad>1</codigoTipoDocumentoIdentidad>
+        <numeroDocumento>5115463</numeroDocumento>
+        <complemento>0</complemento>
+        <codigoCliente>51158891</codigoCliente>
+        <numeroFactura>1</numeroFactura>
+        <numeroAutorizacionCuf>dsa564dsa54d6as5</numeroAutorizacionCuf>
+        <fechaEmisionFactura>2027-02-01T10:14:02.841</fechaEmisionFactura>
+        <subTotalNetoOriginal>162.60</subTotalNetoOriginal>
+        <totalPrecioNetoOriginal>142.60</totalPrecioNetoOriginal>
+        <totaIcePorcentualOriginal>1.63</totaIcePorcentualOriginal>
+        <totaIceEspecificoOriginal>33.39</totaIceEspecificoOriginal>
+        <ivaOriginal>18.54</ivaOriginal>
+        <montoaPagarOriginal>196.16</montoaPagarOriginal>
+        <subTotalNetoDevuelto>27.07</subTotalNetoDevuelto>
+        <totalPrecioNetoDevuelto>23.80</totalPrecioNetoDevuelto>
+        <ivaDevuelto>3.09</ivaDevuelto>
+        <montoaPagarDevuelto>26.87</montoaPagarDevuelto>
+        <descuentoAdicionalOriginal>20.00</descuentoAdicionalOriginal>
+        <montoDescuentoDevuelto>3.28</montoDescuentoDevuelto>
+        <codigoExcepcion xsi:nil="true"/>
+        <leyenda>Ley N° 453: Los servicios deben suministrarse en condiciones de inocuidad, calidad y seguridad.</leyenda>
+        <usuario>vjcm</usuario>
+        <codigoInterno>A</codigoInterno>
+        <codigoDocumentoSector>48</codigoDocumentoSector>
+    </cabecera>
+   <detalle>
+    <nroItem>1</nroItem>
+    <actividadEconomica>110300</actividadEconomica>
+    <codigoProductoSin>24310</codigoProductoSin>
+    <codigoProducto>PT-001-02S</codigoProducto>
+    <descripcion>CERVEZA PALE ALE - MATILDA - 330 ML</descripcion>
+    <cantidad>6.00</cantidad>
+    <unidadMedida>5</unidadMedida>
+    <precioNetoUnitario>8.18</precioNetoUnitario>
+    <montoDescuento>1.50</montoDescuento>
+    <subTotal>47.58</subTotal>
+    <marcaIce>1</marcaIce>
+    <precioNetoVentaIce>47.58</precioNetoVentaIce>
+    <alicuotaEspecifica>5.62</alicuotaEspecifica>
+    <alicuotaPorcentual>0.01</alicuotaPorcentual>
+    <montoIceEspecifico>11.13</montoIceEspecifico>
+    <montoIcePorcentual>0.48</montoIcePorcentual>
+    <cantidadIce>1.98</cantidadIce>
+    <codigoDetalleTransaccion>1</codigoDetalleTransaccion>
+  </detalle>
+  <detalle>
+    <nroItem>2</nroItem>
+    <actividadEconomica>110300</actividadEconomica>
+    <codigoProductoSin>24310</codigoProductoSin>
+    <codigoProducto>PT-005-02S</codigoProducto>
+    <descripcion>CERVEZA PREMIUM NEGRA - BUDDA - 330 ML</descripcion>
+    <cantidad>6.00</cantidad>
+    <unidadMedida>5</unidadMedida>
+    <precioNetoUnitario>9.02</precioNetoUnitario>
+    <montoDescuento>0.85</montoDescuento>
+    <subTotal>53.27</subTotal>
+    <marcaIce>1</marcaIce>
+    <precioNetoVentaIce>53.27</precioNetoVentaIce>
+    <alicuotaEspecifica>5.62</alicuotaEspecifica>
+    <alicuotaPorcentual>0.01</alicuotaPorcentual>
+    <montoIceEspecifico>1.13</montoIceEspecifico>
+    <montoIcePorcentual>0.53</montoIcePorcentual>
+    <cantidadIce>1.98</cantidadIce>
+    <codigoDetalleTransaccion>1</codigoDetalleTransaccion>
+  </detalle>
+  <detalle>
+    <nroItem>3</nroItem>
+    <actividadEconomica>110300</actividadEconomica>
+    <codigoProductoSin>24310</codigoProductoSin>
+    <codigoProducto>PT-008-02S</codigoProducto>
+    <descripcion>CERVEZA IPA - MATILDA - 330 ML</descripcion>
+    <cantidad>6.00</cantidad>
+    <unidadMedida>5</unidadMedida>
+    <precioNetoUnitario>10.50</precioNetoUnitario>
+    <montoDescuento>1.25</montoDescuento>
+    <subTotal>67.41</subTotal>
+    <marcaIce>1</marcaIce>
+    <precioNetoVentaIce>67.41</precioNetoVentaIce>
+    <alicuotaEspecifica>5.62</alicuotaEspecifica>
+    <alicuotaPorcentual>0.01</alicuotaPorcentual>
+    <montoIceEspecifico>11.13</montoIceEspecifico>
+    <montoIcePorcentual>1.25</montoIcePorcentual>
+    <cantidadIce>1.98</cantidadIce>
+    <codigoDetalleTransaccion>1</codigoDetalleTransaccion>
+  </detalle>
+    <detalle>
+        <nroItem>2</nroItem>
+	    <actividadEconomica>110300</actividadEconomica>
+	    <codigoProductoSin>24310</codigoProductoSin>
+	    <codigoProducto>PT-005-02S</codigoProducto>
+	    <descripcion>CERVEZA PREMIUM NEGRA - BUDDA - 330 ML</descripcion>
+	    <cantidad>3.00</cantidad>
+	    <unidadMedida>5</unidadMedida>
+	    <precioNetoUnitario>9.02</precioNetoUnitario>
+	    <montoDescuento xsi:nil="true"/>
+	    <subTotal>27.07</subTotal>
+	    <marcaIce>1</marcaIce>
+	    <precioNetoVentaIce>27.07</precioNetoVentaIce>
+	    <alicuotaEspecifica>0.00</alicuotaEspecifica>
+	    <alicuotaPorcentual>0.00</alicuotaPorcentual>
+	    <montoIceEspecifico>0.00</montoIceEspecifico>
+	    <montoIcePorcentual>0.00</montoIcePorcentual>
+    	<cantidadIce>0.66</cantidadIce>
+        <codigoDetalleTransaccion>2</codigoDetalleTransaccion>
+    </detalle>
+    <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <SignedInfo>
+            <CanonicalizationMethod
+                    Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></CanonicalizationMethod>
+            <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"></SignatureMethod>
+            <Reference URI="">
+                <Transforms>
+                    <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></Transform>
+                    <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithComments"></Transform>
+                </Transforms>
+                <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
+                <DigestValue>GdOUKmoppfdHpIEos7zyMO+C4YVw0gQNxGwwVyB6DtQ=</DigestValue>
+            </Reference>
+        </SignedInfo>
+        <SignatureValue>
+            itb123fGGhh12DpFDFas34ASDAPpSSSSadasDasAS1smkRsj5ksdjasd8asdkasjd8asdkas8asdk21v
+            a1qf+kBKLwF39mj+5zKo1qf+kBKLD42qD/+yxSMMS6DM5SywPxO1oyjnSZtObIe/45fdS4sE9+aNOn
+            UncYUlSDAPpSSSSadasgIMWwlX2XMJ4SDAPpSSSSadas6qihJt/3dEIdta1RETSDAPpSSSSadas9S2W
+            ALbT3VV8pjLqikVLcSDAPpSSSSadaseCKG8abcdssM0Wm8p+5grNNpSDAPpSSSSadasy4TvT4C3xS
+            70zSbKWeBUUglRcU8FECEcacu+UJaBCgRW0S3Q==
+        </SignatureValue>
+        <KeyInfo>
+            <X509Data>
+                <X509Certificate>
+                    TIIEuzCCZ7OgZIZsdZsDSZDSsdZsdSZSDZSDZKoZIhvcNZQEZBQZgbUxCzZZBgNVBZYTZkZ
+                    TIIEuzCCZ7OgZIZsdZsDSZDSsdZsdSZSDZSDZKoZIhvcNZQEZBQZgbUxCzZZBgNVBZYTZkZ
+                    bnRhbTlsbGZZZ1dVzdG9zLTdvYi5ibzCCZSIDQYZKoZIhvcNZQEBBQZDgasdaACZQoCggEB
+                    TIIEuzCCZ7OgZIZsdZsDSZDSsdZsdSZSDZSDZKoZIhvcNZQEZBQZgbUxCzZZBgNVBZYTZkZ
+                    bnRhbTlsbGZZZ1dVzdG9zLTdvYi5ibzCCZSIDQYZKoZIhvcNZQEBBQZDgasdaACZQoCggEB
+                    TIIEuzCCZ7OgZIZsdZsDSZDSsdZsdSZSDZSDZKoZIhvcNZQEZBQZgbUxCzZZBgNVBZYTZkZ
+                    bnRhbTlsbGZZZ1dVzdG9zLTdvYi5ibzCCZSIDQYZKoZIhvcNZQEBBQZDgasdaACZQoCggEB
+                    k/IsZZEBEETRTEQYDVQQZEoxTDZzNTc5TDI4TTITZYZKoZIhvcNZQkBZiNhcT5vbGQucXVp
+                    bnRhbTlsbGZZZ1dVzdG9zLTdvYi5ibzCCZSIDQYZKoZIhvcNZQEBBQZDgasdaACZQoCggEB
+                    bnRhbTlsbGZZZ1dVzdG9zLTdvYi5ibzCCZSIDQYZKoZIhvcNZQEBBQZDgasdaACZQoCggEB
+                    kTIh+T9dIRZ9GghiSZbP2Zk082ycgic2ZepdZLu7p2LEUZUhTXSXGZQkO4o/ZNZZk0ZQKgi
+                    bnRhbTlsbGZZZ1dVzdG9zLTdvYi5ibzCCZSIDQYZKoZIhvcNZQEBBQZDgasdaACZQoCggEB
+                    V8ZVyTkIDRCTcBYZO4ZZ8oV1UTbQEiDZZOYTZDHT2ZRy+kS+OzCdpZZKZZyds0ZClCZRlTg
+                    bnRhbTlsbGZZZ1dVzdG9zLTdvYi5ibzCCZSIDQYZKoZIhvcNZQEBBQZDgasdaACZQoCggEB
+                    Z1UdDQEZIE8DZuBgNVHREEZzZlhiNhcT5vZZZXVpbnRhbTlsbGZZZ1dVzdG9zLTdvYi5i7Z
+                    bzBRBgNVHR8ESZBITEZgRKBChkBodHRczovL2Rlc2ZycT9sbG8uYRzZIuZ29iLTZvL2Rlc2
+                    bnRhbTlsbGZZZ1dVzdG9zLTdvYi5ibzCCZSIDQYZKoZIhvcNZQEBBQZDgasdaACZQoCggEB
+                    NRrZKQl3YhKZKRSZyeegVZIiXlYeEyOe5qdn3XdyTCDkz4bTn02KbcsnZP7oVTqsodBSd0B
+                    ptrxqoqeZHhGBzEl5/vxDS/Sx4eO7ZXd1T4HtZntETdsZXZuPZZt4Vr57R/hqdZeTkk7uO9
+                    bnRhbTlsbGZZZ1dVzdG9zLTdvYi5ibzCCZSIDQYZKoZIhvcNZQEBBQZDgasdaACZQoCggEB
+                    YB+PC1LO7gnh4Zz9UsYb0YBG
+                </X509Certificate>
+            </X509Data>
+        </KeyInfo>
+    </Signature>
+</notaElectronicaCreditoDebitoIce>

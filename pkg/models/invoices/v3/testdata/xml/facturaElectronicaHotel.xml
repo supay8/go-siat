@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<facturaElectronicaHotel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                         xsi:noNamespaceSchemaLocation="facturaElectronicaHotel.xsd">
+    <cabecera>
+        <nitEmisor>123456022</nitEmisor>
+        <razonSocialEmisor>EMPRESA HOTELERA PRUEBA S.A</razonSocialEmisor>
+        <municipio>SANTA CRUZ</municipio>
+        <telefono>70005450</telefono>
+        <numeroFactura>234</numeroFactura>
+        <cuf>15800E3CEC614EA599QA12B71DD029CA9649C9E55A8EEDFA7846D74</cuf>
+        <cufd>BQUE+QytqQUDBKVUFOSVRPQkxVRFZNVFVJBMDAwMDAwM</cufd>
+        <codigoSucursal>3</codigoSucursal>
+        <direccion>ZONA/BARRIO: 4 DE NOVIEMBRE UV: 055MZA: 046B AVENIDA ROCA Y CORONADO NRO. S/N</direccion>
+        <codigoPuntoVenta>0</codigoPuntoVenta>
+        <fechaEmision>2027-07-02T11:25:48.885</fechaEmision>
+        <nombreRazonSocial>ABC SRL</nombreRazonSocial>
+        <codigoTipoDocumentoIdentidad>1</codigoTipoDocumentoIdentidad>
+        <numeroDocumento>12587025</numeroDocumento>
+        <complemento>0</complemento>
+        <codigoCliente>1478</codigoCliente>
+        <cantidadHuespedes>1</cantidadHuespedes>
+        <cantidadHabitaciones>1</cantidadHabitaciones>
+        <cantidadMayores>1</cantidadMayores>
+        <cantidadMenores>0</cantidadMenores>
+        <fechaIngresoHospedaje>2027-07-01T09:01:48.885</fechaIngresoHospedaje>
+        <codigoMetodoPago>1</codigoMetodoPago>
+        <numeroTarjeta xsi:nil="true"/>
+        <subTotalNeto>1222.25</subTotalNeto>
+        <totalPrecioNeto>1092.25</totalPrecioNeto>
+        <iva>141.99</iva>
+        <montoaPagar>1234.24</montoaPagar>
+        <codigoMoneda>1</codigoMoneda>
+        <tipoCambio>1.00</tipoCambio>
+        <montoTotalMoneda>1234.24</montoTotalMoneda>
+        <montoGiftCard>100.00</montoGiftCard>
+        <descuentoAdicional>30.00</descuentoAdicional>
+        <codigoExcepcion xsi:nil="true"/>
+        <leyenda>Ley N° 453: El proveedor debe brindar atención sin discriminación, con respeto, calidez y cordialidad a los usuarios y consumidores.</leyenda>
+        <usuario>vjcm</usuario>
+        <codigoInterno>A</codigoInterno>
+        <codigoDocumentoSector>16</codigoDocumentoSector>
+    </cabecera>
+    <detalle>
+        <actividadEconomica>451010</actividadEconomica>
+        <codigoProductoSin>49111</codigoProductoSin>
+        <codigoProducto>123456</codigoProducto>
+        <codigoTipoHabitacion>2</codigoTipoHabitacion>
+        <descripcion>Pago por la habitación</descripcion>
+        <cantidad>1</cantidad>
+        <unidadMedida>1</unidadMedida>
+        <precioNetoUnitario>977.25</precioNetoUnitario>
+        <montoDescuento>0.00</montoDescuento>
+        <subTotal>977.25</subTotal>
+         <detalleHuespedes>[{"nombreHuesped":"JOSE FERNANDO ROIG","documentoIdentificacion":"1517217","codigoPais":01,"In":01.07,"Out":02.07}]</detalleHuespedes>
+    </detalle>
+    <detalle>
+        <actividadEconomica>451010</actividadEconomica>
+        <codigoProductoSin>9111</codigoProductoSin>
+        <codigoProducto>1234</codigoProducto>
+        <codigoTipoHabitacion>2</codigoTipoHabitacion>
+        <descripcion>Frigo Bar</descripcion>
+        <cantidad>1</cantidad>
+        <unidadMedida>1</unidadMedida>
+        <precioNetoUnitario>245.00</precioNetoUnitario>
+        <montoDescuento>0.00</montoDescuento>
+        <subTotal>245.00</subTotal>
+        <detalleHuespedes xsi:nil="true"/>
+    </detalle>
+    <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <SignedInfo>
+            <CanonicalizationMethod
+                    Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></CanonicalizationMethod>
+            <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"></SignatureMethod>
+            <Reference URI="">
+                <Transforms>
+                    <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></Transform>
+                    <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithComments"></Transform>
+                </Transforms>
+                <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
+                <DigestValue>Je1Ig48uSRWyQ4g4e361bSDK360XD7lyqIpnAYQ/XqU=</DigestValue>
+            </Reference>
+        </SignedInfo>
+        <SignatureValue>
+            itb123fGGhh12DpFDFas34ASDAPpSSSSadasDasAS1smkRsj5ksdjasd8asdkasjd8asdkas8asdk21v
+            a1qf+kBKLwF39mj+5zKo1qf+kBKLD42qD/+yxSMMS6DM5SywPxO1oyjnSZtObIe/45fdS4sE9+aNOn
+            UncYUlSDAPpSSSSadasgIMWwlX2XMJ4SDAPpSSSSadas6qihJt/3dEIdta1RETSDAPpSSSSadas9S2W
+            ALbT3VV8pjLqikVLcSDAPpSSSSadaseCKG8abcdssM0Wm8p+5grNNpSDAPpSSSSadasy4TvT4C3xS
+            70zSbKWeBUUglRcU8FECEcacu+UJaBCgRW0S3Q==
+        </SignatureValue>
+        <KeyInfo>
+            <X509Data>
+                <X509Certificate>
+                    TIIEuzCCZ7OgZIZsdZsDSZDSsdZsdSZSDZSDZKoZIhvcNZQEZBQZgbUxCzZZBgNVBZYTZkZ
+                    TIIEuzCCZ7OgZIZsdZsDSZDSsdZsdSZSDZSDZKoZIhvcNZQEZBQZgbUxCzZZBgNVBZYTZkZ
+                    bnRhbTlsbGZZZ1dVzdG9zLTdvYi5ibzCCZSIDQYZKoZIhvcNZQEBBQZDgasdaACZQoCggEB
+                    TIIEuzCCZ7OgZIZsdZsDSZDSsdZsdSZSDZSDZKoZIhvcNZQEZBQZgbUxCzZZBgNVBZYTZkZ
+                    bnRhbTlsbGZZZ1dVzdG9zLTdvYi5ibzCCZSIDQYZKoZIhvcNZQEBBQZDgasdaACZQoCggEB
+                    TIIEuzCCZ7OgZIZsdZsDSZDSsdZsdSZSDZSDZKoZIhvcNZQEZBQZgbUxCzZZBgNVBZYTZkZ
+                    bnRhbTlsbGZZZ1dVzdG9zLTdvYi5ibzCCZSIDQYZKoZIhvcNZQEBBQZDgasdaACZQoCggEB
+                    k/IsZZEBEETRTEQYDVQQZEoxTDZzNTc5TDI4TTITZYZKoZIhvcNZQkBZiNhcT5vbGQucXVp
+                    bnRhbTlsbGZZZ1dVzdG9zLTdvYi5ibzCCZSIDQYZKoZIhvcNZQEBBQZDgasdaACZQoCggEB
+                    bnRhbTlsbGZZZ1dVzdG9zLTdvYi5ibzCCZSIDQYZKoZIhvcNZQEBBQZDgasdaACZQoCggEB
+                    kTIh+T9dIRZ9GghiSZbP2Zk082ycgic2ZepdZLu7p2LEUZUhTXSXGZQkO4o/ZNZZk0ZQKgi
+                    bnRhbTlsbGZZZ1dVzdG9zLTdvYi5ibzCCZSIDQYZKoZIhvcNZQEBBQZDgasdaACZQoCggEB
+                    V8ZVyTkIDRCTcBYZO4ZZ8oV1UTbQEiDZZOYTZDHT2ZRy+kS+OzCdpZZKZZyds0ZClCZRlTg
+                    bnRhbTlsbGZZZ1dVzdG9zLTdvYi5ibzCCZSIDQYZKoZIhvcNZQEBBQZDgasdaACZQoCggEB
+                    Z1UdDQEZIE8DZuBgNVHREEZzZlhiNhcT5vZZZXVpbnRhbTlsbGZZZ1dVzdG9zLTdvYi5i7Z
+                    bzBRBgNVHR8ESZBITEZgRKBChkBodHRczovL2Rlc2ZycT9sbG8uYRzZIuZ29iLTZvL2Rlc2
+                    bnRhbTlsbGZZZ1dVzdG9zLTdvYi5ibzCCZSIDQYZKoZIhvcNZQEBBQZDgasdaACZQoCggEB
+                    NRrZKQl3YhKZKRSZyeegVZIiXlYeEyOe5qdn3XdyTCDkz4bTn02KbcsnZP7oVTqsodBSd0B
+                    ptrxqoqeZHhGBzEl5/vxDS/Sx4eO7ZXd1T4HtZntETdsZXZuPZZt4Vr57R/hqdZeTkk7uO9
+                    bnRhbTlsbGZZZ1dVzdG9zLTdvYi5ibzCCZSIDQYZKoZIhvcNZQEBBQZDgasdaACZQoCggEB
+                    YB+PC1LO7gnh4Zz9UsYb0YBG
+                </X509Certificate>
+            </X509Data>
+        </KeyInfo>
+    </Signature>
+</facturaElectronicaHotel>

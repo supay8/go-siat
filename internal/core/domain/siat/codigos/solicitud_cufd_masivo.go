@@ -50,6 +50,7 @@ type RespuestaCufdMasivo struct {
 type RespuestaListaRegistroCufdSoapDto struct {
 	Codigo              string                `xml:"codigo" json:"codigo"`
 	CodigoControl       string                `xml:"codigoControl" json:"codigoControl"`
+	CodigoInterno       string                `xml:"codigoInterno,omitempty" json:"codigoInterno,omitempty"` // SIAT V3; vacío en V2.
 	CodigoPuntoVenta    datatype.Nilable[int] `xml:"codigoPuntoVenta" json:"codigoPuntoVenta"`
 	CodigoSucursal      datatype.Nilable[int] `xml:"codigoSucursal" json:"codigoSucursal"`
 	Cuis                string                `xml:"cuis" json:"cuis"`
