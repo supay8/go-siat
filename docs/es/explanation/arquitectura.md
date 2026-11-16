@@ -44,6 +44,34 @@ graph LR
 
 El prefijo `internal/` lo hace cumplir el compilador de Go: nada de lo que está debajo puede importarse desde fuera del módulo. Eso no es una convención, es una frontera — y es lo que le da al SDK libertad de reestructurar sus internos sin un release que rompa.
 
+### Integración del servicio SIAT V3
+
+`siat.NewV3(cfg)` construye una fachada independiente con los mismos accesores
+por familia que V2: `CompraVenta`, `ServicioBasico`, `Electronica` y
+`DocumentoAjuste`, además de códigos, sincronización y operaciones comunes.
+Ambos constructores comparten la composición de HTTP y servicios comunes.
+
+Las solicitudes V3 se construyen con builders opacos de `pkg/models/v3`;
+los documentos fiscales están en `pkg/models/invoices/v3`. El dominio interno
+conserva tags XML, esquemas y reglas de validación, generados desde los XSD.
+Los puertos describen operaciones `(ctx, solicitud)` y los adaptadores
+validan el servicio y delegan al transporte SOAP común.
+
+Firma, compresión, hash e inspección de paquetes pertenecen a la preparación
+del builder. Los adaptadores conservan la respuesta tipada y el llamador
+verifica negocio con `siat.Verify`, igual que en V2. Una configuración efectiva
+por contexto se comprueba contra la identidad del documento preparado antes
+de inyectar credenciales. Los requests preparados se copian antes del envío.
+
+Se comparten los contratos XML que permanecen iguales; los contratos exclusivos
+V3, como paquetes sin `cafc`, tienen sus propios DTO. El catálogo interno
+centraliza sector, tipo fiscal, familia y soporte de paquetes para los nueve
+documentos incluidos. ICE permanece fuera de la API pública V3.
+
+Las pruebas verifican las fronteras entre paquetes, regeneración reproducible,
+API desde un módulo externo, firmas y XML contra XSD. La [guía V3](../how-to/siat-v3.md)
+detalla las operaciones y límites de homologación.
+
 La única excepción deliberada es `internal/core/ports`, que tocás para `WithDynamicConfig`. Es alcanzable solo porque el paquete raíz re-exporta las piezas que necesitás.
 
 ---

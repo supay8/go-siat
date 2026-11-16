@@ -207,3 +207,23 @@ Per-tenant state lives on the context rather than the client, which is what lets
 | Type signatures for everything above | [Reference: API](../reference/api.md) |
 | Tuning the HTTP layer | [Reference: Configuration](../reference/configuration.md) |
 | Seeing the design in use | [Tutorial](../tutorial/first-invoice.md) |
+
+
+## SIAT V3 integration
+
+`NewV3` constructs independent service-oriented clients using the public
+facade, opaque builders, ports, adapters and shared SOAP transport of the SDK.
+Common HTTP and code/catalog/operation dependencies are composed once per client.
+
+V3 requests live in `pkg/models/v3`; fiscal document builders live in
+`pkg/models/invoices/v3`. XML structures and generated XSD constraints remain
+internal. Preparation handles signing, compression, hashing and packet
+inspection; adapters validate the request and dispatch through the shared
+transport. Responses are typed and business verification is explicit via
+`siat.Verify`. Effective request identity must match the prepared document.
+
+The internal catalog defines fiscal type, service family and packet support
+for the nine documented sectors. ICE builders are excluded. V3 packet DTOs
+omit `cafc` without changing V2 contracts. Tests enforce import boundaries,
+reproducible generation, external-module compilation, signatures and XSD
+conformance. See the [V3 guide](../../es/how-to/siat-v3.md) for supported operations.

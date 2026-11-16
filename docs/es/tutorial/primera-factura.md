@@ -29,7 +29,7 @@ Arrancamos a propósito con la modalidad **computarizada** para que puedas compl
 ## Paso 1: Instalar y configurar el cliente
 
 ```bash
-go get github.com/ron86i/go-siat/v2
+go get github.com/supay8/go-siat
 ```
 
 Creá `main.go`. La idea más importante de este SDK: **tu identidad se configura una sola vez**, no se repite en cada llamada.
@@ -42,7 +42,7 @@ import (
     "log"
     "time"
 
-    "github.com/ron86i/go-siat/v2"
+    "github.com/supay8/go-siat"
 )
 
 const urlPiloto = "https://pilotosiatservicios.impuestos.gob.bo/v2"
@@ -95,7 +95,7 @@ cuis := cuisResp.Body.Content.RespuestaCuis.Codigo
 log.Println("CUIS:", cuis)
 ```
 
-Agregá `"github.com/ron86i/go-siat/v2/pkg/models"` a tus imports.
+Agregá `"github.com/supay8/go-siat/pkg/models"` a tus imports.
 
 Fijate en la **verificación de error en dos etapas**. Este patrón se repite en absolutamente todas las llamadas que vas a hacer:
 
@@ -139,7 +139,7 @@ Esta llamada devuelve **dos** valores que necesitás: el código en sí y un `Co
 El **CUF** (*Código Único de Facturación*) es un dígito verificador que identifica unívocamente una factura. A diferencia del CUIS y el CUFD, este lo calculás localmente — sin llamada de red.
 
 ```go
-import "github.com/ron86i/go-siat/v2/pkg/utils"
+import "github.com/supay8/go-siat/pkg/utils"
 
 fechaEmision := time.Now()
 
@@ -171,7 +171,7 @@ if err != nil {
 Ahora la factura en sí. Tiene una **cabecera** (quién, cuándo, totales) y una o más **líneas de detalle** (qué se vendió).
 
 ```go
-import "github.com/ron86i/go-siat/v2/pkg/models/invoices"
+import "github.com/supay8/go-siat/pkg/models/invoices"
 
 nombreCliente := "JUAN PEREZ"
 codigoPuntoVenta := 0

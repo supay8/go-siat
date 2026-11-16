@@ -78,7 +78,7 @@ Dos reglas gobiernan esto, y las dos son silenciosas cuando se rompen:
 Un certificado vencido falla al momento del envío, que es el peor momento para enterarse. Verificalo al arrancar:
 
 ```go
-import "github.com/ron86i/go-siat/v2/pkg/utils"
+import "github.com/supay8/go-siat/pkg/utils"
 
 p12Bytes, err := os.ReadFile("cert.p12")
 if err != nil {

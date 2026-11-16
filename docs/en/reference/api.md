@@ -4,14 +4,14 @@
   <a href="../../es/reference/api.md">🇪🇸 Español</a> · <a href="../README.md">Docs index</a>
 </p>
 
-Complete public surface of `github.com/ron86i/go-siat/v2`. For generated godoc see [pkg.go.dev](https://pkg.go.dev/github.com/ron86i/go-siat/v2).
+Complete public surface of `github.com/supay8/go-siat`. For generated godoc see [pkg.go.dev](https://pkg.go.dev/github.com/supay8/go-siat).
 
 ```go
 import (
-    siat "github.com/ron86i/go-siat/v2"
-    "github.com/ron86i/go-siat/v2/pkg/models"
-    "github.com/ron86i/go-siat/v2/pkg/models/invoices"
-    "github.com/ron86i/go-siat/v2/pkg/utils"
+    siat "github.com/supay8/go-siat"
+    "github.com/supay8/go-siat/pkg/models"
+    "github.com/supay8/go-siat/pkg/models/invoices"
+    "github.com/supay8/go-siat/pkg/utils"
 )
 ```
 

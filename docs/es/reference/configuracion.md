@@ -185,7 +185,7 @@ cfg.TraceId = uuid.NewString()
 Para IDs de traza por solicitud, usá configuración dinámica en vez de mutar estado compartido:
 
 ```go
-ctx = ports.WithDynamicConfig(ctx, siat.Config{TraceId: requestID})
+ctx = siat.WithDynamicConfig(ctx, siat.Config{TraceId: requestID})
 ```
 
 ---
@@ -195,9 +195,9 @@ ctx = ports.WithDynamicConfig(ctx, siat.Config{TraceId: requestID})
 Un solo cliente puede atender a muchos contribuyentes. `WithDynamicConfig` sobrescribe campos elegidos para una sola llamada:
 
 ```go
-import "github.com/ron86i/go-siat/v2/internal/core/ports"
+import siat "github.com/supay8/go-siat"
 
-ctx = ports.WithDynamicConfig(ctx, siat.Config{
+ctx = siat.WithDynamicConfig(ctx, siat.Config{
     Nit:            inquilino.Nit,
     Token:          inquilino.Token,
     CodigoSistema:  inquilino.CodigoSistema,

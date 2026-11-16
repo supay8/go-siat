@@ -1,36 +1,9 @@
-# Soporte y Comunidad
+# Soporte
 
-¡Hola! Gracias por usar **go-siat**. Este SDK fue creado con el objetivo de simplificar la integración con el SIAT en Bolivia y ayudar a que más desarrolladores puedan implementar facturación electrónica de forma sencilla.
+El repositorio oficial es [supay8/go-siat](https://github.com/supay8/go-siat).
 
-Si el proyecto te ha sido útil, aquí tienes algunas formas de apoyarlo para que pueda seguir mejorando:
+Reportá problemas y consultas técnicas en [GitHub Issues](https://github.com/supay8/go-siat/issues).
+Incluí versión del SDK, versión del SIAT, sector, comportamiento esperado y una reproducción mínima.
+Retirá tokens, datos del contribuyente y credenciales de firma de ejemplos y registros.
 
----
-
-## ¡Invítame un café! ☕
-
-Mantener y actualizar este SDK requiere tiempo y dedicación constante para seguir el ritmo de las normativas. Tu apoyo ayuda directamente a cubrir los costos de desarrollo y mantenimiento.
-
-- **GitHub Sponsors**: Apoya el desarrollo continuo del proyecto directamente desde el repositorio.
-
----
-
-## Soporte y Consultoría 🛠️
-
-Si necesitas ayuda personalizada para tu empresa o requieres implementar funcionalidades específicas para tu negocio:
-
-- **Asesoría Técnica**: Ofrezco servicios de consultoría y soporte prioritario para implementaciones corporativas.
-- **Contacto Directo**: Escríbeme por [Telegram](https://t.me/ron86i) para cualquier consulta, sugerencia o para compartir cómo estás usando el SDK.
-
----
-
-## Reporte de Problemas 🐛
-
-Si encuentras un error o tienes una sugerencia técnica:
-
-1. Revisa si ya existe un **Issue** abierto.
-2. Si no, abre uno nuevo siguiendo la plantilla de reporte de errores.
-3. Asegúrate de incluir los logs relevantes (sin información sensible).
-
----
-
-¡Gracias por ayudar a que **go-siat** siga siendo una herramienta de calidad para toda la comunidad boliviana! ❤️
+Se conservan las atribuciones originales y los avisos de licencia del repositorio.

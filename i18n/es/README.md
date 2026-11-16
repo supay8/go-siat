@@ -5,11 +5,11 @@
 <p align="center">
   <a href="https://masterminds.github.io/stability/active.html"><img src="https://masterminds.github.io/stability/active.svg" alt="Stability: Active"></a>
   <br>
-  <a href="https://pkg.go.dev/github.com/ron86i/go-siat/v2"><img src="https://pkg.go.dev/badge/github.com/ron86i/go-siat/v2.svg" alt="Go Reference"></a>
-  <a href="https://go.dev/"><img src="https://img.shields.io/github/go-mod/go-version/ron86i/go-siat?style=flat" alt="Go Version"></a>
-  <a href="../../LICENSE"><img src="https://img.shields.io/github/license/ron86i/go-siat?style=flat" alt="Licencia"></a>
-  <a href="https://github.com/ron86i/go-siat/releases"><img src="https://img.shields.io/github/v/release/ron86i/go-siat?style=flat&label=release" alt="Última Versión"></a>
-  <a href="https://deepwiki.com/ron86i/go-siat"><img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a>
+  <a href="https://pkg.go.dev/github.com/supay8/go-siat"><img src="https://pkg.go.dev/badge/github.com/supay8/go-siat.svg" alt="Go Reference"></a>
+  <a href="https://go.dev/"><img src="https://img.shields.io/github/go-mod/go-version/supay8/go-siat?style=flat" alt="Go Version"></a>
+  <a href="../../LICENSE"><img src="https://img.shields.io/github/license/supay8/go-siat?style=flat" alt="Licencia"></a>
+  <a href="https://github.com/supay8/go-siat/releases"><img src="https://img.shields.io/github/v/release/supay8/go-siat?style=flat&label=release" alt="Última Versión"></a>
+  <a href="https://deepwiki.com/supay8/go-siat"><img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a>
   <a href="../../README.md"><img src="https://img.shields.io/badge/lang-english-red?style=flat" alt="English Version"></a>
 </p>
 
@@ -21,6 +21,12 @@
 > **Documentación Completa**: [Español](../../docs/es/README.md) | [English](../../docs/en/README.md)
 >
 > Arquitectura, Referencia de API, Guía de Facturación, Códigos de Error, Utilidades y Configuración.
+
+## SIAT V2 y V3
+
+El módulo oficial es `github.com/supay8/go-siat`, con una nueva línea `v1.x`. La versión del módulo Go es independiente de la versión del servicio SIAT. Las entradas históricas `v2.x` del changelog pertenecen al módulo de origen.
+
+`siat.New(cfg)` conserva los servicios V2. `siat.NewV3(cfg)` usa el mismo patrón de servicios y builders para los nueve documentos V3 soportados. Las solicitudes están en `pkg/models/v3` y los documentos fiscales en `pkg/models/invoices/v3`. Consultá la [guía V3](../../docs/es/how-to/siat-v3.md) para los límites y ejemplos.
 
 ## 💡 ¿Por qué go-siat?
 
@@ -70,7 +76,7 @@ El SDK cubre los servicios críticos del ecosistema SIAT:
 ### Instalación
 
 ```bash
-go get github.com/ron86i/go-siat/v2
+go get github.com/supay8/go-siat
 ```
 
 ### Requisitos
@@ -89,8 +95,8 @@ package main
 import (
     "context"
     "fmt"
-    "github.com/ron86i/go-siat/v2"
-    "github.com/ron86i/go-siat/v2/pkg/models"
+    "github.com/supay8/go-siat"
+    "github.com/supay8/go-siat/pkg/models"
 )
 
 func main() {

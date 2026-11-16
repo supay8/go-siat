@@ -8,11 +8,11 @@
   <a href="../en/README.md"><img src="https://img.shields.io/badge/lang-english-red?style=flat" alt="English Version"></a>
   <a href="https://masterminds.github.io/stability/active.html"><img src="https://masterminds.github.io/stability/active.svg" alt="Stability: Active"></a>
   <br>
-  <a href="https://pkg.go.dev/github.com/ron86i/go-siat/v2"><img src="https://pkg.go.dev/badge/github.com/ron86i/go-siat/v2.svg" alt="Go Reference"></a>
-  <a href="https://go.dev/"><img src="https://img.shields.io/github/go-mod/go-version/ron86i/go-siat?style=flat" alt="Go Version"></a>
-  <a href="../../LICENSE"><img src="https://img.shields.io/github/license/ron86i/go-siat?style=flat" alt="License"></a>
-  <a href="https://github.com/ron86i/go-siat/releases"><img src="https://img.shields.io/github/v/release/ron86i/go-siat?style=flat&label=release" alt="Latest Release"></a>
-  <a href="https://deepwiki.com/ron86i/go-siat"><img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a>
+  <a href="https://pkg.go.dev/github.com/supay8/go-siat"><img src="https://pkg.go.dev/badge/github.com/supay8/go-siat.svg" alt="Go Reference"></a>
+  <a href="https://go.dev/"><img src="https://img.shields.io/github/go-mod/go-version/supay8/go-siat?style=flat" alt="Go Version"></a>
+  <a href="../../LICENSE"><img src="https://img.shields.io/github/license/supay8/go-siat?style=flat" alt="License"></a>
+  <a href="https://github.com/supay8/go-siat/releases"><img src="https://img.shields.io/github/v/release/supay8/go-siat?style=flat&label=release" alt="Latest Release"></a>
+  <a href="https://deepwiki.com/supay8/go-siat"><img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a>
 </p>
 
 <p align="center">

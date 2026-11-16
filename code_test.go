@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/ron86i/go-siat/v2"
 	"github.com/stretchr/testify/assert"
+	"github.com/supay8/go-siat"
 )
 
 func TestGetMensaje(t *testing.T) {

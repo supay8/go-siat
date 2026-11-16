@@ -1,191 +1,201 @@
-# Integrar SIAT V3 en Supay
+# Usar SIAT V3
 
-La aplicación selecciona la versión al crear el cliente. El paquete raíz
-conserva la API V2; `siat.NewV3` ofrece la API V3 y sus documentos propios.
-Ambos clientes pueden convivir en el mismo proceso.
+El módulo oficial es `github.com/supay8/go-siat`. Su línea de versiones Go es
+`v1.x`; los servicios SIAT V2 y V3 conviven dentro del mismo módulo.
 
-El `/v2` del import identifica la versión del módulo Go. Para usar el
-servicio SIAT V3 se sigue importando este módulo, con sus modelos exclusivos bajo `pkg/models/invoices/v3`.
-
-## Crear el cliente
-
-Reutilizá las credenciales y el transporte que Supay ya proporciona mediante
-`siat.Config`. Creá una copia para configurar el destino V3:
+## Construir el cliente
 
 ```go
 import (
-    siat "github.com/ron86i/go-siat/v2"
-    invoices "github.com/ron86i/go-siat/v2/pkg/models/invoices/v3"
+    siat "github.com/supay8/go-siat"
+    invoices "github.com/supay8/go-siat/pkg/models/invoices/v3"
+    models "github.com/supay8/go-siat/pkg/models/v3"
 )
 
-// cfgV2 es la configuración que Supay ya usa, incluida su firma digital.
-clienteV2, err := siat.New(cfgV2)
-if err != nil { return err }
-
-cfgV3 := cfgV2
-cfgV3.BaseURL = siat.BaseURLPruebasV3 // AmbientePruebas, exclusivamente piloto.
-clienteV3, err := siat.NewV3(cfgV3)
+// cfg contiene identidad, transporte y CredentialSign del emisor.
+cfg.BaseURL = siat.BaseURLPruebasV3
+cliente, err := siat.NewV3(cfg)
 if err != nil { return err }
 ```
 
-Para producción, configurá el ambiente y el endpoint V3 autorizado
-explícitamente. `siat.NewV3` exige una URL absoluta con ruta `/sfd` y rechaza
-una ruta `/v2`. El constructor no modifica `cfgV2` ni el cliente V2.
+En pruebas, una URL vacía selecciona el piloto. Producción exige una URL
+absoluta explícita con ruta `/sfd`, sin query, fragmento ni credenciales.
+`siat.New(cfgV2)` conserva los servicios V2 y sus documentos existentes.
+Cada constructor copia el cliente HTTP y conserva su transporte y middleware.
 
-El SDK recibe la configuración de Supay: no lee `.env`, busca certificados,
-ejecuta comandos externos ni inicia pruebas de homologación por su cuenta.
-El certificado se proporciona con `CredentialSign`, como en V2.
+El SDK recibe la configuración: no carga `.env`, busca certificados ni ejecuta
+pruebas contra el SIN automáticamente. Proporcioná la firma mediante
+`NewPEMCredential` o `NewP12Credential`, que aceptan archivos o bytes.
 
-## Obtener códigos y catálogos
+## Servicios y documentos soportados
 
-Se conservan los accesores y los builders conocidos:
+V3 sigue el patrón de servicios de V2. Todos reciben `(ctx, solicitud)`:
+
+- `CompraVenta()`: Compra-Venta, sector 1.
+- `ServicioBasico()`: Servicios Básicos, sector 13.
+- `Electronica()`: Alquiler (2), Sectores Educativos (11), Hoteles (16),
+  Hospitales/Clínicas (17), Exportación de Servicios (28) y Seguros (34).
+- `DocumentoAjuste()`: Nota de Crédito-Débito, sector 24.
+- `Codigos()`, `Sincronizacion()` y `Operaciones()`: contratos comunes,
+  utilizando los builders existentes de `pkg/models`.
+
+Cada servicio valida que el sector corresponda a su familia. Los tipos
+fiscales se obtienen del catálogo interno: 1 para las facturas con derecho a
+crédito fiscal, 2 para Exportación de Servicios y 3 para notas.
+
+La recepción individual implementa modalidad electrónica y emisión online.
+Los paquetes de contingencia cubren los ocho sectores de factura; las notas
+mantienen operaciones individuales. ICE (14/48), descuento (47), modalidades
+computarizadas, emisión masiva y anexos quedan fuera de esta API V3.
+
+## Códigos y sesión de preparación
+
+Solicitá CUIS y CUFD mediante `cliente.Codigos()`. Usá `GetContent()` para
+comprobar el sobre y verificá el resultado de negocio antes de utilizar sus
+datos. `siat.Verify` está disponible para las respuestas que implementan el
+contrato de resultado del SDK, como CUIS y las nuevas respuestas V3.
+
+Conservá código, control, código interno y vigencia del CUFD. Prepará una
+sesión por sucursal y POS:
 
 ```go
-// Los mismos builders de pkg/models, con el cliente V3.
-respuesta, err := clienteV3.Codigos().SolicitudCuis(ctx, solicitudCuis)
-if err != nil { return err }
-contenido, err := respuesta.GetContent()
-if err != nil { return err }
-// Revisar también Transaccion y MensajesList antes de usar el código.
-_ = contenido
-
-// CUFD: clienteV3.Codigos().SolicitudCufd(ctx, solicitudCufd)
-// Catálogos: clienteV3.Sincronizacion()
-// Eventos: clienteV3.Operaciones()
-```
-
-`GetContent()` comprueba el sobre SOAP. Para códigos, catálogos y operaciones,
-Supay también debe comprobar el resultado de negocio y sus mensajes. Un CUIS
-ya vigente puede responder 980: reutilizalo solo si la respuesta contiene
-código y vigencia válidos y no tiene otro rechazo.
-
-Del CUFD V3 guardá `Codigo`, `CodigoControl`, `CodigoInterno` y `FechaVigencia`.
-Prepará una sesión por sucursal y punto de venta:
-
-```go
-sesion := siat.SesionV3{
-    Sucursal:      sucursal,
-    POS:           puntoVenta,
-    CUIS:          cuis,
-    CUFD:          cufd.Codigo,
+sesion := models.Sesion{
+    Sucursal: sucursal,
+    POS: puntoVenta,
+    CUIS: cuis,
+    CUFD: cufd.Codigo,
     CodigoControl: cufd.CodigoControl,
     CodigoInterno: cufd.CodigoInterno,
 }
 ```
 
-Supay administra la vigencia y persistencia de sus códigos. Conservá la
-versión, sucursal y POS en la clave de almacenamiento para seleccionar los
-datos correspondientes a cada operación. El SDK no renueva códigos ni
-cierra operaciones automáticamente.
+La aplicación administra persistencia y vigencia. Separá códigos y documentos
+por versión SIAT, emisor, ambiente, sucursal y POS.
 
-## Emitir, anular y revertir
+## Preparar y recibir una factura
 
-El adaptador V3 de Supay convierte sus datos de negocio a los tipos de
-`pkg/models/invoices/v3`: `CompraVenta`, `ServicioBasico`, `Alquiler`, `Seguros`,
-`Hospital`, `ExportacionServicios`, `Hotel`, `Educativo` o
-`NotaCreditoDebito`. Los documentos históricos V2 no implementan la interfaz
-V3 y no pueden pasarse accidentalmente a este receptor.
+Los documentos V3 usan builders opacos, `decimal.Decimal` para importes,
+`invoices.Optional[T]` para campos nulos e `invoices.Time` para fechas.
+Los datos se validan contra las restricciones incluidas en los XSD; el SDK
+no calcula ni modifica importes ni sustituye la validación fiscal del SIN.
 
-Usá los campos e importes del esquema V3, incluido `CodigoInterno`. Los
-importes usan `decimal.Decimal`, los valores nulos `invoices.Optional[T]`
-y las fechas `invoices.Time`, expresadas en hora boliviana. El CUF se genera
-con `utils.GenerarCUF` usando el mismo número, fecha, sector, sucursal, POS y
-código de control del documento: modalidad 1 y emisión 1 para emisión online.
-La firma se realiza dentro de `RecepcionFactura`.
+Construí la cabecera y detalles del sector, incluyendo `CodigoInterno`.
+Calculá el CUF con `utils.GenerarCUF`, usando los mismos datos del documento,
+modalidad 1, emisión 1 y el control de su CUFD. `invoices.Time` normaliza a
+hora boliviana y milisegundos. Hay un ejemplo completo que compila en
+[`siat_v3_example_test.go`](../../../siat_v3_example_test.go).
 
 ```go
-// facturaV3 está construida y validada por el adaptador de Supay.
-var documento invoices.Documento = facturaV3
+factura := invoices.NewCompraVentaBuilder().
+    WithCabecera(cabecera).
+    AddDetalle(detalle).
+    Build()
 
-resultado, err := clienteV3.RecepcionFactura(ctx, sesion, documento)
-if err != nil { return err }
-// La recepción individual exige estado 908; persistir CUF y recepción.
-_ = resultado.CodigoRecepcion
+builder := models.NewRecepcionFacturaBuilder().
+    WithSesion(sesion).
+    WithFechaEnvio(time.Now())
+if err := builder.WithFactura(factura, cfg); err != nil { return err }
+solicitud := builder.Build()
 
-referencia := siat.ReferenciaV3{
-    Sector: documento.CodigoDocumentoSector(),
-    CUF:    documento.Informacion().CUF,
+respuesta, err := cliente.CompraVenta().RecepcionFactura(ctx, solicitud)
+if err != nil { return err } // Transporte o validación local.
+contenido, err := respuesta.GetContent()
+if err != nil { return err } // SOAP Fault.
+resultado := contenido.RespuestaServicioFacturacion
+if err := siat.Verify(resultado); err != nil { return err } // Negocio.
+if resultado.CodigoEstado != 908 {
+    return fmt.Errorf("estado de recepción inesperado: %d", resultado.CodigoEstado)
 }
-
-// Estas llamadas corresponden a acciones posteriores del usuario de Supay.
-resultado, err = clienteV3.Anulacion(ctx, sesion, referencia, motivoCatalogo)
-if err != nil { return err } // Exige estado 905.
-
-resultado, err = clienteV3.Reversion(ctx, sesion, referencia)
-if err != nil { return err } // Exige estado 907.
+// Persistir resultado.CodigoRecepcion y el CUF.
 ```
 
-El cliente selecciona el servicio SOAP y el tipo fiscal a partir del
-documento: compra-venta para sector 1, servicios básicos para 13, documentos
-de ajuste para 24 y electrónica para las demás facturas indicadas. Supay
-no necesita mantener esas rutas ni construir los sobres SOAP.
+`WithSesion` debe preceder a `WithFactura`: proporciona los códigos necesarios
+para validar el documento y CUF. La preparación valida, firma, comprime y
+calcula el hash; por eso devuelve `error`. `Build()` captura una copia de la
+solicitud y puede reutilizarse sin que posteriores cambios del builder la
+modifiquen. Los builders se utilizan por operación y no se comparten entre
+goroutines.
 
-La API individual actualmente implementa modalidad electrónica 1 y emisión
-online 1. La migración requiere adaptar los documentos e importes, además
-de seleccionar el cliente. No transforma automáticamente una factura V2 en V3.
+Los documentos V2 no satisfacen la interfaz V3. Para notas, usá
+`NewRecepcionDocumentoAjusteBuilder().WithSesion(...).WithFechaEnvio(...)`,
+prepará con `WithDocumento(nota, cfg)` y enviá mediante
+`cliente.DocumentoAjuste().RecepcionDocumentoAjuste(ctx, solicitud)`.
 
-Para notas de crédito-débito, usá el modelo V3 del sector 24. El sector 47
-se conserva en V2; no hay una conversión implícita entre sectores. Los
-documentos con ICE quedan fuera del alcance de esta integración.
+## Anulación, reversión y consulta
+
+Cada operación tiene su builder. Por ejemplo:
+
+```go
+consulta := models.NewVerificacionEstadoFacturaBuilder().
+    WithSesion(sesion).
+    WithCodigoDocumentoSector(1).
+    WithCuf(cuf).
+    Build()
+respuesta, err := cliente.CompraVenta().VerificacionEstadoFactura(ctx, consulta)
+```
+
+Anulá mediante `NewAnulacionFacturaBuilder`, agregando `WithCodigoMotivo` del
+catálogo; revertí mediante `NewReversionAnulacionFacturaBuilder`. Los nombres
+del servicio son `AnulacionFactura` y `ReversionAnulacionFactura`. Para notas,
+los nombres equivalentes terminan en `DocumentoAjuste`.
+
+El tratamiento de respuestas es el mismo que en recepción. `Verify` comprueba
+transacción y mensajes; el llamador interpreta `CodigoEstado`. Una respuesta
+pendiente no se transforma automáticamente en aceptación final. Ante un
+resultado incierto de transporte, consultá el CUF antes de decidir otro envío.
 
 ## Contingencia
 
-Registrá el evento mediante `clienteV3.Operaciones()` con los builders de
-`pkg/models`. Conservá la sesión usada durante el corte y la sesión posterior.
-El paquete debe contener XML V3 firmados, con CUF de emisión 2 y fechas
-dentro del evento, y persistirse antes de enviarlo.
+Registrá el evento mediante `Operaciones()`. Conservá la sesión utilizada
+durante el corte y la sesión posterior. El TAR.GZ debe contener XML V3 firmados,
+con CUF de emisión 2, del mismo sector y dentro del intervalo del evento.
 
 ```go
-evento := siat.EventoPaqueteV3{
-    Durante: sesionDuranteElCorte,
-    Codigo:  codigoRecepcionEvento,
-    Sector:  sector,
-    Inicio:  inicio,
-    Fin:     fin,
+evento := models.EventoPaquete{
+    Durante: sesionDurante,
+    Codigo: codigoRecepcionEvento,
+    Sector: sector,
+    Inicio: inicio,
+    Fin: fin,
 }
-
-recepcion, err := clienteV3.RecepcionPaqueteArchivo(ctx,
-    sesionPosterior, evento, archivoTarGz)
-if err != nil { return err }
-// Guardar recepcion.CodigoRecepcion antes de consultar.
-
-validacion, err := clienteV3.ValidacionPaquete(ctx,
-    sesionPosterior, sector, recepcion.CodigoRecepcion)
-if err != nil { return err }
-switch validacion.CodigoEstado {
-case 901:
-    // Pendiente: programar otra consulta conservando esta misma recepción.
-case 908:
-    // Paquete validado: actualizar el estado persistido en Supay.
-}
+builder := models.NewRecepcionPaqueteFacturaBuilder().
+    WithSesion(sesionPosterior).
+    WithFechaEnvio(time.Now())
+if err := builder.WithArchivoTarGz(archivoPersistido, evento); err != nil { return err }
+respuesta, err := cliente.CompraVenta().RecepcionPaqueteFactura(ctx, builder.Build())
 ```
 
-`RecepcionPaqueteArchivo` inspecciona el archivo, calcula su cantidad y hash
-y usa el contrato SOAP V3. Una recepción 901 no confirma que las facturas
-estén validadas. Consultá su código hasta obtener un resultado final; no
-reenvíes automáticamente el paquete. Ante una respuesta de transporte
-incierta, reconciliá la operación antes de decidir un nuevo envío.
+La preparación inspecciona entradas, sector, códigos, firmas presentes,
+intervalo y CUF; calcula cantidad y hash sin modificar el archivo. Su contrato
+V3 omite `cafc`; el contrato V2 permanece igual. La verificación de presencia
+de firma del archivo no certifica la confianza de su certificado ante el SIN.
 
-La validación local no garantiza la aceptación del SIN. En particular, la
-validación final de paquetes V3 de Seguros sigue pendiente de confirmación
-en el piloto; no debe anunciarse como un escenario certificado.
+Extraé y verificá la respuesta. Persistí el código de recepción antes de
+consultar con `NewValidacionRecepcionPaqueteFacturaBuilder`, usando
+`WithSesion(sesionPosterior)`, `WithCodigoDocumentoSector(sector)` y
+`WithCodigoRecepcion(codigo)`. Enviá la consulta mediante
+`ValidacionRecepcionPaqueteFactura` del mismo servicio.
 
-## Cambios en Supay y alcance del SDK
+El estado 901 requiere otra consulta; 908 confirma validación. Consultar no
+reenvía el archivo. La aceptación final de paquetes de Seguros en piloto
+sigue pendiente de confirmación; las pruebas locales no certifican ese caso.
 
-Mantené la elección de versión en la configuración de Supay y la conversión
-a documentos V3 en su adaptador SIAT. Los datos de negocio pueden conservar
-su modelo propio. El SDK se encarga de la firma, compresión, hash,
-enrutamiento y contrato SOAP de la recepción individual.
+## Configuración por contexto y comprobaciones
 
-En el repositorio se mantienen la capa pública, sus modelos, los esquemas
-necesarios para regenerarlos, las pruebas locales del SDK y esta guía.
-Los ejecutores locales bajo `cmd/siat-*`, sus guías de homologación,
-credenciales y `.siat-traces/` están excluidos de Git y no son dependencias
-para usar el SDK desde Supay.
+`siat.WithDynamicConfig` permite credenciales y trazas por solicitud. V3
+comprueba el NIT efectivo contra el documento preparado, y rechaza conflictos
+con identidad explícita antes de HTTP. El signer de preparación se proporciona
+explícitamente al builder y debe corresponder al emisor de esa operación.
 
-El ejemplo de configuración y las pruebas de aislamiento se verifican sin
-llamadas al SIN:
+Los ejemplos y contratos se verifican sin credenciales reales. Para validar
+los XML firmados contra los XSD instalá `python3-lxml`. CI exige esa validación.
 
 ```sh
-go test . -run '^(ExampleNewV3|TestNewVersionIsolation|TestV2V3WireCompatibility|TestV3ContingencyPublicAPI)$'
+go generate ./pkg/models/invoices/v3 ./pkg/models/v3
+go vet ./...
+SIAT_REQUIRE_XSD=1 go test -race -count=1 ./...
 ```
+
+La suite usa servidores HTTP locales. Las pruebas de integración que requieren
+credenciales se omiten cuando no existe su configuración. Los ejecutores
+locales ignorados de homologación no forman parte del SDK distribuido.

@@ -3,9 +3,9 @@ package siat_test
 import (
 	"testing"
 
-	"github.com/ron86i/go-siat/v2"
-	"github.com/ron86i/go-siat/v2/pkg/models"
 	"github.com/stretchr/testify/assert"
+	"github.com/supay8/go-siat"
+	"github.com/supay8/go-siat/pkg/models"
 )
 
 func TestMap_ToJSON(t *testing.T) {

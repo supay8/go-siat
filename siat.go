@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ron86i/go-siat/v2/internal/adapter/services"
-	"github.com/ron86i/go-siat/v2/internal/core/domain/siat/common"
-	"github.com/ron86i/go-siat/v2/internal/core/ports"
+	"github.com/supay8/go-siat/internal/adapter/services"
+	"github.com/supay8/go-siat/internal/core/domain/siat/common"
+	"github.com/supay8/go-siat/internal/core/ports"
 )
 
 // SiatServices es el punto de entrada principal del SDK.
@@ -98,32 +98,13 @@ func (s *SiatServices) RecepcionCompras() ports.SiatRecepcionComprasService {
 
 // New crea e inicializa una nueva instancia de SiatServices usando la configuración global.
 func New(config Config) (*SiatServices, error) {
-	if err := validateConfig(config); err != nil {
+	common, err := newCommonServices(config)
+	if err != nil {
 		return nil, err
 	}
-
-	httpClient := config.HTTPClient
-	if httpClient != nil {
-		clonedClient := *httpClient
-		httpClient = &clonedClient
-	} else {
-		httpClient = services.NewHTTPClient(services.DefaultHTTPConfig())
-	}
-
+	httpClient := common.httpClient
 	baseUrl := strings.TrimSpace(config.BaseURL)
-
-	operaciones, err := services.NewSiatOperacionesService(baseUrl, httpClient, config)
-	if err != nil {
-		return nil, err
-	}
-	sincronizacion, err := services.NewSiatSincronizacionService(baseUrl, httpClient, config)
-	if err != nil {
-		return nil, err
-	}
-	codigos, err := services.NewSiatCodigosService(baseUrl, httpClient, config)
-	if err != nil {
-		return nil, err
-	}
+	operaciones, sincronizacion, codigos := common.operaciones, common.sincronizacion, common.codigos
 	compraVenta, err := services.NewCompraVentaService(baseUrl, httpClient, config)
 	if err != nil {
 		return nil, err
