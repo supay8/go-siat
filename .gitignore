@@ -8,6 +8,7 @@
 *.p12
 *.zip
 
+
 # Coverage files (added by CoverLens)
 coverage.out
 .siat-traces/
@@ -16,3 +17,18 @@ coverage.out
 AGENT.md
 .cursorrules
 .cursor/
+
+# Firma local de pruebas
+firma_digital/
+
+# Ejecutores locales de homologación; no forman parte del SDK.
+/cmd/siat-matrix/
+/cmd/siat-v3-individual/
+/cmd/siat-v3-stages/
+
+# Guías y resultados de las ejecuciones locales de homologación.
+/docs/es/how-to/matriz-v2-v3.md
+/docs/es/how-to/siat-v2-contingencia.md
+/docs/es/how-to/siat-v3-contingencia.md
+/docs/es/how-to/siat-v3-etapas.md
+/docs/es/how-to/siat-v3-individual.md

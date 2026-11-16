@@ -40,6 +40,9 @@ Estos documentos siguen [Diátaxis](https://diataxis.fr/): cuatro tipos de mater
 
 ## Buscá por lo que querés hacer
 
+Para incorporar SIAT V3 en una aplicación que ya usa V2, consultá la
+[guía de migración e integración V3](how-to/siat-v3.md).
+
 | Objetivo | Andá a |
 | :--- | :--- |
 | Instalar el SDK y hacer mi primera llamada | [Tutorial](tutorial/primera-factura.md) |

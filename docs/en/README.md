@@ -40,6 +40,9 @@ These docs follow [Diátaxis](https://diataxis.fr/): four kinds of material, eac
 
 ## Find it by what you want to do
 
+To add SIAT V3 to an application that already uses V2, see the
+[V3 migration and integration guide (Spanish)](../es/how-to/siat-v3.md).
+
 | Goal | Go to |
 | :--- | :--- |
 | Install the SDK and make my first call | [Tutorial](tutorial/first-invoice.md) |
