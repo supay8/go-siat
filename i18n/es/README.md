@@ -28,6 +28,35 @@ El módulo oficial es `github.com/supay8/go-siat`, con una nueva línea `v1.x`. 
 
 `siat.New(cfg)` conserva los servicios V2. `siat.NewV3(cfg)` usa el mismo patrón de servicios y builders para los nueve documentos V3 soportados. Las solicitudes están en `pkg/models/v3` y los documentos fiscales en `pkg/models/invoices/v3`. Consultá la [guía V3](../../docs/es/how-to/siat-v3.md) para los límites y ejemplos.
 
+### Estado para publicación y migración
+
+La implementación V3 está preparada para una versión candidata y para integrar aplicaciones existentes por etapas. Antes de una salida estable a producción, validá el cliente final contra el piloto del SIN para los sectores y operaciones que utiliza tu aplicación. Las pruebas de contrato V3 cubren rutas, firmas XML, compresión, hashes, validación de documentos contra los XSD incluidos y aislamiento respecto de V2.
+
+La aceptación final en piloto de **paquetes de contingencia de Seguros (sector 34) sigue pendiente**. Un paquete en estado `901` continúa pendiente; debe consultarse hasta obtener un resultado final.
+
+### Alcance V3
+
+- `CompraVenta()`: Compra-Venta (1).
+- `ServicioBasico()`: Servicios Básicos (13).
+- `Electronica()`: Alquiler (2), Educación (11), Hoteles (16), Hospitales/Clínicas (17), Exportación de Servicios (28) y Seguros (34).
+- `DocumentoAjuste()`: Notas de Crédito-Débito (24).
+- `Codigos()`, `Sincronizacion()` y `Operaciones()`: contratos comunes, configurados para la versión SIAT elegida.
+
+V3 soporta recepción individual electrónica online, consulta de estado, anulación y reversión de anulación para estos nueve sectores. La recepción y validación de paquetes de contingencia están implementadas para los ocho sectores de factura; las notas de crédito-débito mantienen operaciones individuales.
+
+La facturación computarizada, emisión masiva, anexos, documentos ICE (14/48), notas con descuento (47) y otros sectores quedan fuera de la API V3 actual. Las capacidades existentes de V2 siguen disponibles mediante `siat.New(cfg)`.
+
+### Migrar una aplicación existente en V2
+
+1. Identificá los sectores, modalidad de facturación y operaciones de la aplicación y comparalos con el alcance V3 anterior.
+2. Actualizá los imports de `github.com/ron86i/go-siat/v2` a `github.com/supay8/go-siat`, incluidos los subpaquetes. Conservá `siat.New(cfgV2)` mientras verificás los flujos V2 existentes. Fijá un commit revisado o una versión publicada para despliegues reproducibles.
+3. Incorporá un cliente independiente `siat.NewV3(cfgV3)`. La URL piloto es `siat.BaseURLPruebasV3`; producción exige una URL absoluta explícita con ruta `/sfd`.
+4. Construí los documentos fiscales con `pkg/models/invoices/v3` y las solicitudes con `pkg/models/v3`. Guardá el `CodigoInterno` del CUFD junto con su código, control y vigencia. Los documentos fiscales V2 no pueden pasarse a los builders V3.
+5. Separá sesiones y documentos por versión SIAT, emisor, ambiente, sucursal y punto de venta. Conservá la versión de los documentos históricos para sus operaciones posteriores. Comprobá errores de transporte, SOAP Faults mediante `GetContent()` y resultados de negocio antes de aceptar una operación.
+6. Validá la integración final en piloto y migrá sucursales o puntos de venta gradualmente. Ante una recepción incierta, consultá por CUF antes de decidir otro envío.
+
+La [guía V3](../../docs/es/how-to/siat-v3.md) y el [ejemplo de factura que compila](../../siat_v3_example_test.go) muestran preparación, firma, recepción y tratamiento de respuestas.
+
 ## 💡 ¿Por qué go-siat?
 
 Integrarse con los servicios web SOAP del SIAT para la facturación electrónica en Bolivia suele ser un proceso complejo que involucra el manejo manual de XML, firmas digitales (XMLDSig) y estructuras de datos anidadas propensas a errores.
@@ -49,13 +78,13 @@ Integrarse con los servicios web SOAP del SIAT para la facturación electrónica
 - ✍️ **Firma Digital (XMLDSig) Integrada**: Utilidades para firmar facturas automáticamente con su certificado digital.
 - 🚀 **Alto Rendimiento**: Cero dependencias innecesarias, aprovechando la velocidad nativa de Go para la manipulación y compresión de bytes.
 - 🧩 **Modular**: Múltiples servicios (`Codigos`, `Sincronizacion`, `Operaciones`, `CompraVenta`, `Electronica`, `Computarizada`) claramente separados.
-- 🏢 **Multi-Sector**: Soporte nativo y verificado para **48 sectores** distintos (Compra y Venta, Hoteles, Minería, Hospitales, Hidrocarburos, etc.).
+- 🏢 **Multi-Sector**: Builders V2 por sector para compra-venta, hoteles, minería, hospitales, hidrocarburos y otros; nueve sectores V3 dentro del alcance descrito arriba.
 
 ---
 
 ## Capacidades Implementadas
 
-El SDK cubre los servicios críticos del ecosistema SIAT:
+El cliente V2 expone los siguientes servicios. La cobertura V3 se limita al alcance descrito arriba:
 
 | Servicios                   | Funcionalidades Clave                                                                                    |
 | :-------------------------- | :------------------------------------------------------------------------------------------------------- |
@@ -67,7 +96,7 @@ El SDK cubre los servicios críticos del ecosistema SIAT:
 | **Electrónica en Línea**    | Soporte completo para facturación con firma digital.                                                     |
 | **Computarizada en Línea**  | Soporte para modalidades sin firma digital.                                                              |
 | **Sectores Especializados** | Soporte para servicios de Telecomunicaciones, Servicios Básicos, Entidades Financieras y Boletos Aéreos. |
-| **Sectores Especiales**     | Soporte verificado para los **48 sectores** reglamentarios del SIAT.                                     |
+| **Documentos por Sector**   | Builders V2 en `pkg/models/invoices`; documentos V3 en `pkg/models/invoices/v3`.                         |
 
 ---
 
@@ -76,8 +105,10 @@ El SDK cubre los servicios críticos del ecosistema SIAT:
 ### Instalación
 
 ```bash
-go get github.com/supay8/go-siat
+go get github.com/supay8/go-siat@latest
 ```
+
+Para desplegar, fijá la versión o el commit revisado. `@latest` puede resolver una pseudoversión de desarrollo cuando no hay una etiqueta compatible; instalar el módulo no acredita que la integración esté lista para producción.
 
 ### Requisitos
 
@@ -87,7 +118,9 @@ go get github.com/supay8/go-siat
 > [!TIP]
 > **Mejores Prácticas de Contexto**: Proporcione siempre un contexto con timeout (ej. 30s) en todas las llamadas al SDK. Evite el uso directo de `context.Background()` para prevenir peticiones suspendidas si el servidor del SIAT está lento.
 
-### Ejemplo: Verificar NIT
+### Ejemplo: Solicitar un CUIS con V2
+
+El CUIS es el primer paso del flujo de facturación. La identidad del emisor se configura una vez en el cliente.
 
 ```go
 package main
@@ -95,35 +128,54 @@ package main
 import (
     "context"
     "fmt"
+    "log"
+    "time"
+
     "github.com/supay8/go-siat"
     "github.com/supay8/go-siat/pkg/models"
 )
 
 func main() {
-    // 1. Inicializar configuración del cliente
-    config := siat.Config{
+    // 1. Inicializar el cliente con la identidad del emisor.
+    s, err := siat.New(siat.Config{
         Token:          "YOUR_SIAT_TOKEN",
         Nit:            123456789,
         CodigoSistema:  "YOUR_SYSTEM_CODE",
-        CodigoAmbiente: 2, // Pruebas
-        BaseURL:        "YOUR_SIAT_URL",
+        CodigoAmbiente: siat.AmbientePruebas,
+        BaseURL:        "https://pilotosiatservicios.impuestos.gob.bo/v2",
+    })
+    if err != nil {
+        log.Fatal(err)
     }
-    s, _ := siat.New(config)
 
-    // 2. Preparar solicitud usando builders
-    req := models.NewVerificarNitBuilder().
-        WithNit(123456789).
+    ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+    defer cancel()
+
+    // 2. Preparar los datos propios de la solicitud.
+    req := models.NewCuisBuilder().
+        WithCodigoSucursal(0).
+        WithCodigoPuntoVenta(0).
+        WithCodigoModalidad(siat.ModalidadElectronica).
         Build()
 
-    // 3. Ejecutar llamada
-    resp, err := s.Codigos().VerificarNit(context.Background(), req)
+    // 3. Comprobar transporte, SOAP Fault y resultado de negocio.
+    resp, err := s.Codigos().SolicitudCuis(ctx, req)
     if err != nil {
-        panic(err)
+        log.Fatal(err)
+    }
+    content, err := resp.GetContent()
+    if err != nil {
+        log.Fatal(err)
+    }
+    if err := siat.Verify(content.RespuestaCuis); err != nil {
+        log.Fatal(err)
     }
 
-    fmt.Printf("Estado de transacción NIT: %v\n", resp.Body.Content.RespuestaVerificarNit.Transaccion)
+    fmt.Println("CUIS:", content.RespuestaCuis.Codigo)
 }
 ```
+
+Para solicitar un CUIS con V3 en el mismo ejemplo, usá `siat.NewV3` y configurá `BaseURL` con `siat.BaseURLPruebasV3`. El builder CUIS sigue en `pkg/models`; los documentos fiscales y builders de recepción usan los paquetes V3 indicados arriba.
 
 > Para guías avanzadas (flujo completo de facturación, firmas digitales, manejo de errores, middleware), consulta la [**Documentación Completa**](../../docs/es/README.md).
 
@@ -131,7 +183,12 @@ func main() {
 
 ## 🛠️ Referencia de Uso (Tests)
 
-Los **Tests de Integración** actúan como la documentación técnica viviente del SDK:
+Las pruebas proporcionan ejemplos de uso. Las pruebas de contrato V3 usan servidores HTTP locales; las integraciones que requieren credenciales se omiten cuando no existe su configuración. Aprobar pruebas locales no confirma la aceptación del SIN en piloto o producción.
+
+- [Compatibilidad de solicitudes V2/V3](../../siat_v3_client_test.go).
+- [Recepción individual y ciclo de vida V3](../../siat_v3_facturacion_test.go).
+- [Paquetes de contingencia V3](../../siat_v3_contingencia_test.go).
+- [Validación de documentos V3, XSD y errores](../../siat_v3_contract_test.go).
 
 | Categoría                  | Archivo de Test                                                                                                      |
 | :------------------------- | :------------------------------------------------------------------------------------------------------------------- |
